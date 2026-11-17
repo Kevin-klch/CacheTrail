@@ -7,13 +7,14 @@ use App\Enums\Transportation;
 use Database\Factories\TrailFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'description', 'estimated_duration_minutes', 'transportation'])]
+#[Fillable(['name', 'description', 'estimated_duration_minutes', 'transportations'])]
 class Trail extends Model
 {
     /** @use HasFactory<TrailFactory> */
@@ -42,7 +43,7 @@ class Trail extends Model
     {
         return [
             'estimated_duration_minutes' => 'integer',
-            'transportation' => Transportation::class,
+            'transportations' => AsEnumCollection::of(Transportation::class),
             'visibility' => TrailVisibility::class,
             'published_at' => 'datetime',
         ];
@@ -80,6 +81,14 @@ class Trail extends Model
     public function scopePublished(Builder $query): void
     {
         $query->where('visibility', TrailVisibility::Published);
+    }
+
+    /**
+     * @param  Builder<Trail>  $query
+     */
+    public function scopeSuitableFor(Builder $query, Transportation $transportation): void
+    {
+        $query->whereJsonContains('transportations', $transportation->value);
     }
 
     public function isPublished(): bool
@@ -139,6 +148,14 @@ class Trail extends Model
     public function durationRemainingMinutes(): int
     {
         return (int) $this->estimated_duration_minutes % 60;
+    }
+
+    /**
+     * Comma separated labels, e.g. "Zu Fuß, Fahrrad".
+     */
+    public function transportationLabel(): string
+    {
+        return $this->transportations->map(fn (Transportation $mode): string => $mode->label())->implode(', ');
     }
 
     public function imageUrl(): ?string

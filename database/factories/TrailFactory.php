@@ -25,7 +25,7 @@ class TrailFactory extends Factory
             'name' => fake()->unique()->words(3, true),
             'description' => fake()->paragraphs(2, true),
             'estimated_duration_minutes' => fake()->numberBetween(30, 480),
-            'transportation' => fake()->randomElement(Transportation::cases()),
+            'transportations' => fake()->randomElements(Transportation::cases(), fake()->numberBetween(1, count(Transportation::cases()))),
             'visibility' => TrailVisibility::Draft,
             'published_at' => null,
         ];

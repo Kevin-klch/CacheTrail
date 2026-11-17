@@ -34,19 +34,27 @@
 
     <fieldset>
         <legend class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Means of transport') }}</legend>
+        @php
+            $selectedTransportations = old('transportations', $trail->transportations?->map(fn ($mode) => $mode->value)->all() ?? []);
+        @endphp
         <div class="grid gap-3 sm:grid-cols-3">
             @foreach (App\Enums\Transportation::cases() as $option)
-                <label class="relative flex cursor-pointer items-center gap-3 rounded-2xl border border-sand-300 bg-white px-4 py-3 transition has-checked:border-forest-600 has-checked:bg-forest-50 has-checked:ring-2 has-checked:ring-forest-600/20 has-focus-visible:ring-4 has-focus-visible:ring-forest-500/25">
-                    <input type="radio" name="transportation" value="{{ $option->value }}" class="sr-only" required
-                        @checked(old('transportation', $trail->transportation?->value) === $option->value)>
-                    <x-transport-icons :transportation="$option" class="text-forest-700" />
+                <label class="group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-sand-300 bg-white px-4 py-3 transition has-checked:border-forest-600 has-checked:bg-forest-50 has-checked:ring-2 has-checked:ring-forest-600/20 has-focus-visible:ring-4 has-focus-visible:ring-forest-500/25">
+                    <input type="checkbox" name="transportations[]" value="{{ $option->value }}" class="peer sr-only"
+                        @checked(in_array($option->value, (array) $selectedTransportations, true))>
+                    <span class="grid size-5 shrink-0 place-items-center rounded-md border border-sand-300 bg-white text-transparent transition peer-checked:border-forest-700 peer-checked:bg-forest-700 peer-checked:text-paper">
+                        <x-icon name="check" class="size-3.5" />
+                    </span>
+                    <x-icon :name="$option->icon()" class="text-forest-700" />
                     <span class="text-sm font-medium">{{ $option->label() }}</span>
                 </label>
             @endforeach
         </div>
-        @error('transportation')
-            <p class="mt-1.5 text-sm text-red-700">{{ $message }}</p>
-        @enderror
+        @if ($errors->has('transportations') || $errors->has('transportations.*'))
+            <p class="mt-1.5 text-sm text-red-700">{{ $errors->first('transportations') ?: $errors->first('transportations.*') }}</p>
+        @else
+            <p class="mt-1.5 text-sm text-ink-muted">{{ __('Select all that apply.') }}</p>
+        @endif
     </fieldset>
 
     <div>

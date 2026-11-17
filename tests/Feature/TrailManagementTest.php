@@ -33,7 +33,7 @@ class TrailManagementTest extends TestCase
             'description' => "Erster Absatz.\n\nZweiter Absatz.",
             'duration_hours' => 2,
             'duration_minutes' => 30,
-            'transportation' => Transportation::FootAndBike->value,
+            'transportations' => [Transportation::Foot->value, Transportation::Bike->value],
             ...$overrides,
         ];
     }
@@ -68,7 +68,7 @@ class TrailManagementTest extends TestCase
         $this->assertTrue($trail->user->is($user));
         $this->assertSame('waldabenteuer-am-niederrhein', $trail->slug);
         $this->assertSame(150, $trail->estimated_duration_minutes);
-        $this->assertSame(Transportation::FootAndBike, $trail->transportation);
+        $this->assertEquals([Transportation::Foot, Transportation::Bike], $trail->transportations->all());
         $this->assertSame(TrailVisibility::Draft, $trail->visibility);
         $this->assertNull($trail->published_at);
     }
@@ -112,15 +112,32 @@ class TrailManagementTest extends TestCase
         $this->actingAs(User::factory()->create())
             ->post(route('trails.store'), $this->validData([
                 'name' => '',
-                'transportation' => 'car',
+                'transportations' => ['car'],
                 'duration_hours' => 0,
                 'duration_minutes' => 0,
             ]))
             ->assertSessionHasErrors([
                 'name' => 'Name der Route ist ein Pflichtfeld.',
-                'transportation',
+                'transportations.0',
                 'duration_hours' => 'Die geschätzte Dauer muss mindestens 5 Minuten betragen.',
             ]);
+    }
+
+    public function test_at_least_one_means_of_transport_is_required(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->post(route('trails.store'), $this->validData(['transportations' => []]))
+            ->assertSessionHasErrors('transportations');
+
+        $this->assertDatabaseCount('trails', 0);
+    }
+
+    public function test_means_of_transport_are_stored_in_canonical_order(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->post(route('trails.store'), $this->validData(['transportations' => ['bike', 'foot']]));
+
+        $this->assertEquals([Transportation::Foot, Transportation::Bike], Trail::sole()->transportations->all());
     }
 
     public function test_slugs_are_unique_and_avoid_reserved_words(): void

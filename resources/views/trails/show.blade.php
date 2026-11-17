@@ -52,8 +52,8 @@
                     <h2 class="sr-only">{{ __('Route details') }}</h2>
                     <dl>
                         <x-stat :label="__('Duration')" icon="clock">{{ $trail->durationLabel() }}</x-stat>
-                        <x-stat :label="__('Transport')" :icon="$trail->transportation->allowsWalking() ? 'foot' : 'bike'">
-                            {{ $trail->transportation->label() }}
+                        <x-stat :label="__('Transport')" :icon="$trail->transportations->first()?->icon() ?? 'route'">
+                            {{ $trail->transportationLabel() }}
                         </x-stat>
                         <x-stat :label="__('Caches')" icon="route" pending />
                         <x-stat :label="__('Length')" icon="map" pending />

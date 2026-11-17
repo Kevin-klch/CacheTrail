@@ -40,7 +40,7 @@ class TrailController extends Controller
                     ->orWhereLike('description', "%{$search}%"));
             })
             ->when($filters['transportation'] ?? null, function (Builder $query, string $transportation): void {
-                $query->whereIn('transportation', $this->matchingTransportations(Transportation::from($transportation)));
+                $query->suitableFor(Transportation::from($transportation));
             })
             ->when(isset($filters['min_hours']), fn (Builder $query) => $query->where('estimated_duration_minutes', '>=', (int) round($filters['min_hours'] * 60)))
             ->when(isset($filters['max_hours']), fn (Builder $query) => $query->where('estimated_duration_minutes', '<=', (int) round($filters['max_hours'] * 60)))
@@ -117,20 +117,6 @@ class TrailController extends Controller
         $trail->delete();
 
         return redirect()->route('trails.mine')->with('status', 'trail-deleted');
-    }
-
-    /**
-     * A filter for walking also matches trails suitable for both, and so on.
-     *
-     * @return list<string>
-     */
-    private function matchingTransportations(Transportation $transportation): array
-    {
-        return match ($transportation) {
-            Transportation::Foot => [Transportation::Foot->value, Transportation::FootAndBike->value],
-            Transportation::Bike => [Transportation::Bike->value, Transportation::FootAndBike->value],
-            Transportation::FootAndBike => [Transportation::FootAndBike->value],
-        };
     }
 
     private function storeImage(UploadedFile $image): string

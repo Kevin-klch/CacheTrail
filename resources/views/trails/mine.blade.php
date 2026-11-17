@@ -33,7 +33,7 @@
                                 </div>
                                 <p class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-muted">
                                     <span class="inline-flex items-center gap-1.5"><x-icon name="clock" class="size-4" /> {{ $trail->durationLabel() }}</span>
-                                    <x-transport-icons :transportation="$trail->transportation" />
+                                    <x-transport-icons :transportations="$trail->transportations" />
                                     <span>{{ __('Last updated on :date', ['date' => $trail->updated_at->translatedFormat('j. F Y')]) }}</span>
                                 </p>
                             </div>

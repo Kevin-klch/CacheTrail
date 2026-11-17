@@ -18,7 +18,7 @@
             </div>
             <div class="inline-flex items-center gap-1.5">
                 <dt class="sr-only">{{ __('Means of transport') }}</dt>
-                <dd class="text-forest-700"><x-transport-icons :transportation="$trail->transportation" /></dd>
+                <dd class="text-forest-700"><x-transport-icons :transportations="$trail->transportations" /></dd>
             </div>
         </dl>
 

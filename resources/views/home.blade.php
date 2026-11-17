@@ -89,7 +89,7 @@
                                             <span class="block truncate font-serif text-lg font-bold text-forest-900">{{ $trail->name }}</span>
                                             <span class="flex items-center gap-3 text-sm text-ink-muted">
                                                 <span class="inline-flex items-center gap-1"><x-icon name="clock" class="size-3.5" /> {{ $trail->durationLabel() }}</span>
-                                                <x-transport-icons :transportation="$trail->transportation" />
+                                                <x-transport-icons :transportations="$trail->transportations" />
                                             </span>
                                         </span>
                                         <x-icon name="arrow-right" class="size-4 text-forest-500" />

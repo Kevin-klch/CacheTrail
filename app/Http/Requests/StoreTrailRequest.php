@@ -28,7 +28,8 @@ class StoreTrailRequest extends FormRequest
             'description' => ['required', 'string', 'max:10000'],
             'duration_hours' => ['required', 'integer', 'min:0', 'max:72'],
             'duration_minutes' => ['required', 'integer', 'min:0', 'max:59'],
-            'transportation' => ['required', Rule::enum(Transportation::class)],
+            'transportations' => ['required', 'array', 'min:1'],
+            'transportations.*' => ['required', 'distinct', Rule::enum(Transportation::class)],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:'.self::MAX_IMAGE_KILOBYTES],
         ];
     }
@@ -57,7 +58,8 @@ class StoreTrailRequest extends FormRequest
             'description' => __('Description'),
             'duration_hours' => __('Hours'),
             'duration_minutes' => __('Minutes'),
-            'transportation' => __('Means of transport'),
+            'transportations' => __('Means of transport'),
+            'transportations.*' => __('Means of transport'),
             'image' => __('Cover image'),
         ];
     }
@@ -68,7 +70,7 @@ class StoreTrailRequest extends FormRequest
     }
 
     /**
-     * @return array{name: string, description: string, estimated_duration_minutes: int, transportation: string}
+     * @return array{name: string, description: string, estimated_duration_minutes: int, transportations: list<Transportation>}
      */
     public function trailAttributes(): array
     {
@@ -76,8 +78,23 @@ class StoreTrailRequest extends FormRequest
             'name' => $this->validated('name'),
             'description' => $this->validated('description'),
             'estimated_duration_minutes' => $this->durationInMinutes(),
-            'transportation' => $this->validated('transportation'),
+            'transportations' => $this->selectedTransportations(),
         ];
+    }
+
+    /**
+     * The selected means of transport in their canonical order.
+     *
+     * @return list<Transportation>
+     */
+    public function selectedTransportations(): array
+    {
+        $selected = $this->validated('transportations');
+
+        return array_values(array_filter(
+            Transportation::cases(),
+            fn (Transportation $mode): bool => in_array($mode->value, $selected, true),
+        ));
     }
 
     public function wantsToPublish(): bool

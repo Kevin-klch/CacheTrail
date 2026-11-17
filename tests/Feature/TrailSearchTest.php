@@ -33,16 +33,21 @@ class TrailSearchTest extends TestCase
             ->assertDontSee('Seerunde');
     }
 
-    public function test_the_walking_filter_includes_trails_for_both(): void
+    public function test_the_transport_filter_matches_trails_that_include_it(): void
     {
-        Trail::factory()->published()->create(['name' => 'Fussrunde', 'transportation' => Transportation::Foot]);
-        Trail::factory()->published()->create(['name' => 'Radrunde', 'transportation' => Transportation::Bike]);
-        Trail::factory()->published()->create(['name' => 'Kombirunde', 'transportation' => Transportation::FootAndBike]);
+        Trail::factory()->published()->create(['name' => 'Fussrunde', 'transportations' => [Transportation::Foot]]);
+        Trail::factory()->published()->create(['name' => 'Radrunde', 'transportations' => [Transportation::Bike]]);
+        Trail::factory()->published()->create(['name' => 'Kombirunde', 'transportations' => [Transportation::Foot, Transportation::Bike]]);
 
         $this->get(route('trails.index', ['transportation' => 'foot']))
             ->assertSee('Fussrunde')
             ->assertSee('Kombirunde')
             ->assertDontSee('Radrunde');
+
+        $this->get(route('trails.index', ['transportation' => 'bike']))
+            ->assertSee('Radrunde')
+            ->assertSee('Kombirunde')
+            ->assertDontSee('Fussrunde');
     }
 
     public function test_trails_can_be_filtered_by_duration(): void
