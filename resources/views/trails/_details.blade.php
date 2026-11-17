@@ -1,6 +1,6 @@
 {{-- Media, description, caches and key figures of a trail; shared by the detail page and the preview step. --}}
         @if ($trail->imageUrl() && $trail->caches->isNotEmpty())
-            <div class="grid gap-4 lg:grid-cols-[3fr_2fr]">
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-[3fr_2fr]">
                 <x-trail-image :trail="$trail" class="aspect-[16/10] w-full rounded-[2rem] shadow-2xl shadow-forest-950/20" />
                 <x-trail-map :markers="$trail->mapMarkers()" class="aspect-[16/10] w-full lg:aspect-auto" />
             </div>
@@ -10,7 +10,7 @@
             <x-trail-image :trail="$trail" class="aspect-[21/9] w-full rounded-[2rem] shadow-2xl shadow-forest-950/20" />
         @endif
 
-        <div class="mt-10 grid gap-10 lg:grid-cols-[1fr_22rem]">
+        <div class="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_22rem]">
             <article>
                 <div class="flex flex-wrap items-center gap-3">
                     @unless ($trail->isPublished())
@@ -31,7 +31,7 @@
                     @endif
                 </div>
 
-                <div class="mt-8 space-y-4 text-lg leading-relaxed text-ink">
+                <div class="mt-8 space-y-4 break-words text-lg leading-relaxed text-ink">
                     @foreach ($trail->descriptionParagraphs() as $paragraph)
                         <p>{!! nl2br(e($paragraph)) !!}</p>
                     @endforeach

@@ -3,7 +3,7 @@
 {{-- Large route card for the detailed directory view: cover image and route preview side by side, all key figures and a longer description. --}}
 <article {{ $attributes->class(['group relative overflow-hidden rounded-[2rem] border border-sand-200 bg-white shadow-[0_12px_32px_-18px_rgb(26_50_38/0.25)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-18px_rgb(26_50_38/0.35)]']) }}>
     @if ($trail->imageUrl() && $trail->caches->isNotEmpty())
-        <div class="grid h-80 grid-rows-2 sm:h-72 sm:grid-cols-[3fr_2fr] sm:grid-rows-1">
+        <div class="grid grid-cols-1 h-80 grid-rows-2 sm:h-72 sm:grid-cols-[3fr_2fr] sm:grid-rows-1">
             <img src="{{ $trail->imageUrl() }}" alt="" loading="lazy" class="size-full object-cover">
             <x-route-preview :trail="$trail" class="size-full" />
         </div>

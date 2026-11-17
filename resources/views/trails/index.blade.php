@@ -20,7 +20,7 @@
                     <input type="hidden" name="view" value="{{ $view }}">
                 @endif
 
-                <div class="grid gap-4 md:grid-cols-[2fr_1fr_1fr_auto] md:items-end">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-[2fr_1fr_1fr_auto] md:items-end">
                     <div>
                         <label for="q" class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Search') }}</label>
                         <div class="relative">
@@ -55,7 +55,7 @@
                         @endif
                     </summary>
 
-                    <div class="mt-4 grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="mt-4 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
                         <x-range-filter :label="__('Duration')" name="hours" :values="$filters" :max="72" step="0.5" :unit="__('hrs.')" />
                         <x-range-filter :label="__('Number of caches')" name="caches" :values="$filters" :max="100" />
                         <x-range-filter :label="__('Length')" name="km" :values="$filters" :max="1000" step="0.5" unit="km" />
@@ -158,7 +158,7 @@
             </div>
             <div class="mx-auto mt-10 max-w-5xl">{{ $trails->links() }}</div>
         @else
-            <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($trails as $trail)
                     <x-trail-card :trail="$trail" :location="$location" />
                 @endforeach

@@ -11,7 +11,7 @@
             <path d="M-50 120c220 0 260-40 360-90s180-110 360-80 320 60 580 0" />
         </svg>
 
-        <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 pb-24 pt-16 sm:px-6 sm:pb-32 sm:pt-24 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+        <div class="relative mx-auto grid grid-cols-1 max-w-7xl items-center gap-12 px-4 pb-24 pt-16 sm:px-6 sm:pb-32 sm:pt-24 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
             <div>
                 @if (session('status') === 'account-deleted')
                     <x-alert class="mb-8 max-w-lg">{{ __('Your account has been deleted.') }}</x-alert>
@@ -60,7 +60,7 @@
 
     {{-- Intro and latest routes, connected by the trail line --}}
     <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="relative grid gap-12 pt-20 lg:grid-cols-2 lg:gap-32 lg:pb-8">
+        <div class="relative grid grid-cols-1 gap-12 pt-20 lg:grid-cols-2 lg:gap-32 lg:pb-8">
             <x-trail-line class="absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 text-trail-500/70 lg:block" />
             <div class="lg:pt-10">
                 <h2 class="text-4xl font-bold">{{ __('Geocaching made easy') }}</h2>
@@ -110,7 +110,7 @@
         {{-- How it works --}}
         <div class="relative mt-28">
             <h2 class="text-center text-4xl font-bold">{{ __('How CacheTrail works') }}</h2>
-            <div class="mt-12 grid gap-6 md:grid-cols-3">
+            <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
                 @foreach ([
                     ['icon' => 'compass', 'title' => __('Discover'), 'text' => __('Browse routes by region, length, duration, difficulty and terrain.')],
                     ['icon' => 'map', 'title' => __('Head out'), 'text' => __('Follow the caches in the order the creator recommends, on foot or by bike.')],
@@ -136,7 +136,7 @@
                     {{ __('As soon as routes are saved as favorites, the community favorites will appear here.') }}
                 </x-empty-state>
             @else
-                <div class="mt-10 grid gap-6 md:grid-cols-3">
+                <div class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
                     @foreach ($popularTrails as $trail)
                         <x-trail-card :trail="$trail" />
                     @endforeach
@@ -163,7 +163,7 @@
                 <p class="mx-auto mt-4 max-w-xl text-lg text-forest-100/90">
                     {{ __('Create your own route from existing geocaches and let others enjoy it as much as you did.') }}
                 </p>
-                <x-button variant="accent" :href="route('trails.create')" class="mt-8 px-7 py-3 text-base">
+                <x-button variant="accent" :href="auth()->check() ? route('trails.create') : route('register')" class="mt-8 px-7 py-3 text-base">
                     {{ __('Create route') }}
                     <x-icon name="arrow-right" class="size-4" />
                 </x-button>

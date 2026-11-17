@@ -1,4 +1,4 @@
-@props(['title' => null])
+@props(['title' => null, 'description' => null])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -8,6 +8,9 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title ? $title.' · '.config('app.name') : config('app.name').' · '.__('Discover routes. Find adventures.') }}</title>
+        <meta name="description" content="{{ $description ?? __('Discover ready-made geocaching routes that fit your day, or share your favorite tour with other geocachers.') }}">
+        <meta name="theme-color" content="#213f30">
+        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -27,7 +30,7 @@
         <footer class="mt-24 text-forest-800">
             <x-treeline class="-mb-px" />
             <div class="bg-forest-800 text-forest-100">
-                <div class="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
+                <div class="mx-auto grid grid-cols-1 max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
                     <div>
                         <x-logo inverted />
                         <p class="mt-4 max-w-xs font-serif text-lg italic text-forest-100/90">{{ __('Discover routes. Find adventures.') }}</p>

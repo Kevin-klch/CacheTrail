@@ -1,4 +1,4 @@
-<x-layouts.app :title="$trail->name">
+<x-layouts.app :title="$trail->name" :description="Str::limit($trail->descriptionParagraphs()[0] ?? '', 155)">
     <div class="rounded-b-[2.5rem] bg-forest-700 pb-40 pt-8 sm:rounded-b-[4rem]">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <a href="{{ route('trails.index') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-forest-100 hover:text-white">

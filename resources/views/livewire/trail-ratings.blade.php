@@ -86,7 +86,7 @@
                     </div>
 
                     @if ($item->comment)
-                        <p class="mt-3 whitespace-pre-line leading-relaxed text-ink">{{ $item->comment }}</p>
+                        <p class="mt-3 whitespace-pre-line break-words leading-relaxed text-ink">{{ $item->comment }}</p>
                     @endif
 
                     {{-- Reply of the route creator --}}
@@ -112,7 +112,7 @@
                                     · <button type="button" wire:click="startReply({{ $item->id }})" class="normal-case tracking-normal hover:underline">{{ __('Edit') }}</button>
                                 @endcan
                             </p>
-                            <p class="mt-1 whitespace-pre-line text-sm leading-relaxed text-ink">{{ $item->creator_reply }}</p>
+                            <p class="mt-1 whitespace-pre-line break-words text-sm leading-relaxed text-ink">{{ $item->creator_reply }}</p>
                         </div>
                     @else
                         @can('reply', $item)

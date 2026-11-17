@@ -37,7 +37,7 @@
         @php
             $selectedTransportations = old('transportations', $trail->transportations?->map(fn ($mode) => $mode->value)->all() ?? []);
         @endphp
-        <div class="grid gap-3 sm:grid-cols-3">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
             @foreach (App\Enums\Transportation::cases() as $option)
                 <label class="group relative flex cursor-pointer items-center gap-3 rounded-2xl border border-sand-300 bg-white px-4 py-3 transition has-checked:border-forest-600 has-checked:bg-forest-50 has-checked:ring-2 has-checked:ring-forest-600/20 has-focus-visible:ring-4 has-focus-visible:ring-forest-500/25">
                     <input type="checkbox" name="transportations[]" value="{{ $option->value }}" class="peer sr-only"
