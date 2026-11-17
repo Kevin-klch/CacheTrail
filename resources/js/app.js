@@ -1,6 +1,8 @@
 import { Alpine, Livewire } from '../../vendor/livewire/livewire/dist/livewire.esm';
-import { registerTrailMap } from './trail-map';
+import { registerDirectoryMap, registerShareLocation, registerTrailMap } from './trail-map';
 
 registerTrailMap(Alpine);
+registerDirectoryMap(Alpine);
+registerShareLocation(Alpine);
 
 Livewire.start();

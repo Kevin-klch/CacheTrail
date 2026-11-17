@@ -53,6 +53,94 @@ function popupContent(cache, labels) {
     return root;
 }
 
+function directoryPopup(route, labels) {
+    const root = element('div', 'ct-popup');
+    const link = element('a', 'ct-popup__link', labels.view);
+
+    link.href = route.url;
+    root.append(element('p', 'ct-popup__title', route.name), element('p', 'ct-popup__meta', route.summary));
+
+    if (route.distance) {
+        root.append(element('p', 'ct-popup__flag', route.distance));
+    }
+
+    root.append(link);
+
+    return root;
+}
+
+/**
+ * Alpine component for the map view of the route directory: one marker per route start.
+ */
+export function registerDirectoryMap(Alpine) {
+    Alpine.data('directoryMap', (routes = [], location = null, labels = {}) => ({
+        init() {
+            const map = L.map(this.$refs.map, { scrollWheelZoom: false });
+            const layer = L.featureGroup().addTo(map);
+
+            L.tileLayer(TILE_URL, { maxZoom: 19, attribution: ATTRIBUTION }).addTo(map);
+
+            routes.forEach((route) => {
+                L.marker([route.latitude, route.longitude], {
+                    icon: L.divIcon({ className: '', html: element('span', 'ct-pin').outerHTML, iconSize: [28, 28], iconAnchor: [14, 28], popupAnchor: [0, -26] }),
+                    title: route.name,
+                    keyboard: true,
+                })
+                    .bindPopup(directoryPopup(route, labels))
+                    .addTo(layer);
+            });
+
+            if (location) {
+                L.circleMarker([location.latitude, location.longitude], { radius: 8, color: '#fff', weight: 3, fillColor: TRAIL_COLOR, fillOpacity: 1 })
+                    .bindTooltip(labels.you)
+                    .addTo(layer);
+            }
+
+            if (layer.getLayers().length > 0) {
+                map.fitBounds(layer.getBounds(), { padding: [40, 40], maxZoom: 13 });
+            } else {
+                map.setView([51.16, 10.45], 5);
+            }
+
+            new ResizeObserver(() => map.invalidateSize()).observe(this.$refs.map);
+        },
+    }));
+}
+
+/**
+ * Alpine component for the "use my location" button: asks the browser for the position and submits it.
+ */
+export function registerShareLocation(Alpine) {
+    Alpine.data('shareLocation', (messages = {}) => ({
+        busy: false,
+        error: null,
+
+        locate() {
+            if (!('geolocation' in navigator)) {
+                this.error = messages.unavailable;
+
+                return;
+            }
+
+            this.busy = true;
+            this.error = null;
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    this.$root.querySelector('[name="latitude"]').value = position.coords.latitude;
+                    this.$root.querySelector('[name="longitude"]').value = position.coords.longitude;
+                    this.$root.submit();
+                },
+                (failure) => {
+                    this.busy = false;
+                    this.error = failure.code === failure.PERMISSION_DENIED ? messages.denied : messages.unavailable;
+                },
+                { enableHighAccuracy: false, timeout: 15000, maximumAge: 600000 },
+            );
+        },
+    }));
+}
+
 /**
  * Alpine component: <div x-data="trailMap(caches, labels)"><div x-ref="map"></div></div>
  * Listens for "trail-caches-updated" window events to redraw without a page reload.

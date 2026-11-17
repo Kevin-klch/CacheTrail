@@ -1,4 +1,4 @@
-@props(['trail'])
+@props(['trail', 'location' => null])
 
 {{-- Large route card for the detailed directory view: cover image and route preview side by side, all key figures and a longer description. --}}
 <article {{ $attributes->class(['group relative overflow-hidden rounded-[2rem] border border-sand-200 bg-white shadow-[0_12px_32px_-18px_rgb(26_50_38/0.25)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-18px_rgb(26_50_38/0.35)]']) }}>
@@ -9,6 +9,12 @@
         </div>
     @else
         <x-trail-image :trail="$trail" class="h-56 w-full sm:h-72" />
+    @endif
+    @if ($location && $trail->distanceFromLabel($location))
+        <span class="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-paper/95 px-3 py-1 text-xs font-semibold text-forest-800 shadow">
+            <x-icon name="compass" class="size-3.5" />
+            {{ $trail->distanceFromLabel($location) }}
+        </span>
     @endif
 
     <div class="p-6 sm:p-8">

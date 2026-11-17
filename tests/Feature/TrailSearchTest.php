@@ -96,13 +96,12 @@ class TrailSearchTest extends TestCase
             ->assertSee('Waldrunde')
             ->assertSee('Route ansehen')
             ->assertSee('<input type="hidden" name="view" value="detailed">', false)
-            ->assertSee('view=compact', false);
+            ->assertSee('view=map', false);
     }
 
-    public function test_unknown_views_fall_back_to_compact(): void
+    public function test_unknown_views_are_rejected(): void
     {
         $this->get(route('trails.index', ['view' => 'fancy']))
-            ->assertOk()
-            ->assertDontSee('<input type="hidden" name="view" value="detailed">', false);
+            ->assertSessionHasErrors(['view' => 'Der gewählte Wert für Ansicht ist ungültig.']);
     }
 }

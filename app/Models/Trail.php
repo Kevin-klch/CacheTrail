@@ -6,6 +6,7 @@ use App\Enums\DistanceMethod;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
 use App\Support\GeoDistance;
+use App\Support\UserLocation;
 use Database\Factories\TrailFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +29,7 @@ class Trail extends Model
     /**
      * Slugs that would collide with fixed URLs below /routen.
      */
-    private const array RESERVED_SLUGS = ['erstellen'];
+    private const array RESERVED_SLUGS = ['erstellen', 'standort'];
 
     /**
      * The model's default values for attributes.
@@ -239,6 +240,46 @@ class Trail extends Model
         return $this->caches->values()
             ->map(fn (TrailCache $cache, int $index): array => $cache->toMapMarker($index + 1))
             ->all();
+    }
+
+    /**
+     * Distance from the given location to the start of the trail, e.g. "ca. 4 km entfernt"; null without caches.
+     */
+    public function distanceFromLabel(UserLocation $location): ?string
+    {
+        if ($this->start_latitude === null || $this->start_longitude === null) {
+            return null;
+        }
+
+        $kilometers = $location->distanceTo($this->start_latitude, $this->start_longitude) / 1000;
+
+        return $kilometers < 1
+            ? __('less than 1 km away')
+            : __('approx. :distance away', ['distance' => number_format($kilometers, $kilometers < 10 ? 1 : 0, ',', '.').' km']);
+    }
+
+    /**
+     * Start point and key figures for the map view of the route directory.
+     *
+     * @return array{name: string, url: string, latitude: float, longitude: float, summary: string, distance: ?string}
+     */
+    public function toDirectoryMarker(?UserLocation $location): array
+    {
+        return [
+            'name' => $this->name,
+            'url' => route('trails.show', $this),
+            'latitude' => $this->start_latitude,
+            'longitude' => $this->start_longitude,
+            'summary' => collect([
+                $this->durationLabel(),
+                trans_choice(':count cache|:count caches', $this->cache_count),
+                $this->distanceLabel(),
+                $this->average_difficulty !== null
+                    ? 'D/T '.number_format($this->average_difficulty, 1, ',', '').' / '.number_format($this->average_terrain, 1, ',', '')
+                    : null,
+            ])->filter()->implode(' · '),
+            'distance' => $location ? $this->distanceFromLabel($location) : null,
+        ];
     }
 
     /**

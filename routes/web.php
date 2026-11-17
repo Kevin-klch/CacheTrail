@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyTrailsController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\TrailController;
+use App\Http\Controllers\UserLocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -15,6 +16,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified', 'premium'])->group(function () {
     Route::get('/routen', [TrailController::class, 'index'])->name('trails.index');
+    Route::post('/routen/standort', [UserLocationController::class, 'store'])->name('location.store');
+    Route::delete('/routen/standort', [UserLocationController::class, 'destroy'])->name('location.destroy');
     Route::get('/routen/erstellen', [TrailController::class, 'create'])->name('trails.create');
     Route::post('/routen', [TrailController::class, 'store'])->name('trails.store');
     Route::get('/routen/{trail}', [TrailController::class, 'show'])->name('trails.show');

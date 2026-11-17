@@ -95,7 +95,22 @@
         @apply mt-1.5 mb-0 text-xs font-medium text-red-800;
     }
 
+    .ct-pin {
+        @apply block size-7 rounded-full rounded-br-none border-[3px] border-paper bg-forest-700 shadow-lg;
+        transform: rotate(45deg);
+    }
+
+    .ct-popup__link {
+        @apply mt-2 inline-block text-sm font-semibold text-forest-700 underline underline-offset-4;
+    }
+
     .leaflet-container {
         @apply font-sans;
+    }
+
+    /* Tailwind's base styles limit image sizes, which leaves gaps between Leaflet tiles. */
+    .leaflet-container img {
+        max-width: none !important;
+        max-height: none !important;
     }
 }
