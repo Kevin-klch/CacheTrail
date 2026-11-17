@@ -53,6 +53,7 @@ class TrailController extends Controller
         return view('trails.index', [
             'trails' => $trails,
             'filters' => $filters,
+            'view' => $request->query('view') === 'detailed' ? 'detailed' : 'compact',
         ]);
     }
 

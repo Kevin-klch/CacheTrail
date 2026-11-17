@@ -76,4 +76,33 @@ class TrailSearchTest extends TestCase
         $this->get(route('trails.index'))->assertDontSee('Älteste Runde');
         $this->get(route('trails.index', ['page' => 2]))->assertSee('Älteste Runde');
     }
+
+    public function test_the_compact_view_is_the_default(): void
+    {
+        Trail::factory()->published()->withCaches(2)->create(['name' => 'Waldrunde']);
+
+        $this->get(route('trails.index'))
+            ->assertOk()
+            ->assertSee('Waldrunde')
+            ->assertDontSee('Route ansehen');
+    }
+
+    public function test_the_detailed_view_shows_large_cards_and_keeps_filters(): void
+    {
+        Trail::factory()->published()->withCaches(2)->create(['name' => 'Waldrunde', 'transportations' => [Transportation::Foot]]);
+
+        $this->get(route('trails.index', ['view' => 'detailed', 'transportation' => 'foot']))
+            ->assertOk()
+            ->assertSee('Waldrunde')
+            ->assertSee('Route ansehen')
+            ->assertSee('<input type="hidden" name="view" value="detailed">', false)
+            ->assertSee('view=compact', false);
+    }
+
+    public function test_unknown_views_fall_back_to_compact(): void
+    {
+        $this->get(route('trails.index', ['view' => 'fancy']))
+            ->assertOk()
+            ->assertDontSee('<input type="hidden" name="view" value="detailed">', false);
+    }
 }

@@ -6,6 +6,9 @@
     <div class="mx-auto -mt-20 max-w-7xl px-4 sm:px-6 lg:px-8">
         <x-card class="p-4 sm:p-5">
             <form method="GET" action="{{ route('trails.index') }}" role="search" class="grid gap-4 md:grid-cols-[2fr_1fr_1fr_1fr_auto] md:items-end">
+                @if ($view === 'detailed')
+                    <input type="hidden" name="view" value="detailed">
+                @endif
                 <div>
                     <label for="q" class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Search') }}</label>
                     <div class="relative">
@@ -24,15 +27,32 @@
                 <div class="flex gap-2">
                     <x-button class="flex-1 md:flex-none">{{ __('Filter') }}</x-button>
                     @if (array_filter($filters))
-                        <x-button variant="ghost" :href="route('trails.index')">{{ __('Reset') }}</x-button>
+                        <x-button variant="ghost" :href="route('trails.index', $view === 'detailed' ? ['view' => 'detailed'] : [])">{{ __('Reset') }}</x-button>
                     @endif
                 </div>
             </form>
         </x-card>
 
-        <div class="mt-8 flex items-baseline justify-between gap-4">
-            <p class="text-sm text-ink-muted">{{ trans_choice(':count route found|:count routes found', $trails->total()) }}</p>
-            <p class="text-sm text-ink-muted">{{ __('Sorted by: newest') }}</p>
+        <div class="mt-8 flex flex-wrap items-center justify-between gap-4">
+            <p class="text-sm text-ink-muted">
+                {{ trans_choice(':count route found|:count routes found', $trails->total()) }}
+                · {{ __('Sorted by: newest') }}
+            </p>
+
+            <div class="inline-flex rounded-full border border-sand-300 bg-white p-1 text-sm font-medium" role="group" aria-label="{{ __('View') }}">
+                @foreach (['compact' => [__('Compact'), 'grid'], 'detailed' => [__('Detailed'), 'list']] as $option => [$label, $icon])
+                    <a href="{{ request()->fullUrlWithQuery(['view' => $option, 'page' => null]) }}"
+                        @if ($view === $option) aria-current="true" @endif
+                        @class([
+                            'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 transition',
+                            'bg-forest-700 text-paper' => $view === $option,
+                            'text-forest-800 hover:bg-forest-50' => $view !== $option,
+                        ])>
+                        <x-icon :name="$icon" class="size-4" />
+                        {{ $label }}
+                    </a>
+                @endforeach
+            </div>
         </div>
 
         @if ($trails->isEmpty())
@@ -44,11 +64,19 @@
                 @endif
             </x-empty-state>
         @else
-            <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach ($trails as $trail)
-                    <x-trail-card :trail="$trail" />
-                @endforeach
-            </div>
+            @if ($view === 'detailed')
+                <div class="mx-auto mt-6 max-w-5xl space-y-8">
+                    @foreach ($trails as $trail)
+                        <x-trail-card-detailed :trail="$trail" />
+                    @endforeach
+                </div>
+            @else
+                <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($trails as $trail)
+                        <x-trail-card :trail="$trail" />
+                    @endforeach
+                </div>
+            @endif
 
             <div class="mt-10">
                 {{ $trails->links() }}

@@ -83,6 +83,12 @@
         @case('alert')
             <path d="M12 4 2.5 20h19Z" /><path d="M12 10v4.5M12 17.5v.01" />
             @break
+        @case('grid')
+            <rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><rect x="13" y="13" width="7" height="7" rx="1.5" />
+            @break
+        @case('list')
+            <rect x="4" y="4" width="16" height="7" rx="1.5" /><rect x="4" y="13" width="16" height="7" rx="1.5" />
+            @break
         @case('mail')
             <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
             @break
