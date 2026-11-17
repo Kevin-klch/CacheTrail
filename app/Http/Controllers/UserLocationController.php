@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TrailSort;
+use App\Services\Geocoding\ReverseGeocoder;
 use App\Support\UserLocation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,14 +13,19 @@ use Illuminate\Http\Request;
  */
 class UserLocationController extends Controller
 {
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, ReverseGeocoder $geocoder): RedirectResponse
     {
         $validated = $request->validate([
             'latitude' => ['required', 'numeric', 'between:-90,90'],
             'longitude' => ['required', 'numeric', 'between:-180,180'],
         ]);
 
-        UserLocation::remember($request->session(), (float) $validated['latitude'], (float) $validated['longitude']);
+        UserLocation::remember(
+            $request->session(),
+            (float) $validated['latitude'],
+            (float) $validated['longitude'],
+            $geocoder->placeName(...),
+        );
 
         return redirect()->to($this->directoryUrl($request, ['sort' => TrailSort::Nearest->value]));
     }

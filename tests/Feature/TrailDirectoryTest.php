@@ -6,6 +6,7 @@ use App\Models\Trail;
 use App\Models\User;
 use App\Support\UserLocation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /**
@@ -88,6 +89,8 @@ class TrailDirectoryTest extends TestCase
 
     public function test_the_location_is_stored_rounded_in_the_session_only(): void
     {
+        Http::fake(['*' => Http::response(['address' => ['town' => 'Ratingen']])]);
+
         $this->post(route('location.store'), ['latitude' => 51.234567, 'longitude' => 6.789012, 'return_query' => 'q=wald'])
             ->assertRedirect(route('trails.index', ['q' => 'wald', 'sort' => 'nearest']));
 

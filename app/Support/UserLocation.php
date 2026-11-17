@@ -17,20 +17,32 @@ final readonly class UserLocation
     public function __construct(
         public float $latitude,
         public float $longitude,
+        public ?string $placeName = null,
     ) {}
 
     public static function fromSession(Session $session): ?self
     {
         $stored = $session->get(self::SESSION_KEY);
 
-        return is_array($stored) ? new self((float) $stored['latitude'], (float) $stored['longitude']) : null;
+        return is_array($stored)
+            ? new self((float) $stored['latitude'], (float) $stored['longitude'], $stored['place_name'] ?? null)
+            : null;
     }
 
-    public static function remember(Session $session, float $latitude, float $longitude): self
+    /**
+     * @param  (callable(float, float): ?string)|null  $placeNameResolver  looks up a place name for the rounded coordinates
+     */
+    public static function remember(Session $session, float $latitude, float $longitude, ?callable $placeNameResolver = null): self
     {
-        $location = new self(round($latitude, self::PRECISION), round($longitude, self::PRECISION));
+        $latitude = round($latitude, self::PRECISION);
+        $longitude = round($longitude, self::PRECISION);
+        $location = new self($latitude, $longitude, $placeNameResolver ? $placeNameResolver($latitude, $longitude) : null);
 
-        $session->put(self::SESSION_KEY, ['latitude' => $location->latitude, 'longitude' => $location->longitude]);
+        $session->put(self::SESSION_KEY, [
+            'latitude' => $location->latitude,
+            'longitude' => $location->longitude,
+            'place_name' => $location->placeName,
+        ]);
 
         return $location;
     }
@@ -38,6 +50,20 @@ final readonly class UserLocation
     public static function forget(Session $session): void
     {
         $session->forget(self::SESSION_KEY);
+    }
+
+    /**
+     * The place name, or the rounded coordinates if no name is known, e.g. "Moers" or "51,46° N, 6,63° O".
+     */
+    public function label(): string
+    {
+        return $this->placeName ?? sprintf(
+            '%s° %s, %s° %s',
+            number_format(abs($this->latitude), 2, ',', ''),
+            $this->latitude >= 0 ? 'N' : 'S',
+            number_format(abs($this->longitude), 2, ',', ''),
+            $this->longitude >= 0 ? 'O' : 'W',
+        );
     }
 
     /**

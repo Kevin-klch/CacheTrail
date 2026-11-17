@@ -1,4 +1,4 @@
-@props(['label', 'name', 'values' => [], 'min' => 0, 'max' => null, 'step' => 1, 'unit' => null])
+@props(['label', 'name', 'values' => [], 'min' => 0, 'max' => null, 'step' => 1, 'unit' => null, 'form' => null])
 
 {{-- A "from / to" pair of number inputs named min_{name} and max_{name}. --}}
 <fieldset {{ $attributes }}>
@@ -12,7 +12,7 @@
                 <span class="text-ink-muted" aria-hidden="true">–</span>
             @endif
             <label for="{{ $field }}" class="sr-only">{{ $label }} {{ $placeholder }}</label>
-            <input id="{{ $field }}" name="{{ $field }}" type="number" min="{{ $min }}" @if ($max !== null) max="{{ $max }}" @endif step="{{ $step }}"
+            <input id="{{ $field }}" name="{{ $field }}" @if ($form) form="{{ $form }}" @endif type="number" min="{{ $min }}" @if ($max !== null) max="{{ $max }}" @endif step="{{ $step }}"
                 value="{{ $values[$field] ?? '' }}" placeholder="{{ $placeholder }}"
                 @class([
                     'block w-full min-w-0 rounded-xl border bg-white px-3 py-2 text-ink shadow-xs placeholder:text-ink-muted/60 focus:outline-none focus:ring-4',

@@ -37,6 +37,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Reverse Geocoding
+    |--------------------------------------------------------------------------
+    |
+    | Used to show the place name of the visitor's shared location
+    | ("Dein Standort: Moers"). Requests are sent by the server only.
+    |
+    */
+
+    'geocoding' => [
+        'reverse_url' => env('CACHETRAIL_REVERSE_GEOCODING_URL', 'https://nominatim.openstreetmap.org/reverse'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Routes
     |--------------------------------------------------------------------------
     */

@@ -45,7 +45,7 @@ class TrailCacheDisplayTest extends TestCase
 
         $this->actingAs(User::factory()->create())
             ->get(route('trails.index'))
-            ->assertSee('3 Caches');
+            ->assertSeeInOrder(['Caches', '3', 'Länge']);
     }
 
     public function test_deleting_a_trail_deletes_its_caches(): void

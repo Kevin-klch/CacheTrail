@@ -1,35 +1,36 @@
-@props(['trail'])
+@props(['trail', 'size' => 'compact'])
 
-{{-- Key figures of a trail as a compact row of icons and values. --}}
-<dl {{ $attributes->class(['flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-forest-800']) }}>
-    <div class="inline-flex items-center gap-1.5">
-        <dt><x-icon name="clock" class="size-4 text-forest-500" /><span class="sr-only">{{ __('Estimated duration') }}</span></dt>
-        <dd class="font-medium">{{ $trail->durationLabel() }}</dd>
-    </div>
-    <div class="inline-flex items-center gap-1.5">
-        <dt><x-icon name="route" class="size-4 text-forest-500" /><span class="sr-only">{{ __('Caches') }}</span></dt>
-        <dd class="font-medium">{{ trans_choice(':count cache|:count caches', $trail->cache_count) }}</dd>
-    </div>
-    @if ($trail->distanceLabel())
-        <div class="inline-flex items-center gap-1.5">
-            <dt><x-icon name="map" class="size-4 text-forest-500" /><span class="sr-only">{{ __('Length (straight line)') }}</span></dt>
-            <dd class="font-medium">{{ $trail->distanceLabel() }}</dd>
+{{-- Key figures of a trail as small tiles: icon and label on top, value below. Icons come from x-icon,
+     so custom attribute icons can be swapped in there in one place. Compact cards use short labels. --}}
+@php
+    $format = fn (?float $value): string => $value === null ? '–' : number_format($value, 1, ',', '');
+    $compact = $size === 'compact';
+
+    $tiles = [
+        ['icon' => 'clock', 'label' => __('Duration'), 'short' => __('Duration'), 'value' => $trail->durationLabel()],
+        ['icon' => 'route', 'label' => __('Caches'), 'short' => __('Caches'), 'value' => (string) $trail->cache_count],
+        ['icon' => 'map', 'label' => __('Length'), 'short' => __('Length'), 'value' => $trail->distanceLabel() ?? '–'],
+        ['icon' => 'difficulty', 'label' => __('Difficulty'), 'short' => __('D rating'), 'value' => $format($trail->average_difficulty)],
+        ['icon' => 'terrain', 'label' => __('Terrain'), 'short' => __('T rating'), 'value' => $format($trail->average_terrain)],
+    ];
+@endphp
+
+<dl {{ $attributes->class(['grid gap-2', 'grid-cols-3' => $compact, 'grid-cols-3 sm:grid-cols-6' => ! $compact]) }}>
+    @foreach ($tiles as $tile)
+        <div class="min-w-0 rounded-xl bg-sand-100/70 px-2.5 py-2" title="{{ $tile['label'] }}">
+            <dt class="flex items-center gap-1 text-[0.7rem] font-medium uppercase tracking-wide text-ink-muted">
+                <x-icon :name="$tile['icon']" class="size-3.5 shrink-0 text-forest-500" />
+                <span class="truncate" aria-hidden="true">{{ $compact ? $tile['short'] : $tile['label'] }}</span>
+                <span class="sr-only">{{ $tile['label'] }}</span>
+            </dt>
+            <dd @class(['mt-0.5 truncate font-semibold text-forest-900', 'text-sm' => $compact, 'text-base' => ! $compact])>{{ $tile['value'] }}</dd>
         </div>
-    @endif
-    @if ($trail->average_difficulty !== null)
-        <div class="inline-flex items-center gap-1.5">
-            <dt class="font-semibold text-forest-500" title="{{ __('Difficulty') }} / {{ __('Terrain') }}">D/T</dt>
-            <dd class="font-medium">{{ number_format($trail->average_difficulty, 1, ',', '') }} / {{ number_format($trail->average_terrain, 1, ',', '') }}</dd>
-        </div>
-    @endif
-    @if ($trail->rating_count > 0)
-        <div class="inline-flex items-center gap-1.5">
-            <dt><x-icon name="star" class="size-4 fill-current text-trail-500" /><span class="sr-only">{{ __('Rating') }}</span></dt>
-            <dd class="font-medium">{{ $trail->averageRatingLabel() }} <span class="font-normal text-ink-muted">({{ $trail->rating_count }})</span></dd>
-        </div>
-    @endif
-    <div class="inline-flex items-center gap-1.5">
-        <dt class="sr-only">{{ __('Means of transport') }}</dt>
-        <dd class="text-forest-700"><x-transport-icons :transportations="$trail->transportations" /></dd>
+    @endforeach
+    <div class="min-w-0 rounded-xl bg-sand-100/70 px-2.5 py-2" title="{{ __('Means of transport') }}">
+        <dt class="truncate text-[0.7rem] font-medium uppercase tracking-wide text-ink-muted">
+            <span aria-hidden="true">{{ $compact ? __('On the way') : __('Transport') }}</span>
+            <span class="sr-only">{{ __('Means of transport') }}</span>
+        </dt>
+        <dd class="mt-1 text-forest-800"><x-transport-icons :transportations="$trail->transportations" /></dd>
     </div>
 </dl>

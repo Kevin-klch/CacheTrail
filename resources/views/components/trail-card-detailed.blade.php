@@ -2,25 +2,17 @@
 
 {{-- Large route card for the detailed directory view: cover image and route preview side by side, all key figures and a longer description. --}}
 <article {{ $attributes->class(['group relative overflow-hidden rounded-[2rem] border border-sand-200 bg-white shadow-[0_12px_32px_-18px_rgb(26_50_38/0.25)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-18px_rgb(26_50_38/0.35)]']) }}>
-    @if ($trail->imageUrl() && $trail->caches->isNotEmpty())
-        <div class="grid grid-cols-1 h-80 grid-rows-2 sm:h-72 sm:grid-cols-[3fr_2fr] sm:grid-rows-1">
-            <img src="{{ $trail->imageUrl() }}" alt="" loading="lazy" class="size-full object-cover">
-            <x-route-preview :trail="$trail" class="size-full" />
-        </div>
-    @else
-        <x-trail-image :trail="$trail" class="h-56 w-full sm:h-72" />
-    @endif
-    @if ($location && $trail->distanceFromLabel($location))
-        <span class="absolute left-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-paper/95 px-3 py-1 text-xs font-semibold text-forest-800 shadow">
-            <x-icon name="compass" class="size-3.5" />
-            {{ $trail->distanceFromLabel($location) }}
-        </span>
-    @endif
-    @can('view', $trail)
-        <div class="absolute right-4 top-4 z-10">
-            <livewire:favorite-button :trail="$trail" :key="'favorite-detailed-'.$trail->id" />
-        </div>
-    @endcan
+    <div class="relative">
+        @if ($trail->imageUrl() && $trail->caches->isNotEmpty())
+            <div class="grid h-80 grid-cols-1 grid-rows-2 sm:h-72 sm:grid-cols-[3fr_2fr] sm:grid-rows-1">
+                <img src="{{ $trail->imageUrl() }}" alt="" loading="lazy" class="size-full object-cover">
+                <x-route-preview :trail="$trail" class="size-full" />
+            </div>
+        @else
+            <x-trail-image :trail="$trail" class="h-56 w-full sm:h-72" />
+        @endif
+        <x-trail-card-overlays :trail="$trail" :location="$location" />
+    </div>
 
     <div class="p-6 sm:p-8">
         <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
@@ -43,7 +35,7 @@
             </span>
         </div>
 
-        <x-trail-stats :trail="$trail" class="mt-5 text-base" />
+        <x-trail-stats :trail="$trail" size="large" class="mt-5" />
 
         <div class="mt-5 space-y-3 leading-relaxed text-ink-muted">
             @foreach (array_slice($trail->descriptionParagraphs(), 0, 2) as $paragraph)
