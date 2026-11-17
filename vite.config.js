@@ -24,7 +24,8 @@ export default defineConfig({
     ],
     server: {
         watch: {
-            ignored: ['**/storage/framework/views/**'],
+            // Watching vendor/ and the SQLite database blocks the dev server on Windows.
+            ignored: ['**/storage/**', '**/vendor/**', '**/bootstrap/cache/**', '**/database/**'],
         },
     },
 });
