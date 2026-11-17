@@ -16,7 +16,7 @@
             <span class="sr-only">{{ __('Home') }}</span>
         </a>
 
-        <div class="hidden items-center gap-1 lg:flex">
+        <div class="hidden items-center gap-1 xl:flex">
             <x-nav-link :href="route('home')" :active="request()->routeIs('home')">{{ __('Home') }}</x-nav-link>
             @foreach ($items as $item)
                 <x-nav-link :href="route($item['route'])" :active="request()->routeIs($item['route'])" :icon="$item['icon']" :locked="! $hasPremiumAccess">
@@ -25,7 +25,7 @@
             @endforeach
         </div>
 
-        <div class="hidden items-center gap-2 lg:flex">
+        <div class="hidden items-center gap-2 xl:flex">
             @auth
                 <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')" icon="user">{{ __('Profile') }}</x-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
@@ -43,7 +43,7 @@
 
         <button
             type="button"
-            class="inline-flex items-center justify-center rounded-full p-2 text-paper transition hover:bg-paper/10 lg:hidden"
+            class="inline-flex items-center justify-center rounded-full p-2 text-paper transition hover:bg-paper/10 xl:hidden"
             x-on:click="open = ! open"
             x-bind:aria-expanded="open.toString()"
             aria-controls="mobile-menu"
@@ -60,7 +60,7 @@
         x-cloak
         x-transition.opacity
         x-on:keydown.escape.window="open = false"
-        class="border-t border-paper/10 bg-forest-800 px-4 pb-6 pt-3 lg:hidden"
+        class="border-t border-paper/10 bg-forest-800 px-4 pb-6 pt-3 xl:hidden"
     >
         <div class="flex flex-col gap-1">
             <x-nav-link mobile :href="route('home')" :active="request()->routeIs('home')">{{ __('Home') }}</x-nav-link>

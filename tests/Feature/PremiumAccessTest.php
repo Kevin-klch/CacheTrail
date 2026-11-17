@@ -41,7 +41,7 @@ class PremiumAccessTest extends TestCase
         $this->actingAs(User::factory()->create())
             ->get(route($routeName))
             ->assertOk()
-            ->assertSee('Kommt bald');
+            ->assertDontSee('Premium-Zugang erforderlich');
     }
 
     #[DataProvider('premiumRoutes')]

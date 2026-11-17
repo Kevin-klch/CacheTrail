@@ -5,7 +5,7 @@
     @if ($active) aria-current="page" @endif
     @if ($locked) title="{{ __('Requires premium access') }}" @endif
     {{ $attributes->class([
-        'group inline-flex items-center gap-2 font-medium transition',
+        'group inline-flex items-center gap-2 whitespace-nowrap font-medium transition',
         'rounded-full px-3.5 py-2 text-sm' => ! $mobile,
         'w-full rounded-2xl px-4 py-3 text-base' => $mobile,
         'bg-paper/15 text-white' => $active,

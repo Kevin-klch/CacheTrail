@@ -72,9 +72,38 @@
 
             <div>
                 <h2 class="text-center text-2xl font-bold lg:text-left">{{ __('Recently added') }}</h2>
-                <x-empty-state class="mt-5" :title="__('No routes yet')">
-                    {{ __('The first routes will appear here as soon as they are published.') }}
-                </x-empty-state>
+                @if ($latestTrails->isEmpty())
+                    <x-empty-state class="mt-5" :title="__('No routes yet')">
+                        {{ __('The first routes will appear here as soon as they are published.') }}
+                    </x-empty-state>
+                @else
+                    <x-trail-card :trail="$latestTrails->first()" class="mt-5" />
+
+                    @if ($latestTrails->count() > 1)
+                        <ul class="mt-4 divide-y divide-sand-200 rounded-3xl border border-sand-200 bg-white/70">
+                            @foreach ($latestTrails->skip(1) as $trail)
+                                <li>
+                                    <a href="{{ route('trails.show', $trail) }}" class="flex items-center gap-4 px-5 py-3 transition hover:bg-white">
+                                        <x-trail-image :trail="$trail" class="aspect-square w-12 shrink-0 rounded-xl" />
+                                        <span class="min-w-0 flex-1">
+                                            <span class="block truncate font-serif text-lg font-bold text-forest-900">{{ $trail->name }}</span>
+                                            <span class="flex items-center gap-3 text-sm text-ink-muted">
+                                                <span class="inline-flex items-center gap-1"><x-icon name="clock" class="size-3.5" /> {{ $trail->durationLabel() }}</span>
+                                                <x-transport-icons :transportation="$trail->transportation" />
+                                            </span>
+                                        </span>
+                                        <x-icon name="arrow-right" class="size-4 text-forest-500" />
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+
+                    <a href="{{ route('trails.index') }}" class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-forest-700 hover:underline">
+                        {{ __('Show all routes') }}
+                        <x-icon name="arrow-right" class="size-4" />
+                    </a>
+                @endif
             </div>
         </div>
 
