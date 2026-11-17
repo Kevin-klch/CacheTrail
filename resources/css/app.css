@@ -4,6 +4,51 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-serif: 'Alegreya', ui-serif, Georgia, serif;
+
+    /* Paper tones: page background and quiet surfaces */
+    --color-paper: #f7f2e6;
+    --color-sand-100: #f0e8d6;
+    --color-sand-200: #e4d8bf;
+    --color-sand-300: #d3c3a2;
+
+    /* Forest: primary brand color */
+    --color-forest-50: #eef4ef;
+    --color-forest-100: #d6e5da;
+    --color-forest-200: #adc9b5;
+    --color-forest-300: #7fa88b;
+    --color-forest-400: #548667;
+    --color-forest-500: #3a6b4f;
+    --color-forest-600: #2f5a43;
+    --color-forest-700: #284c39;
+    --color-forest-800: #213f30;
+    --color-forest-900: #1a3226;
+    --color-forest-950: #0f1f17;
+
+    /* Trail: warm accent used for the dashed route line and highlights */
+    --color-trail-400: #e07a5f;
+    --color-trail-500: #cc5a3d;
+    --color-trail-600: #ad4529;
+
+    /* Text */
+    --color-ink: #1d2621;
+    --color-ink-muted: #56625b;
+}
+
+@layer base {
+    body {
+        @apply bg-paper font-sans text-ink antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+        @apply font-serif text-forest-900;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
 }
