@@ -7,6 +7,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -41,7 +42,34 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'blocked_at' => 'datetime',
         ];
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->blocked_at !== null;
+    }
+
+    /**
+     * Blocks or unblocks the user. Their routes and ratings are hidden while blocked,
+     * so the rating figures of the affected routes are recalculated.
+     */
+    public function setBlocked(bool $blocked): void
+    {
+        $this->forceFill(['blocked_at' => $blocked ? now() : null])->save();
+
+        Trail::query()
+            ->whereIn('id', $this->ratings()->select('trail_id'))
+            ->each(fn (Trail $trail) => $trail->refreshCommunityStatistics());
+    }
+
+    /**
+     * @param  Builder<User>  $query
+     */
+    public function scopeNotBlocked(Builder $query): void
+    {
+        $query->whereNull('blocked_at');
     }
 
     /**

@@ -131,7 +131,7 @@ class TrailRatings extends Component
         $this->trail->refresh();
 
         return view('livewire.trail-ratings', [
-            'ratings' => $this->trail->ratings()->with('user')->latest()->paginate(self::PER_PAGE),
+            'ratings' => $this->trail->visibleRatings()->with('user')->latest()->paginate(self::PER_PAGE),
             'ownRating' => $this->ownRating(),
             'canRate' => Gate::allows('create', [TrailRating::class, $this->trail]),
         ]);

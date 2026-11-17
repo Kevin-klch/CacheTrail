@@ -23,7 +23,9 @@ class TrailPolicy
             return true;
         }
 
-        return $trail->isPublished() && $this->hasPremiumAccess($user);
+        return $trail->isPublished()
+            && ! $trail->user->isBlocked()
+            && $this->hasPremiumAccess($user);
     }
 
     public function create(User $user): bool

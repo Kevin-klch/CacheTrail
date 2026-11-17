@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyTrailsController;
@@ -14,6 +15,14 @@ Route::get('/', HomeController::class)->name('home');
 Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::delete('/profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth', 'verified', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::redirect('/', '/admin/meldungen')->name('index');
+    Route::get('/meldungen', [Admin\ReportController::class, 'index'])->name('reports.index');
+    Route::patch('/meldungen/{report}', [Admin\ReportController::class, 'update'])->name('reports.update');
+    Route::get('/nutzer', [Admin\UserController::class, 'index'])->name('users.index');
+    Route::patch('/nutzer/{user}', [Admin\UserController::class, 'update'])->name('users.update');
 });
 
 Route::middleware(['auth', 'verified', 'premium'])->group(function () {

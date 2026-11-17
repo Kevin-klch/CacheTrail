@@ -24,7 +24,10 @@
                         {{ __('Created by') }} <a href="{{ $trail->user->profileUrl() }}" class="font-semibold text-forest-700 hover:underline">{{ $trail->user->name }}</a>
                     </p>
                     @if (! ($isPreview ?? false) && $trail->isPublished())
-                        <livewire:favorite-button :trail="$trail" :large="true" />
+                        <div class="flex flex-wrap items-center gap-4">
+                            <livewire:report-button :reportable="$trail" />
+                            <livewire:favorite-button :trail="$trail" :large="true" />
+                        </div>
                     @endif
                 </div>
 

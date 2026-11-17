@@ -74,7 +74,8 @@
                             <x-stars :value="$item->rating" />
                             <span class="text-xs text-ink-muted">{{ $item->created_at->translatedFormat('j. F Y') }}</span>
                         </div>
-                        <div class="flex items-center gap-3 text-sm">
+                        <div class="flex flex-wrap items-center gap-3 text-sm">
+                            <livewire:report-button :reportable="$item" :key="'report-rating-'.$item->id" />
                             @if ($ownRating?->is($item) && ! $editing)
                                 <button type="button" wire:click="edit" class="font-medium text-forest-700 hover:underline">{{ __('Edit') }}</button>
                             @endif

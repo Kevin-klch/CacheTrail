@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureUserHasPremiumAccess;
+use App\Http\Middleware\LogOutBlockedUsers;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'premium' => EnsureUserHasPremiumAccess::class,
+        ]);
+
+        $middleware->web(append: [
+            LogOutBlockedUsers::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

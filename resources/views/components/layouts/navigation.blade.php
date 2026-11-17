@@ -1,5 +1,6 @@
 @php
     $hasPremiumAccess = auth()->check() && Gate::allows('premium');
+    $openReports = Gate::allows('admin') ? App\Models\Report::open()->count() : 0;
 
     $items = auth()->check() ? [
         ['route' => 'trails.index', 'label' => __('Discover routes'), 'icon' => 'compass'],
@@ -27,6 +28,14 @@
 
         <div class="hidden items-center gap-2 xl:flex">
             @auth
+                @can('admin')
+                    <x-nav-link :href="route('admin.reports.index')" :active="request()->routeIs('admin.*')" icon="flag">
+                        {{ __('Admin') }}
+                        @if ($openReports > 0)
+                            <span class="ml-1 rounded-full bg-trail-500 px-1.5 py-0.5 text-xs text-white">{{ $openReports }}</span>
+                        @endif
+                    </x-nav-link>
+                @endcan
                 <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')" icon="user">{{ __('Profile') }}</x-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -73,6 +82,14 @@
 
         <div class="mt-4 flex flex-col gap-1 border-t border-paper/10 pt-4">
             @auth
+                @can('admin')
+                    <x-nav-link mobile :href="route('admin.reports.index')" :active="request()->routeIs('admin.*')" icon="flag">
+                        {{ __('Admin') }}
+                        @if ($openReports > 0)
+                            <span class="ml-1 rounded-full bg-trail-500 px-1.5 py-0.5 text-xs text-white">{{ $openReports }}</span>
+                        @endif
+                    </x-nav-link>
+                @endcan
                 <x-nav-link mobile :href="route('profile.edit')" :active="request()->routeIs('profile.*')" icon="user">{{ __('Profile') }}</x-nav-link>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

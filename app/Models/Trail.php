@@ -111,6 +111,16 @@ class Trail extends Model
     }
 
     /**
+     * Ratings shown publicly: those of blocked users are hidden.
+     *
+     * @return HasMany<TrailRating, $this>
+     */
+    public function visibleRatings(): HasMany
+    {
+        return $this->ratings()->whereHas('user', fn (Builder $user) => $user->notBlocked());
+    }
+
+    /**
      * Users who saved this trail as a favorite.
      *
      * @return BelongsToMany<User, $this>
@@ -130,11 +140,11 @@ class Trail extends Model
      */
     public function refreshCommunityStatistics(): void
     {
-        $average = $this->ratings()->avg('rating');
+        $average = $this->visibleRatings()->avg('rating');
 
         $this->forceFill([
             'favorite_count' => $this->favoritedBy()->count(),
-            'rating_count' => $this->ratings()->count(),
+            'rating_count' => $this->visibleRatings()->count(),
             'average_rating' => $average === null ? null : round((float) $average, 2),
         ])->saveQuietly();
     }
@@ -219,7 +229,8 @@ class Trail extends Model
      */
     public function scopePublished(Builder $query): void
     {
-        $query->where('visibility', TrailVisibility::Published);
+        $query->where('visibility', TrailVisibility::Published)
+            ->whereHas('user', fn (Builder $user) => $user->notBlocked());
     }
 
     /**
