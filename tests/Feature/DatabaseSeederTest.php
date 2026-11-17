@@ -17,5 +17,7 @@ class DatabaseSeederTest extends TestCase
         $this->assertDatabaseCount('users', 2);
         $this->assertSame(4, Trail::published()->count());
         $this->assertSame(5, Trail::count());
+        $this->assertDatabaseCount('trail_caches', 29);
+        $this->assertTrue(Trail::published()->get()->every(fn (Trail $trail): bool => $trail->hasEnoughCachesToPublish()));
     }
 }

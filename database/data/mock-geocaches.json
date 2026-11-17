@@ -1,0 +1,352 @@
+[
+  {
+    "code": "GCCT01",
+    "name": "Der alte Baum",
+    "latitude": 51.4723,
+    "longitude": 6.5202,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT02",
+    "name": "Waldgeheimnis",
+    "latitude": 51.47338,
+    "longitude": 6.5224,
+    "type": "multi",
+    "difficulty": 2.5,
+    "terrain": 2.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT03",
+    "name": "Am kleinen Bach",
+    "latitude": 51.4759,
+    "longitude": 6.52526,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT04",
+    "name": "Spechtloch",
+    "latitude": 51.47626,
+    "longitude": 6.5268,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 3.0,
+    "status": "temporarily_disabled"
+  },
+  {
+    "code": "GCCT05",
+    "name": "Lichtung der Rehe",
+    "latitude": 51.4795,
+    "longitude": 6.529,
+    "type": "mystery",
+    "difficulty": 3.0,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT06",
+    "name": "Brückenrätsel",
+    "latitude": 51.47914,
+    "longitude": 6.53252,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT07",
+    "name": "Aussichtsplattform",
+    "latitude": 51.4831,
+    "longitude": 6.5334,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT08",
+    "name": "Das Finale",
+    "latitude": 51.48202,
+    "longitude": 6.5356,
+    "type": "multi",
+    "difficulty": 3.0,
+    "terrain": 2.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT11",
+    "name": "Glück auf!",
+    "latitude": 51.4532,
+    "longitude": 6.5536,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT12",
+    "name": "Förderturm",
+    "latitude": 51.45392,
+    "longitude": 6.5552,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT13",
+    "name": "Seilscheibe",
+    "latitude": 51.4556,
+    "longitude": 6.55728,
+    "type": "mystery",
+    "difficulty": 3.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT14",
+    "name": "Kauenhalle",
+    "latitude": 51.45584,
+    "longitude": 6.5584,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.0,
+    "status": "archived"
+  },
+  {
+    "code": "GCCT15",
+    "name": "Grubenlampe",
+    "latitude": 51.458,
+    "longitude": 6.56,
+    "type": "letterbox",
+    "difficulty": 2.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT16",
+    "name": "Schacht 4",
+    "latitude": 51.45776,
+    "longitude": 6.56256,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT21",
+    "name": "Rheinblick",
+    "latitude": 51.326,
+    "longitude": 6.722,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT22",
+    "name": "Am Anleger",
+    "latitude": 51.3326,
+    "longitude": 6.726,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT23",
+    "name": "Weidenufer",
+    "latitude": 51.348,
+    "longitude": 6.7312,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT24",
+    "name": "Buhnenkopf",
+    "latitude": 51.3502,
+    "longitude": 6.734,
+    "type": "earthcache",
+    "difficulty": 2.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT25",
+    "name": "Fährhaus",
+    "latitude": 51.37,
+    "longitude": 6.738,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "temporarily_disabled"
+  },
+  {
+    "code": "GCCT26",
+    "name": "Kiesbank",
+    "latitude": 51.3678,
+    "longitude": 6.7444,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT27",
+    "name": "Deichkrone",
+    "latitude": 51.392,
+    "longitude": 6.746,
+    "type": "virtual",
+    "difficulty": 1.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT28",
+    "name": "Am Biergarten",
+    "latitude": 51.3854,
+    "longitude": 6.75,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT31",
+    "name": "Entenhaus",
+    "latitude": 51.4217,
+    "longitude": 6.602,
+    "type": "traditional",
+    "difficulty": 1.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT32",
+    "name": "Am Spielplatz",
+    "latitude": 51.42212,
+    "longitude": 6.603,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT33",
+    "name": "Seerosen",
+    "latitude": 51.4231,
+    "longitude": 6.6043,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT34",
+    "name": "Froschkönig",
+    "latitude": 51.42324,
+    "longitude": 6.605,
+    "type": "wherigo",
+    "difficulty": 2.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT35",
+    "name": "Bank am Weiher",
+    "latitude": 51.4245,
+    "longitude": 6.606,
+    "type": "traditional",
+    "difficulty": 1.0,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT41",
+    "name": "Marktbrunnen",
+    "latitude": 51.4575,
+    "longitude": 6.6258,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT42",
+    "name": "Rathausuhr",
+    "latitude": 51.4578,
+    "longitude": 6.6266,
+    "type": "multi",
+    "difficulty": 2.5,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT43",
+    "name": "Stadtmauer",
+    "latitude": 51.4585,
+    "longitude": 6.62764,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT44",
+    "name": "Alte Gasse",
+    "latitude": 51.4586,
+    "longitude": 6.6282,
+    "type": "mystery",
+    "difficulty": 3.5,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT51",
+    "name": "Feldkreuz",
+    "latitude": 51.448,
+    "longitude": 6.589,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT52",
+    "name": "Hochsitz",
+    "latitude": 51.4528,
+    "longitude": 6.598,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 3.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT53",
+    "name": "Hinter der Mühle",
+    "latitude": 51.464,
+    "longitude": 6.6097,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.0,
+    "status": "archived"
+  },
+  {
+    "code": "GCCT54",
+    "name": "Wegkreuzung",
+    "latitude": 51.4656,
+    "longitude": 6.616,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  }
+]

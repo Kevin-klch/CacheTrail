@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\GeocacheProvider;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
 use App\Http\Requests\StoreTrailRequest;
 use App\Http\Requests\UpdateTrailRequest;
 use App\Models\Trail;
+use App\Services\Geocaching\MockGeocacheProvider;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,6 +36,7 @@ class TrailController extends Controller
         $trails = Trail::query()
             ->published()
             ->with('user')
+            ->withCount('caches')
             ->when($filters['q'] ?? null, function (Builder $query, string $search): void {
                 $query->where(fn (Builder $query) => $query
                     ->whereLike('name', "%{$search}%")
@@ -54,11 +57,15 @@ class TrailController extends Controller
         ]);
     }
 
-    public function show(Trail $trail): View
+    public function show(Trail $trail, GeocacheProvider $geocacheProvider): View
     {
         Gate::authorize('view', $trail);
 
-        return view('trails.show', ['trail' => $trail->load('user')]);
+        return view('trails.show', [
+            'trail' => $trail->load(['user', 'caches']),
+            'geocacheProvider' => $geocacheProvider,
+            'usesExampleData' => $geocacheProvider instanceof MockGeocacheProvider,
+        ]);
     }
 
     public function create(): View
@@ -72,7 +79,7 @@ class TrailController extends Controller
     {
         $trail = new Trail($request->trailAttributes());
         $trail->user()->associate($request->user());
-        $trail->changeVisibility($request->wantsToPublish() ? TrailVisibility::Published : TrailVisibility::Draft);
+        $trail->changeVisibility(TrailVisibility::Draft);
 
         if ($request->hasFile('image')) {
             $trail->image_path = $this->storeImage($request->file('image'));
@@ -80,16 +87,24 @@ class TrailController extends Controller
 
         $trail->save();
 
-        return redirect()
-            ->route('trails.show', $trail)
-            ->with('status', $trail->isPublished() ? 'trail-published' : 'trail-saved-as-draft');
+        return redirect()->route('trails.caches', $trail)->with('status', 'trail-created');
+    }
+
+    /**
+     * Steps 2 and 3 of the route editor, handled by the TrailCacheEditor Livewire component.
+     */
+    public function caches(Trail $trail): View
+    {
+        Gate::authorize('update', $trail);
+
+        return view('trails.caches', ['trail' => $trail]);
     }
 
     public function edit(Trail $trail): View
     {
         Gate::authorize('update', $trail);
 
-        return view('trails.edit', ['trail' => $trail]);
+        return view('trails.edit', ['trail' => $trail->loadCount('caches')]);
     }
 
     public function update(UpdateTrailRequest $request, Trail $trail): RedirectResponse

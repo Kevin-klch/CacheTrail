@@ -10,7 +10,7 @@ class MyTrailsController extends Controller
     public function __invoke(Request $request): View
     {
         return view('trails.mine', [
-            'trails' => $request->user()->trails()->latest('updated_at')->paginate(TrailController::PER_PAGE),
+            'trails' => $request->user()->trails()->withCount('caches')->latest('updated_at')->paginate(TrailController::PER_PAGE),
         ]);
     }
 }

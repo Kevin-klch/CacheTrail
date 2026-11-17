@@ -8,9 +8,12 @@ use Database\Factories\TrailFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -73,6 +76,60 @@ class Trail extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The caches in the order defined by the creator.
+     *
+     * @return HasMany<TrailCache, $this>
+     */
+    public function caches(): HasMany
+    {
+        return $this->hasMany(TrailCache::class)->orderBy('position');
+    }
+
+    public static function minCachesToPublish(): int
+    {
+        return (int) config('cachetrail.trails.min_caches_to_publish');
+    }
+
+    public function hasEnoughCachesToPublish(): bool
+    {
+        return $this->caches()->count() >= static::minCachesToPublish();
+    }
+
+    /**
+     * Moves a cache to a new zero-based position; the other caches keep their relative order.
+     */
+    public function moveCache(TrailCache $cache, int $position): void
+    {
+        $caches = $this->caches()->get();
+        $ordered = $caches->reject(fn (TrailCache $other): bool => $other->is($cache))->values();
+        $ordered->splice(max(0, min($position, $ordered->count())), 0, [$caches->firstWhere('id', $cache->id)]);
+
+        $this->savePositions($ordered);
+    }
+
+    public function removeCache(TrailCache $cache): void
+    {
+        DB::transaction(function () use ($cache): void {
+            $cache->delete();
+            $this->savePositions($this->caches()->get());
+        });
+    }
+
+    /**
+     * @param  Collection<int, TrailCache>  $caches
+     */
+    private function savePositions(Collection $caches): void
+    {
+        DB::transaction(function () use ($caches): void {
+            $caches->values()->each(function (TrailCache $cache, int $position): void {
+                if ($cache->position !== $position) {
+                    $cache->update(['position' => $position]);
+                }
+            });
+        });
     }
 
     /**

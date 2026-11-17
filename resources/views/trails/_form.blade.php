@@ -80,8 +80,10 @@
         </div>
     </div>
 
-    <div class="rounded-2xl bg-sand-100/70 px-4 py-3 text-sm text-ink-muted">
-        <x-icon name="route" class="mr-1 inline size-4 align-text-bottom text-forest-600" />
-        {{ __('Adding geocaches by GC code, the order and the map will follow in the next development step.') }}
-    </div>
+    @unless ($trail->exists)
+        <div class="rounded-2xl bg-sand-100/70 px-4 py-3 text-sm text-ink-muted">
+            <x-icon name="route" class="mr-1 inline size-4 align-text-bottom text-forest-600" />
+            {{ __('In the next step you add the geocaches by their GC codes and put them in order.') }}
+        </div>
+    @endunless
 </div>

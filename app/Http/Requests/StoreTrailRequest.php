@@ -96,9 +96,4 @@ class StoreTrailRequest extends FormRequest
             fn (Transportation $mode): bool => in_array($mode->value, $selected, true),
         ));
     }
-
-    public function wantsToPublish(): bool
-    {
-        return $this->input('intent') === 'publish';
-    }
 }

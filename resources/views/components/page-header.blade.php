@@ -9,5 +9,6 @@
         @if ($slot->isNotEmpty())
             <p class="mt-3 max-w-2xl text-lg text-forest-100/90">{{ $slot }}</p>
         @endif
+        {{ $below ?? '' }}
     </div>
 </div>

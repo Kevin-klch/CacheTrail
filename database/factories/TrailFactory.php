@@ -5,8 +5,10 @@ namespace Database\Factories;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
 use App\Models\Trail;
+use App\Models\TrailCache;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 
 /**
  * @extends Factory<Trail>
@@ -37,6 +39,17 @@ class TrailFactory extends Factory
             'visibility' => TrailVisibility::Published,
             'published_at' => now(),
         ]);
+    }
+
+    /**
+     * Adds the given number of caches in consecutive positions.
+     */
+    public function withCaches(int $count): static
+    {
+        return $this->has(
+            TrailCache::factory()->count($count)->sequence(fn (Sequence $sequence) => ['position' => $sequence->index]),
+            'caches',
+        );
     }
 
     public function hidden(): static

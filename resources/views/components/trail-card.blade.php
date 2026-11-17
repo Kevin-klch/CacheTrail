@@ -17,6 +17,10 @@
                 <dd class="font-medium">{{ $trail->durationLabel() }}</dd>
             </div>
             <div class="inline-flex items-center gap-1.5">
+                <dt><x-icon name="route" class="size-4 text-forest-500" /><span class="sr-only">{{ __('Caches') }}</span></dt>
+                <dd class="font-medium">{{ trans_choice(':count cache|:count caches', $trail->caches_count ?? $trail->caches()->count()) }}</dd>
+            </div>
+            <div class="inline-flex items-center gap-1.5">
                 <dt class="sr-only">{{ __('Means of transport') }}</dt>
                 <dd class="text-forest-700"><x-transport-icons :transportations="$trail->transportations" /></dd>
             </div>

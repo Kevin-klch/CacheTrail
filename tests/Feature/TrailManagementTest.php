@@ -53,17 +53,17 @@ class TrailManagementTest extends TestCase
         $this->actingAs(User::factory()->create())
             ->get(route('trails.create'))
             ->assertOk()
-            ->assertSee('Als Entwurf speichern');
+            ->assertSee('Weiter zu den Caches');
     }
 
-    public function test_a_trail_can_be_saved_as_draft(): void
+    public function test_creating_a_trail_saves_a_draft_and_continues_to_the_caches(): void
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->post(route('trails.store'), $this->validData(['intent' => 'draft']));
+        $response = $this->actingAs($user)->post(route('trails.store'), $this->validData());
 
         $trail = Trail::sole();
-        $response->assertRedirect(route('trails.show', $trail));
+        $response->assertRedirect(route('trails.caches', $trail));
 
         $this->assertTrue($trail->user->is($user));
         $this->assertSame('waldabenteuer-am-niederrhein', $trail->slug);
@@ -73,15 +73,12 @@ class TrailManagementTest extends TestCase
         $this->assertNull($trail->published_at);
     }
 
-    public function test_a_trail_can_be_published_directly(): void
+    public function test_creating_a_trail_never_publishes_it_directly(): void
     {
         $this->actingAs(User::factory()->create())
-            ->post(route('trails.store'), $this->validData(['intent' => 'publish']));
+            ->post(route('trails.store'), $this->validData(['visibility' => 'published']));
 
-        $trail = Trail::sole();
-
-        $this->assertSame(TrailVisibility::Published, $trail->visibility);
-        $this->assertNotNull($trail->published_at);
+        $this->assertSame(TrailVisibility::Draft, Trail::sole()->visibility);
     }
 
     public function test_a_cover_image_can_be_uploaded(): void
@@ -157,7 +154,7 @@ class TrailManagementTest extends TestCase
 
     public function test_the_owner_can_update_a_trail(): void
     {
-        $trail = Trail::factory()->create(['name' => 'Alter Name']);
+        $trail = Trail::factory()->withCaches(2)->create(['name' => 'Alter Name']);
 
         $this->actingAs($trail->user)
             ->put(route('trails.update', $trail), $this->validData([
@@ -176,7 +173,7 @@ class TrailManagementTest extends TestCase
 
     public function test_hiding_and_republishing_keeps_the_first_publication_date(): void
     {
-        $trail = Trail::factory()->published()->create(['published_at' => now()->subMonth()]);
+        $trail = Trail::factory()->published()->withCaches(2)->create(['published_at' => now()->subMonth()]);
         $firstPublishedAt = $trail->published_at;
 
         foreach ([TrailVisibility::Hidden, TrailVisibility::Published] as $visibility) {
@@ -184,6 +181,28 @@ class TrailManagementTest extends TestCase
         }
 
         $this->assertTrue($firstPublishedAt->equalTo($trail->fresh()->published_at));
+    }
+
+    public function test_publishing_via_the_edit_form_requires_enough_caches(): void
+    {
+        $trail = Trail::factory()->withCaches(1)->create();
+
+        $this->actingAs($trail->user)
+            ->put(route('trails.update', $trail), $this->validData(['visibility' => TrailVisibility::Published->value]))
+            ->assertSessionHasErrors(['visibility' => 'Eine Route braucht mindestens 2 Caches, um veröffentlicht zu werden.']);
+
+        $this->assertSame(TrailVisibility::Draft, $trail->fresh()->visibility);
+    }
+
+    public function test_already_published_trails_without_caches_stay_published_when_edited(): void
+    {
+        $trail = Trail::factory()->published()->create(['name' => 'Alte Route']);
+
+        $this->actingAs($trail->user)
+            ->put(route('trails.update', $trail), $this->validData(['name' => 'Alte Route, neu', 'visibility' => 'published']))
+            ->assertSessionHasNoErrors();
+
+        $this->assertSame('Alte Route, neu', $trail->fresh()->name);
     }
 
     public function test_replacing_and_removing_the_image_deletes_old_files(): void

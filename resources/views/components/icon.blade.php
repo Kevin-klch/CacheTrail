@@ -68,6 +68,21 @@
         @case('eye-off')
             <path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c5 0 8.5 4.5 9.5 7a13 13 0 0 1-2.9 4.1M6.6 6.6A13 13 0 0 0 2.5 12c1 2.5 4.5 7 9.5 7a9.6 9.6 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2" />
             @break
+        @case('grip')
+            <circle cx="9" cy="6" r="1.2" fill="currentColor" /><circle cx="15" cy="6" r="1.2" fill="currentColor" /><circle cx="9" cy="12" r="1.2" fill="currentColor" /><circle cx="15" cy="12" r="1.2" fill="currentColor" /><circle cx="9" cy="18" r="1.2" fill="currentColor" /><circle cx="15" cy="18" r="1.2" fill="currentColor" />
+            @break
+        @case('chevron-up')
+            <path d="m6 15 6-6 6 6" />
+            @break
+        @case('chevron-down')
+            <path d="m6 9 6 6 6-6" />
+            @break
+        @case('external')
+            <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+            @break
+        @case('alert')
+            <path d="M12 4 2.5 20h19Z" /><path d="M12 10v4.5M12 17.5v.01" />
+            @break
         @case('mail')
             <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6.5 8.5-6.5" />
             @break

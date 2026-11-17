@@ -1,7 +1,22 @@
 <x-layouts.app :title="__('Edit route')">
-    <x-page-header :title="__('Edit route')" :eyebrow="$trail->name" />
+    <x-page-header :title="__('Edit route')" :eyebrow="$trail->name">
+        <x-slot:below>
+            <x-editor-steps :current="1" :trail="$trail" />
+        </x-slot:below>
+    </x-page-header>
 
     <div class="mx-auto -mt-20 max-w-3xl space-y-8 px-4 sm:px-6 lg:px-8">
+        <x-card class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-2xl font-bold">{{ __('Caches') }}</h2>
+                <p class="mt-1 text-sm text-ink-muted">{{ trans_choice(':count cache in this route.|:count caches in this route.', $trail->caches_count) }}</p>
+            </div>
+            <x-button variant="secondary" :href="route('trails.caches', $trail)">
+                <x-icon name="route" class="size-4" />
+                {{ __('Edit caches') }}
+            </x-button>
+        </x-card>
+
         <x-card>
             <form method="POST" action="{{ route('trails.update', $trail) }}" enctype="multipart/form-data">
                 @csrf

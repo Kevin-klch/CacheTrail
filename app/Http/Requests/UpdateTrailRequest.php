@@ -3,8 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Enums\TrailVisibility;
+use App\Models\Trail;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class UpdateTrailRequest extends StoreTrailRequest
 {
@@ -22,6 +24,28 @@ class UpdateTrailRequest extends StoreTrailRequest
             ...parent::rules(),
             'visibility' => ['required', Rule::enum(TrailVisibility::class)],
             'remove_image' => ['boolean'],
+        ];
+    }
+
+    /**
+     * Publishing needs enough caches; routes that are already published may stay published.
+     *
+     * @return array<int, callable(Validator): void>
+     */
+    public function after(): array
+    {
+        return [
+            ...parent::after(),
+            function (Validator $validator): void {
+                /** @var Trail $trail */
+                $trail = $this->route('trail');
+
+                if ($this->input('visibility') === TrailVisibility::Published->value
+                    && ! $trail->isPublished()
+                    && ! $trail->hasEnoughCachesToPublish()) {
+                    $validator->errors()->add('visibility', __('A route needs at least :count caches to be published.', ['count' => Trail::minCachesToPublish()]));
+                }
+            },
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\Trails\AddCachesToTrail;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
 use App\Models\Trail;
@@ -9,11 +10,11 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
- * Fictional demo routes for local development.
+ * Fictional demo routes with caches from the mock provider, for local development.
  */
 class TrailSeeder extends Seeder
 {
-    public function run(): void
+    public function run(AddCachesToTrail $addCaches): void
     {
         $testUser = User::where('email', 'test@example.com')->firstOrFail();
         $admin = User::where('email', 'admin@example.com')->firstOrFail();
@@ -22,6 +23,7 @@ class TrailSeeder extends Seeder
             [
                 'user' => $testUser,
                 'name' => 'Waldabenteuer am Niederrhein',
+                'caches' => 'GCCT01 GCCT02 GCCT03 GCCT04 GCCT05 GCCT06 GCCT07 GCCT08',
                 'minutes' => 120,
                 'transportations' => [Transportation::Foot, Transportation::Bike],
                 'visibility' => TrailVisibility::Published,
@@ -31,6 +33,7 @@ class TrailSeeder extends Seeder
             [
                 'user' => $testUser,
                 'name' => 'Zechenrunde im Revier',
+                'caches' => 'GCCT11 GCCT12 GCCT13 GCCT14 GCCT15 GCCT16',
                 'minutes' => 150,
                 'transportations' => [Transportation::Foot],
                 'visibility' => TrailVisibility::Published,
@@ -40,6 +43,7 @@ class TrailSeeder extends Seeder
             [
                 'user' => $admin,
                 'name' => 'Rheinufer-Radtour',
+                'caches' => 'GCCT21 GCCT22 GCCT23 GCCT24 GCCT25 GCCT26 GCCT27 GCCT28',
                 'minutes' => 300,
                 'transportations' => [Transportation::Bike],
                 'visibility' => TrailVisibility::Published,
@@ -49,6 +53,7 @@ class TrailSeeder extends Seeder
             [
                 'user' => $admin,
                 'name' => 'Familienrunde am Weiher',
+                'caches' => 'GCCT31 GCCT32 GCCT33 GCCT34 GCCT35',
                 'minutes' => 60,
                 'transportations' => [Transportation::Foot],
                 'visibility' => TrailVisibility::Published,
@@ -58,6 +63,7 @@ class TrailSeeder extends Seeder
             [
                 'user' => $testUser,
                 'name' => 'Altstadt-Spaziergang',
+                'caches' => 'GCCT41 GCCT42',
                 'minutes' => 90,
                 'transportations' => [Transportation::Foot],
                 'visibility' => TrailVisibility::Draft,
@@ -77,6 +83,8 @@ class TrailSeeder extends Seeder
             $trail->visibility = $data['visibility'];
             $trail->published_at = $data['published_days_ago'] !== null ? now()->subDays($data['published_days_ago']) : null;
             $trail->save();
+
+            $addCaches->handle($trail, $data['caches']);
         }
     }
 }

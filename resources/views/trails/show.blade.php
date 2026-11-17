@@ -13,7 +13,6 @@
             <x-alert class="mb-6">
                 {{ match (session('status')) {
                     'trail-published' => __('Your route has been published.'),
-                    'trail-saved-as-draft' => __('Your route has been saved as a draft. Only you can see it.'),
                     'trail-updated' => __('Your changes have been saved.'),
                     default => '',
                 } }}
@@ -40,10 +39,45 @@
                 </div>
 
                 <section class="mt-14">
-                    <h2 class="text-3xl font-bold">{{ __('Caches on this route') }}</h2>
-                    <x-empty-state class="mt-5" :title="__('Caches follow soon')">
-                        {{ __('The list of caches, in the order recommended by the creator, and the map will appear here in the next development step.') }}
-                    </x-empty-state>
+                    <div class="flex flex-wrap items-baseline justify-between gap-3">
+                        <h2 class="text-3xl font-bold">{{ __('Caches on this route') }}</h2>
+                        @can('update', $trail)
+                            <a href="{{ route('trails.caches', $trail) }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-forest-700 hover:underline">
+                                <x-icon name="edit" class="size-4" />
+                                {{ __('Edit caches') }}
+                            </a>
+                        @endcan
+                    </div>
+
+                    @if ($trail->caches->isEmpty())
+                        <x-empty-state class="mt-5" :title="__('No caches yet')">
+                            {{ __('This route does not contain any caches yet.') }}
+                        </x-empty-state>
+                    @else
+                        <p class="mt-2 text-ink-muted">{{ __('Visit the stations in the order recommended by the creator.') }}</p>
+                        <ol class="relative mt-6 space-y-3">
+                            <span class="absolute bottom-6 left-[1.1rem] top-6 border-l-2 border-dashed border-trail-400/70" aria-hidden="true"></span>
+                            @foreach ($trail->caches as $cache)
+                                <li @class([
+                                    'relative flex items-start gap-4 rounded-2xl border bg-white p-4',
+                                    'border-sand-200' => $cache->cache_status === App\Enums\CacheStatus::Active,
+                                    'border-amber-200 bg-amber-50/40' => $cache->cache_status === App\Enums\CacheStatus::TemporarilyDisabled,
+                                    'border-red-200 bg-red-50/40' => $cache->cache_status === App\Enums\CacheStatus::Archived,
+                                    'border-sand-300' => $cache->cache_status === App\Enums\CacheStatus::Unknown,
+                                ])>
+                                    <span @class([
+                                        'relative -ml-[0.15rem] grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold ring-4 ring-paper',
+                                        'bg-forest-700 text-paper' => $cache->cache_status !== App\Enums\CacheStatus::Archived,
+                                        'bg-sand-300 text-ink-muted' => $cache->cache_status === App\Enums\CacheStatus::Archived,
+                                    ])>{{ $loop->iteration }}</span>
+                                    <x-cache-details :cache="$cache" :url="$geocacheProvider->cacheUrl($cache->cache_code)" class="flex-1" />
+                                </li>
+                            @endforeach
+                        </ol>
+                        @if ($usesExampleData)
+                            <p class="mt-4 text-xs text-ink-muted">{{ __('Example data: the caches currently come from a test data set, not from Geocaching.com.') }}</p>
+                        @endif
+                    @endif
                 </section>
             </article>
 
@@ -55,7 +89,7 @@
                         <x-stat :label="__('Transport')" :icon="$trail->transportations->first()?->icon() ?? 'route'">
                             {{ $trail->transportationLabel() }}
                         </x-stat>
-                        <x-stat :label="__('Caches')" icon="route" pending />
+                        <x-stat :label="__('Caches')" icon="route">{{ $trail->caches->count() }}</x-stat>
                         <x-stat :label="__('Length')" icon="map" pending />
                         <x-stat :label="__('Difficulty')" icon="compass" pending />
                         <x-stat :label="__('Terrain')" icon="map" pending />

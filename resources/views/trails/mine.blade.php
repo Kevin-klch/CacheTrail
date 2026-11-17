@@ -32,15 +32,22 @@
                                     <x-visibility-badge :visibility="$trail->visibility" />
                                 </div>
                                 <p class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-muted">
+                                    <span class="inline-flex items-center gap-1.5"><x-icon name="route" class="size-4" /> {{ trans_choice(':count cache|:count caches', $trail->caches_count) }}</span>
                                     <span class="inline-flex items-center gap-1.5"><x-icon name="clock" class="size-4" /> {{ $trail->durationLabel() }}</span>
                                     <x-transport-icons :transportations="$trail->transportations" />
                                     <span>{{ __('Last updated on :date', ['date' => $trail->updated_at->translatedFormat('j. F Y')]) }}</span>
                                 </p>
                             </div>
-                            <x-button variant="secondary" :href="route('trails.edit', $trail)" class="shrink-0">
-                                <x-icon name="edit" class="size-4" />
-                                {{ __('Edit') }}
-                            </x-button>
+                            <div class="flex shrink-0 gap-2">
+                                <x-button variant="secondary" :href="route('trails.caches', $trail)">
+                                    <x-icon name="route" class="size-4" />
+                                    {{ __('Caches') }}
+                                </x-button>
+                                <x-button variant="secondary" :href="route('trails.edit', $trail)">
+                                    <x-icon name="edit" class="size-4" />
+                                    {{ __('Edit') }}
+                                </x-button>
+                            </div>
                         </li>
                     @endforeach
                 </ul>

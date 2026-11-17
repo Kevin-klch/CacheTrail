@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified', 'premium'])->group(function () {
     Route::post('/routen', [TrailController::class, 'store'])->name('trails.store');
     Route::get('/routen/{trail}', [TrailController::class, 'show'])->name('trails.show');
     Route::get('/routen/{trail}/bearbeiten', [TrailController::class, 'edit'])->name('trails.edit');
+    Route::get('/routen/{trail}/caches', [TrailController::class, 'caches'])->name('trails.caches');
     Route::put('/routen/{trail}', [TrailController::class, 'update'])->name('trails.update');
     Route::delete('/routen/{trail}', [TrailController::class, 'destroy'])->name('trails.destroy');
 
