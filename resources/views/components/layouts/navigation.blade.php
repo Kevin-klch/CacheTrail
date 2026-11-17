@@ -6,7 +6,7 @@
         ['route' => 'trails.index', 'label' => __('Discover routes'), 'icon' => 'compass'],
         ['route' => 'trails.create', 'label' => __('Create route'), 'icon' => 'plus'],
         ['route' => 'trails.mine', 'label' => __('My routes'), 'icon' => 'route'],
-        ['route' => 'favorites.index', 'label' => __('Favorites'), 'icon' => 'heart'],
+        ['route' => 'bookmarks.index', 'label' => __('Saved'), 'icon' => 'bookmark'],
     ] : [];
 @endphp
 

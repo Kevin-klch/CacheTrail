@@ -19,6 +19,7 @@
 
 @can('view', $trail)
     <div class="absolute right-3 top-3 z-10 flex gap-2">
-        <livewire:favorite-button :trail="$trail" :key="'favorite-'.$trail->id" />
+        <livewire:like-button :trail="$trail" :key="'like-'.$trail->id" />
+        <livewire:bookmark-button :trail="$trail" :key="'bookmark-'.$trail->id" />
     </div>
 @endcan

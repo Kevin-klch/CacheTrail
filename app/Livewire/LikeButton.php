@@ -9,9 +9,9 @@ use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 /**
- * Heart button to save a route as a favorite (specification 9.5).
+ * Public "Gefällt mir" for a route; the number of likes determines its popularity.
  */
-class FavoriteButton extends Component
+class LikeButton extends Component
 {
     #[Locked]
     public Trail $trail;
@@ -19,13 +19,13 @@ class FavoriteButton extends Component
     #[Locked]
     public bool $large = false;
 
-    public bool $favorited = false;
+    public bool $liked = false;
 
     public function mount(Trail $trail, bool $large = false): void
     {
         $this->trail = $trail;
         $this->large = $large;
-        $this->favorited = $trail->isFavoritedBy(auth()->user());
+        $this->liked = $trail->isLikedBy(auth()->user());
     }
 
     public function toggle(): void
@@ -34,18 +34,18 @@ class FavoriteButton extends Component
 
         $user = auth()->user();
 
-        if ($this->trail->isFavoritedBy($user)) {
-            $this->trail->favoritedBy()->detach($user);
+        if ($this->trail->isLikedBy($user)) {
+            $this->trail->likedBy()->detach($user);
         } else {
-            $this->trail->favoritedBy()->syncWithoutDetaching([$user->id]);
+            $this->trail->likedBy()->syncWithoutDetaching([$user->id]);
         }
 
         $this->trail->refreshCommunityStatistics();
-        $this->favorited = ! $this->favorited;
+        $this->liked = ! $this->liked;
     }
 
     public function render(): View
     {
-        return view('livewire.favorite-button');
+        return view('livewire.like-button');
     }
 }

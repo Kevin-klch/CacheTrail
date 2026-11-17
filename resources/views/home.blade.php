@@ -133,7 +133,7 @@
             <h2 class="text-center text-4xl font-bold">{{ __('Popular routes') }}</h2>
             @if ($popularTrails->isEmpty())
                 <x-empty-state class="mx-auto mt-10 max-w-2xl" icon="heart" :title="__('No popular routes yet')">
-                    {{ __('As soon as routes are saved as favorites, the community favorites will appear here.') }}
+                    {{ __('As soon as routes are liked, the community favorites will appear here.') }}
                 </x-empty-state>
             @else
                 <div class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">

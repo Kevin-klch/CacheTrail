@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin;
-use App\Http\Controllers\FavoritesController;
+use App\Http\Controllers\BookmarksController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyTrailsController;
 use App\Http\Controllers\Profile\ProfileController;
@@ -40,6 +40,7 @@ Route::middleware(['auth', 'verified', 'premium'])->group(function () {
     Route::delete('/routen/{trail}', [TrailController::class, 'destroy'])->name('trails.destroy');
 
     Route::get('/meine-routen', MyTrailsController::class)->name('trails.mine');
-    Route::get('/favoriten', FavoritesController::class)->name('favorites.index');
+    Route::get('/merkliste', BookmarksController::class)->name('bookmarks.index');
+    Route::redirect('/favoriten', '/merkliste', 301);
     Route::get('/nutzer/{user}', PublicProfileController::class)->where('user', '[0-9]+(-[a-z0-9-]*)?')->name('profiles.show');
 });

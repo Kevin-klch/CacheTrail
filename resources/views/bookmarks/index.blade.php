@@ -1,13 +1,13 @@
-<x-layouts.app :title="__('Favorites')">
-    <x-page-header :title="__('Favorites')" :eyebrow="__('Your collection')">
-        {{ __('Routes you have saved for later.') }}
+<x-layouts.app :title="__('Saved for later')">
+    <x-page-header :title="__('Saved for later')" :eyebrow="__('Your list')">
+        {{ __('Routes you want to do some day. Only you can see this list.') }}
     </x-page-header>
 
     <div class="mx-auto -mt-20 max-w-7xl px-4 sm:px-6 lg:px-8">
         @if ($trails->isEmpty())
             <x-card>
-                <x-empty-state icon="heart" :title="__('No favorites yet')">
-                    {{ __('Save routes you like with the heart and find them here again.') }}
+                <x-empty-state icon="bookmark" :title="__('Your list is empty')">
+                    {{ __('Save routes with the bookmark symbol and find them here again.') }}
                     <div class="mt-5">
                         <x-button :href="route('trails.index')">{{ __('Discover routes') }}</x-button>
                     </div>

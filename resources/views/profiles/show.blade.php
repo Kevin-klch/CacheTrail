@@ -19,8 +19,8 @@
                 <dd class="mt-1 font-serif text-3xl font-bold text-forest-900">{{ $trails->total() }}</dd>
             </x-card>
             <x-card class="p-5 sm:p-5">
-                <dt class="text-sm text-ink-muted">{{ __('Favorites received') }}</dt>
-                <dd class="mt-1 font-serif text-3xl font-bold text-forest-900">{{ $favoritesReceived }}</dd>
+                <dt class="text-sm text-ink-muted">{{ __('Likes received') }}</dt>
+                <dd class="mt-1 font-serif text-3xl font-bold text-forest-900">{{ $likesReceived }}</dd>
             </x-card>
         </dl>
 

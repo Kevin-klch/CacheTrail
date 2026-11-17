@@ -27,9 +27,9 @@ class CommunityDirectoryTest extends TestCase
 
     public function test_routes_can_be_sorted_by_popularity(): void
     {
-        $this->publishedTrail('Mittel', ['favorite_count' => 5]);
-        $this->publishedTrail('Top', ['favorite_count' => 12]);
-        $this->publishedTrail('Neu', ['favorite_count' => 0]);
+        $this->publishedTrail('Mittel', ['like_count' => 5]);
+        $this->publishedTrail('Top', ['like_count' => 12]);
+        $this->publishedTrail('Neu', ['like_count' => 0]);
 
         $this->actingAs(User::factory()->create())
             ->get(route('trails.index', ['sort' => 'popular']))
@@ -50,8 +50,8 @@ class CommunityDirectoryTest extends TestCase
 
     public function test_the_home_page_shows_popular_routes(): void
     {
-        $this->publishedTrail('Beliebte Runde', ['favorite_count' => 3]);
-        $this->publishedTrail('Unbeachtete Runde', ['favorite_count' => 0, 'published_at' => now()->subYear()]);
+        $this->publishedTrail('Beliebte Runde', ['like_count' => 3]);
+        $this->publishedTrail('Unbeachtete Runde', ['like_count' => 0, 'published_at' => now()->subYear()]);
 
         $this->get(route('home'))
             ->assertOk()
@@ -61,7 +61,7 @@ class CommunityDirectoryTest extends TestCase
     public function test_public_profiles_show_published_routes_but_never_the_email_address(): void
     {
         $author = User::factory()->create(['name' => 'Erika Muster', 'email' => 'erika@example.com']);
-        Trail::factory()->for($author)->published()->create(['name' => 'Erikas Runde', 'favorite_count' => 4]);
+        Trail::factory()->for($author)->published()->create(['name' => 'Erikas Runde', 'like_count' => 4]);
         Trail::factory()->for($author)->create(['name' => 'Erikas Entwurf']);
 
         $this->actingAs(User::factory()->create())

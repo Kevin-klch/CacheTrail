@@ -26,7 +26,8 @@
                     @if (! ($isPreview ?? false) && $trail->isPublished())
                         <div class="flex flex-wrap items-center gap-4">
                             <livewire:report-button :reportable="$trail" />
-                            <livewire:favorite-button :trail="$trail" :large="true" />
+                            <livewire:like-button :trail="$trail" :large="true" />
+                            <livewire:bookmark-button :trail="$trail" :large="true" />
                         </div>
                     @endif
                 </div>

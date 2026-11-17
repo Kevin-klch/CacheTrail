@@ -29,7 +29,7 @@ class PublicProfileController extends Controller
         return view('profiles.show', [
             'profile' => $profile,
             'trails' => $trails,
-            'favoritesReceived' => (int) $profile->trails()->published()->sum('favorite_count'),
+            'likesReceived' => (int) $profile->trails()->published()->sum('like_count'),
         ]);
     }
 }

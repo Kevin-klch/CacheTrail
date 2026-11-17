@@ -92,9 +92,17 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * @return BelongsToMany<Trail, $this>
      */
-    public function favoriteTrails(): BelongsToMany
+    public function bookmarkedTrails(): BelongsToMany
     {
-        return $this->belongsToMany(Trail::class, 'trail_favorites')->withTimestamps();
+        return $this->belongsToMany(Trail::class, 'trail_bookmarks')->withTimestamps();
+    }
+
+    /**
+     * @return BelongsToMany<Trail, $this>
+     */
+    public function likedTrails(): BelongsToMany
+    {
+        return $this->belongsToMany(Trail::class, 'trail_likes')->withTimestamps();
     }
 
     /**

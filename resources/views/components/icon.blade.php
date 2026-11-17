@@ -68,6 +68,12 @@
         @case('eye-off')
             <path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c5 0 8.5 4.5 9.5 7a13 13 0 0 1-2.9 4.1M6.6 6.6A13 13 0 0 0 2.5 12c1 2.5 4.5 7 9.5 7a9.6 9.6 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2" />
             @break
+        @case('bookmark')
+            <path d="M6.5 4h11a1 1 0 0 1 1 1v15l-6.5-4-6.5 4V5a1 1 0 0 1 1-1Z" />
+            @break
+        @case('check-circle')
+            <circle cx="12" cy="12" r="9" /><path d="m8 12.5 3 3 5-6" />
+            @break
         @case('sliders')
             <path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" />
             @break

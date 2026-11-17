@@ -19,7 +19,7 @@ class DatabaseSeederTest extends TestCase
         $this->assertSame(5, Trail::count());
         $this->assertDatabaseCount('trail_caches', 29);
         $this->assertDatabaseCount('trail_ratings', 4);
-        $this->assertSame(1, Trail::where('slug', 'waldabenteuer-am-niederrhein')->value('favorite_count'));
+        $this->assertSame(1, Trail::where('slug', 'waldabenteuer-am-niederrhein')->value('like_count'));
         $this->assertTrue(Trail::published()->get()->every(fn (Trail $trail): bool => $trail->hasEnoughCachesToPublish()));
     }
 }

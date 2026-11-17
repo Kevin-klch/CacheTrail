@@ -18,8 +18,8 @@ class HomeController extends Controller
         return view('home', [
             'latestTrails' => Trail::published()->with($withPreview)->latest('published_at')->limit(self::LATEST_TRAILS_COUNT)->get(),
             'popularTrails' => Trail::published()->with($withPreview)
-                ->where('favorite_count', '>', 0)
-                ->orderByDesc('favorite_count')
+                ->where('like_count', '>', 0)
+                ->orderByDesc('like_count')
                 ->orderByDesc('average_rating')
                 ->limit(self::POPULAR_TRAILS_COUNT)
                 ->get(),

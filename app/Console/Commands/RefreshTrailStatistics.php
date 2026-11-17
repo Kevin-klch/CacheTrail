@@ -8,7 +8,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
 #[Signature('trails:refresh-statistics')]
-#[Description('Recalculate cache, distance, favorite and rating figures of all routes')]
+#[Description('Recalculate cache, distance, like and rating figures of all routes')]
 class RefreshTrailStatistics extends Command
 {
     public function handle(): int

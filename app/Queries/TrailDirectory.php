@@ -73,7 +73,7 @@ class TrailDirectory
     {
         match ($sort) {
             TrailSort::Newest => $query->latest('published_at'),
-            TrailSort::Popular => $query->orderByDesc('favorite_count')->latest('published_at'),
+            TrailSort::Popular => $query->orderByDesc('like_count')->latest('published_at'),
             TrailSort::BestRated => $query
                 ->orderByRaw('case when rating_count >= ? then 0 else 1 end', [TrailSort::MIN_RATINGS_FOR_RANKING])
                 ->orderByRaw('average_rating is null')

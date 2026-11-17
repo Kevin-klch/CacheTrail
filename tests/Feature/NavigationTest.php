@@ -33,7 +33,7 @@ class NavigationTest extends TestCase
             ->assertSee(route('trails.index'))
             ->assertSee(route('trails.create'))
             ->assertSee(route('trails.mine'))
-            ->assertSee(route('favorites.index'))
+            ->assertSee(route('bookmarks.index'))
             ->assertSee(route('profile.edit'))
             ->assertDontSee('(Premium-Zugang erforderlich)')
             ->assertDontSee(route('register'));

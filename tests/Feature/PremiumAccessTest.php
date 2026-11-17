@@ -23,7 +23,7 @@ class PremiumAccessTest extends TestCase
             'discover routes' => ['trails.index'],
             'create route' => ['trails.create'],
             'my routes' => ['trails.mine'],
-            'favorites' => ['favorites.index'],
+            'saved for later' => ['bookmarks.index'],
         ];
     }
 

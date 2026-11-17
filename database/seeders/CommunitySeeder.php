@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
- * Demo favorites and ratings between the two local development accounts.
+ * Demo likes, bookmarks and ratings between the two local development accounts.
  */
 class CommunitySeeder extends Seeder
 {
@@ -36,7 +36,8 @@ class CommunitySeeder extends Seeder
                 $rating->reply($reply);
             }
 
-            $author->favoriteTrails()->syncWithoutDetaching([$trail->id]);
+            $author->likedTrails()->syncWithoutDetaching([$trail->id]);
+            $author->bookmarkedTrails()->syncWithoutDetaching([$trail->id]);
             $trail->refreshCommunityStatistics();
         }
     }

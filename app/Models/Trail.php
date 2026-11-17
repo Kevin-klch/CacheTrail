@@ -60,7 +60,7 @@ class Trail extends Model
             'distance_method' => DistanceMethod::class,
             'start_latitude' => 'float',
             'start_longitude' => 'float',
-            'favorite_count' => 'integer',
+            'like_count' => 'integer',
             'rating_count' => 'integer',
             'average_rating' => 'float',
         ];
@@ -121,29 +121,44 @@ class Trail extends Model
     }
 
     /**
-     * Users who saved this trail as a favorite.
+     * Users who saved this trail on their private list "Für später merken".
      *
      * @return BelongsToMany<User, $this>
      */
-    public function favoritedBy(): BelongsToMany
+    public function bookmarkedBy(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'trail_favorites')->withTimestamps();
+        return $this->belongsToMany(User::class, 'trail_bookmarks')->withTimestamps();
     }
 
-    public function isFavoritedBy(User $user): bool
+    public function isBookmarkedBy(User $user): bool
     {
-        return $this->favoritedBy()->whereKey($user->id)->exists();
+        return $this->bookmarkedBy()->whereKey($user->id)->exists();
     }
 
     /**
-     * Recalculates the favorite and rating figures used for sorting by popularity and rating.
+     * Users who like this trail ("Gefällt mir"); the count determines popularity.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function likedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'trail_likes')->withTimestamps();
+    }
+
+    public function isLikedBy(User $user): bool
+    {
+        return $this->likedBy()->whereKey($user->id)->exists();
+    }
+
+    /**
+     * Recalculates the like and rating figures used for sorting by popularity and rating.
      */
     public function refreshCommunityStatistics(): void
     {
         $average = $this->visibleRatings()->avg('rating');
 
         $this->forceFill([
-            'favorite_count' => $this->favoritedBy()->count(),
+            'like_count' => $this->likedBy()->count(),
             'rating_count' => $this->visibleRatings()->count(),
             'average_rating' => $average === null ? null : round((float) $average, 2),
         ])->saveQuietly();
