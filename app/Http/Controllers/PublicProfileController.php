@@ -7,13 +7,14 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 /**
- * Public profile of a geocacher: name, member since and published routes. The email address is never shown.
+ * Public profile of a geocacher: info box, geocaching and CacheTrail figures, completed and
+ * published routes. The email address is never shown.
  */
 class PublicProfileController extends Controller
 {
     public function __invoke(string $user): View|RedirectResponse
     {
-        $profile = User::findOrFail((int) $user);
+        $profile = User::with('geocachingAccount')->findOrFail((int) $user);
 
         // Old or shortened addresses lead to the current one, e.g. after a name change.
         if ($user !== $profile->profileSlug()) {
@@ -28,8 +29,11 @@ class PublicProfileController extends Controller
 
         return view('profiles.show', [
             'profile' => $profile,
+            'account' => $profile->geocachingAccount,
             'trails' => $trails,
             'likesReceived' => (int) $profile->trails()->published()->sum('like_count'),
+            'completedCount' => $profile->completedTrails()->count(),
+            'lastCompleted' => $profile->completedTrails()->published()->orderByPivot('completed_at', 'desc')->first(),
         ]);
     }
 }

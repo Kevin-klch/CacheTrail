@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -30,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $attributes = [
         'role' => UserRole::User,
         'blocked_at' => null,
+        'bio' => null,
     ];
 
     /**
@@ -103,6 +105,24 @@ class User extends Authenticatable implements MustVerifyEmail
     public function likedTrails(): BelongsToMany
     {
         return $this->belongsToMany(Trail::class, 'trail_likes')->withTimestamps();
+    }
+
+    /**
+     * Routes the user has completed, with the date in the pivot ("completed_at").
+     *
+     * @return BelongsToMany<Trail, $this>
+     */
+    public function completedTrails(): BelongsToMany
+    {
+        return $this->belongsToMany(Trail::class, 'trail_completions')->withPivot('completed_at')->withTimestamps();
+    }
+
+    /**
+     * @return HasOne<GeocachingAccount, $this>
+     */
+    public function geocachingAccount(): HasOne
+    {
+        return $this->hasOne(GeocachingAccount::class);
     }
 
     /**

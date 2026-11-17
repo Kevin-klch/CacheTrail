@@ -10,9 +10,27 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    public const int BIO_MAX_LENGTH = 500;
+
     public function edit(Request $request): View
     {
-        return view('profile.edit', ['user' => $request->user()]);
+        return view('profile.edit', ['user' => $request->user()->load('geocachingAccount')]);
+    }
+
+    /**
+     * The short public text in the info box of the profile.
+     */
+    public function updateBio(Request $request): RedirectResponse
+    {
+        $validated = $request->validateWithBag('updateBio', [
+            'bio' => ['nullable', 'string', 'max:'.self::BIO_MAX_LENGTH],
+        ], attributes: ['bio' => __('About me')]);
+
+        $bio = trim((string) ($validated['bio'] ?? ''));
+
+        $request->user()->forceFill(['bio' => $bio === '' ? null : $bio])->save();
+
+        return back()->with('status', 'bio-updated');
     }
 
     public function destroy(Request $request): RedirectResponse

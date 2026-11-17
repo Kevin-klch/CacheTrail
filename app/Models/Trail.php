@@ -136,6 +136,21 @@ class Trail extends Model
     }
 
     /**
+     * Users who have completed this trail.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function completedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'trail_completions')->withPivot('completed_at')->withTimestamps();
+    }
+
+    public function isCompletedBy(User $user): bool
+    {
+        return $this->completedBy()->whereKey($user->id)->exists();
+    }
+
+    /**
      * Users who like this trail ("Gefällt mir"); the count determines popularity.
      *
      * @return BelongsToMany<User, $this>

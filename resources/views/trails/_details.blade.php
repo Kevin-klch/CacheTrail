@@ -86,6 +86,10 @@
             </article>
 
             <aside class="space-y-6 lg:sticky lg:top-6 lg:self-start">
+                @if (! ($isPreview ?? false) && $trail->isPublished())
+                    <livewire:complete-button :trail="$trail" />
+                @endif
+
                 <x-card class="p-5 sm:p-6">
                     <h2 class="sr-only">{{ __('Route details') }}</h2>
                     <dl>

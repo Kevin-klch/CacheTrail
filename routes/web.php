@@ -15,6 +15,7 @@ Route::get('/', HomeController::class)->name('home');
 Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::delete('/profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('/profil/infobox', [ProfileController::class, 'updateBio'])->name('profile.bio.update');
 });
 
 Route::middleware(['auth', 'verified', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {

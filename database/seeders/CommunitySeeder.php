@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
- * Demo likes, bookmarks and ratings between the two local development accounts.
+ * Demo likes, bookmarks, ratings, completions and profile data between the two local development accounts.
  */
 class CommunitySeeder extends Seeder
 {
@@ -23,6 +23,18 @@ class CommunitySeeder extends Seeder
             ['rheinufer-radtour', $testUser, 5, 'Perfekt für einen sonnigen Sonntag mit dem Rad.', null],
             ['familienrunde-am-weiher', $testUser, 4, null, null],
         ];
+
+        // Fictional demo data until the Geocaching.com API is approved.
+        $testUser->forceFill(['bio' => 'Ich cache seit Jahren am Niederrhein, am liebsten mit dem Rad.
+Multis und Rätselcaches sind meine Leidenschaft.'])->save();
+        $testUser->geocachingAccount()->create([
+            'provider' => 'geocaching_com',
+            'username' => 'TestCacher',
+            'membership_status' => 'premium',
+            'finds_count' => 1234,
+            'member_since' => '2015-04-12',
+            'last_verified_at' => now(),
+        ]);
 
         foreach ($ratings as [$slug, $author, $stars, $comment, $reply]) {
             $trail = Trail::where('slug', $slug)->firstOrFail();
@@ -40,5 +52,8 @@ class CommunitySeeder extends Seeder
             $author->bookmarkedTrails()->syncWithoutDetaching([$trail->id]);
             $trail->refreshCommunityStatistics();
         }
+
+        $admin->completedTrails()->attach(Trail::where('slug', 'waldabenteuer-am-niederrhein')->value('id'), ['completed_at' => now()->subDays(3)]);
+        $testUser->completedTrails()->attach(Trail::where('slug', 'rheinufer-radtour')->value('id'), ['completed_at' => now()->subWeek()]);
     }
 }
