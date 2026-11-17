@@ -4,7 +4,6 @@ namespace App\Livewire;
 
 use App\Actions\Trails\AddCachesToTrail;
 use App\Contracts\GeocacheProvider;
-use App\Enums\TrailVisibility;
 use App\Models\Trail;
 use App\Models\TrailCache;
 use App\Services\Geocaching\MockGeocacheProvider;
@@ -51,6 +50,8 @@ class TrailCacheEditor extends Component
         $this->added = $result->added;
         $this->failures = $result->failures;
         $this->codes = implode("\n", array_keys($result->failures));
+
+        $this->cachesChanged();
     }
 
     /**
@@ -59,42 +60,28 @@ class TrailCacheEditor extends Component
     public function sortCache(int $cacheId, int $position): void
     {
         $this->trail->moveCache($this->findCache($cacheId), $position);
+        $this->cachesChanged();
     }
 
     public function moveUp(int $cacheId): void
     {
         $cache = $this->findCache($cacheId);
         $this->trail->moveCache($cache, $cache->position - 1);
+        $this->cachesChanged();
     }
 
     public function moveDown(int $cacheId): void
     {
         $cache = $this->findCache($cacheId);
         $this->trail->moveCache($cache, $cache->position + 1);
+        $this->cachesChanged();
     }
 
     public function removeCache(int $cacheId): void
     {
         $this->trail->removeCache($this->findCache($cacheId));
         $this->added = [];
-    }
-
-    public function publish(): void
-    {
-        Gate::authorize('update', $this->trail);
-
-        if (! $this->trail->hasEnoughCachesToPublish()) {
-            $this->addError('publish', __('A route needs at least :count caches to be published.', ['count' => Trail::minCachesToPublish()]));
-
-            return;
-        }
-
-        $this->trail->changeVisibility(TrailVisibility::Published);
-        $this->trail->save();
-
-        session()->flash('status', 'trail-published');
-
-        $this->redirectRoute('trails.show', $this->trail);
+        $this->cachesChanged();
     }
 
     public function render(GeocacheProvider $provider): View
@@ -103,6 +90,16 @@ class TrailCacheEditor extends Component
             'caches' => $this->trail->caches()->get(),
             'usesExampleData' => $provider instanceof MockGeocacheProvider,
         ]);
+    }
+
+    /**
+     * Refreshes the key figures shown in the editor and lets the route map redraw immediately (specification 10.4).
+     */
+    private function cachesChanged(): void
+    {
+        $this->trail->refresh()->load('caches');
+
+        $this->dispatch('trail-caches-updated', caches: $this->trail->mapMarkers());
     }
 
     /**

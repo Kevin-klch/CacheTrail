@@ -20,6 +20,8 @@ Route::middleware(['auth', 'verified', 'premium'])->group(function () {
     Route::get('/routen/{trail}', [TrailController::class, 'show'])->name('trails.show');
     Route::get('/routen/{trail}/bearbeiten', [TrailController::class, 'edit'])->name('trails.edit');
     Route::get('/routen/{trail}/caches', [TrailController::class, 'caches'])->name('trails.caches');
+    Route::get('/routen/{trail}/vorschau', [TrailController::class, 'preview'])->name('trails.preview');
+    Route::post('/routen/{trail}/veroeffentlichen', [TrailController::class, 'publish'])->name('trails.publish');
     Route::put('/routen/{trail}', [TrailController::class, 'update'])->name('trails.update');
     Route::delete('/routen/{trail}', [TrailController::class, 'destroy'])->name('trails.destroy');
 

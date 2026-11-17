@@ -18,8 +18,20 @@
             </div>
             <div class="inline-flex items-center gap-1.5">
                 <dt><x-icon name="route" class="size-4 text-forest-500" /><span class="sr-only">{{ __('Caches') }}</span></dt>
-                <dd class="font-medium">{{ trans_choice(':count cache|:count caches', $trail->caches_count ?? $trail->caches()->count()) }}</dd>
+                <dd class="font-medium">{{ trans_choice(':count cache|:count caches', $trail->cache_count) }}</dd>
             </div>
+            @if ($trail->distanceLabel())
+                <div class="inline-flex items-center gap-1.5">
+                    <dt><x-icon name="map" class="size-4 text-forest-500" /><span class="sr-only">{{ __('Length (straight line)') }}</span></dt>
+                    <dd class="font-medium">{{ $trail->distanceLabel() }}</dd>
+                </div>
+            @endif
+            @if ($trail->average_difficulty !== null)
+                <div class="inline-flex items-center gap-1.5">
+                    <dt class="font-semibold text-forest-500" title="{{ __('Difficulty') }} / {{ __('Terrain') }}">D/T</dt>
+                    <dd class="font-medium">{{ number_format($trail->average_difficulty, 1, ',', '') }} / {{ number_format($trail->average_terrain, 1, ',', '') }}</dd>
+                </div>
+            @endif
             <div class="inline-flex items-center gap-1.5">
                 <dt class="sr-only">{{ __('Means of transport') }}</dt>
                 <dd class="text-forest-700"><x-transport-icons :transportations="$trail->transportations" /></dd>

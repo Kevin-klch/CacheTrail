@@ -35,8 +35,7 @@ class TrailController extends Controller
 
         $trails = Trail::query()
             ->published()
-            ->with('user')
-            ->withCount('caches')
+            ->with(['user', 'caches:id,trail_id,position,latitude,longitude'])
             ->when($filters['q'] ?? null, function (Builder $query, string $search): void {
                 $query->where(fn (Builder $query) => $query
                     ->whereLike('name', "%{$search}%")
@@ -100,11 +99,41 @@ class TrailController extends Controller
         return view('trails.caches', ['trail' => $trail]);
     }
 
+    /**
+     * Step 3 of the route editor: shows the route as others will see it before it is published.
+     */
+    public function preview(Trail $trail, GeocacheProvider $geocacheProvider): View
+    {
+        Gate::authorize('update', $trail);
+
+        return view('trails.preview', [
+            'trail' => $trail->load(['user', 'caches']),
+            'geocacheProvider' => $geocacheProvider,
+            'usesExampleData' => $geocacheProvider instanceof MockGeocacheProvider,
+        ]);
+    }
+
+    public function publish(Trail $trail): RedirectResponse
+    {
+        Gate::authorize('update', $trail);
+
+        if (! $trail->hasEnoughCachesToPublish()) {
+            return redirect()->route('trails.caches', $trail)->withErrors([
+                'publish' => __('A route needs at least :count caches to be published.', ['count' => Trail::minCachesToPublish()]),
+            ]);
+        }
+
+        $trail->changeVisibility(TrailVisibility::Published);
+        $trail->save();
+
+        return redirect()->route('trails.show', $trail)->with('status', 'trail-published');
+    }
+
     public function edit(Trail $trail): View
     {
         Gate::authorize('update', $trail);
 
-        return view('trails.edit', ['trail' => $trail->loadCount('caches')]);
+        return view('trails.edit', ['trail' => $trail]);
     }
 
     public function update(UpdateTrailRequest $request, Trail $trail): RedirectResponse

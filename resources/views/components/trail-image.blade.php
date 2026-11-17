@@ -1,8 +1,10 @@
 @props(['trail'])
 
-{{-- Cover image of a trail; trails without an image get a drawn placeholder. In phase 4 this becomes a map preview of the caches. --}}
+{{-- Cover image of a trail; without an image a schematic preview of the route, or a drawn placeholder if it has no caches yet. --}}
 @if ($trail->imageUrl())
     <img src="{{ $trail->imageUrl() }}" alt="" loading="lazy" {{ $attributes->class(['object-cover']) }}>
+@elseif ($trail->caches->isNotEmpty())
+    <x-route-preview :trail="$trail" :attributes="$attributes" />
 @else
     <div {{ $attributes->class(['relative overflow-hidden bg-forest-600']) }} aria-hidden="true">
         <svg class="absolute inset-0 size-full text-forest-400/50" preserveAspectRatio="xMidYMid slice" viewBox="0 0 400 240" fill="none" stroke="currentColor" stroke-width="1.5">

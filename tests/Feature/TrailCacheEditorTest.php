@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Enums\TrailVisibility;
 use App\Livewire\TrailCacheEditor;
 use App\Models\Trail;
 use App\Models\TrailCache;
@@ -128,29 +127,29 @@ class TrailCacheEditorTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_publishing_requires_at_least_two_caches(): void
+    public function test_changes_dispatch_the_updated_markers_for_the_map(): void
     {
-        $trail = Trail::factory()->withCaches(1)->create();
+        $trail = Trail::factory()->create();
 
         Livewire::actingAs($trail->user)
             ->test(TrailCacheEditor::class, ['trail' => $trail])
-            ->call('publish')
-            ->assertHasErrors('publish');
-
-        $this->assertSame(TrailVisibility::Draft, $trail->fresh()->visibility);
+            ->set('codes', 'GCCT01 GCCT02')
+            ->call('addCaches')
+            ->assertDispatched('trail-caches-updated', fn (string $name, array $params): bool => count($params['caches']) === 2
+                && $params['caches'][0]['code'] === 'GCCT01'
+                && $params['caches'][1]['number'] === 2);
     }
 
-    public function test_a_trail_with_enough_caches_can_be_published(): void
+    public function test_the_key_figures_are_shown_and_updated_live(): void
     {
-        $trail = Trail::factory()->withCaches(2)->create();
+        $trail = Trail::factory()->create();
 
         Livewire::actingAs($trail->user)
             ->test(TrailCacheEditor::class, ['trail' => $trail])
-            ->call('publish')
-            ->assertRedirect(route('trails.show', $trail));
-
-        $this->assertSame(TrailVisibility::Published, $trail->fresh()->visibility);
-        $this->assertNotNull($trail->fresh()->published_at);
+            ->set('codes', 'GCCT01 GCCT02')
+            ->call('addCaches')
+            ->assertSee('2,0 / 5')
+            ->assertSee('Weiter zur Vorschau');
     }
 
     public function test_admins_can_edit_caches_of_any_trail(): void

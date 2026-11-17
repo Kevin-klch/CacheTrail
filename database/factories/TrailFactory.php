@@ -49,7 +49,7 @@ class TrailFactory extends Factory
         return $this->has(
             TrailCache::factory()->count($count)->sequence(fn (Sequence $sequence) => ['position' => $sequence->index]),
             'caches',
-        );
+        )->afterCreating(fn (Trail $trail) => $trail->refreshStatistics());
     }
 
     public function hidden(): static

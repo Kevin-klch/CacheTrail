@@ -91,21 +91,46 @@
         @endif
     </x-card>
 
-    {{-- Finish --}}
+    {{-- Map and calculated key figures, updated live --}}
+    <x-card>
+        <h2 class="text-2xl font-bold">{{ __('Map and key figures') }}</h2>
+        <p class="mt-1 text-sm text-ink-muted">{{ __('Calculated automatically from the caches in your order.') }}</p>
+
+        <dl class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            @foreach ([
+                [__('Caches'), (string) $trail->cache_count],
+                [__('Length'), $trail->distanceLabel() ?? '–'],
+                [__('Difficulty'), App\Models\Trail::ratingAverageLabel($trail->average_difficulty) ?? '–'],
+                [__('Terrain'), App\Models\Trail::ratingAverageLabel($trail->average_terrain) ?? '–'],
+            ] as [$label, $value])
+                <div class="rounded-2xl bg-sand-100/70 px-4 py-3">
+                    <dt class="text-xs font-medium uppercase tracking-wide text-ink-muted">{{ $label }}</dt>
+                    <dd class="mt-1 font-serif text-xl font-bold text-forest-900">{{ $value }}</dd>
+                </div>
+            @endforeach
+        </dl>
+        <p class="mt-2 text-xs text-ink-muted">{{ __('The length is the sum of the straight lines between the stations; the actual walking distance is usually longer.') }}</p>
+
+        <x-trail-map :markers="$trail->load('caches')->mapMarkers()" class="mt-5 h-80 w-full sm:h-96" />
+    </x-card>
+
+    {{-- Next step --}}
     <x-card class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         @if ($trail->isPublished())
             <p class="text-sm text-ink-muted">{{ __('This route is published. Changes to the caches are visible immediately.') }}</p>
             <x-button :href="route('trails.show', $trail)">{{ __('Done') }}</x-button>
         @else
-            <div>
-                <p class="text-sm text-ink-muted">{{ __('A route needs at least :count caches to be published.', ['count' => App\Models\Trail::minCachesToPublish()]) }}</p>
-                @error('publish')
-                    <p class="mt-1 text-sm font-medium text-red-700">{{ $message }}</p>
-                @enderror
-            </div>
+            <p class="text-sm text-ink-muted">{{ __('A route needs at least :count caches to be published.', ['count' => App\Models\Trail::minCachesToPublish()]) }}</p>
             <div class="flex flex-col-reverse gap-3 sm:flex-row">
                 <x-button variant="secondary" :href="route('trails.show', $trail)">{{ __('Keep as draft') }}</x-button>
-                <x-button type="button" wire:click="publish" :disabled="$caches->count() < App\Models\Trail::minCachesToPublish()">{{ __('Publish route') }}</x-button>
+                @if ($caches->count() >= App\Models\Trail::minCachesToPublish())
+                    <x-button :href="route('trails.preview', $trail)">
+                        {{ __('Continue to the preview') }}
+                        <x-icon name="arrow-right" class="size-4" />
+                    </x-button>
+                @else
+                    <x-button type="button" disabled>{{ __('Continue to the preview') }}</x-button>
+                @endif
             </div>
         @endif
     </x-card>

@@ -12,7 +12,7 @@ class HomeController extends Controller
     public function __invoke(): View
     {
         return view('home', [
-            'latestTrails' => Trail::published()->with('user')->withCount('caches')->latest('published_at')->limit(self::LATEST_TRAILS_COUNT)->get(),
+            'latestTrails' => Trail::published()->with(['user', 'caches:id,trail_id,position,latitude,longitude'])->latest('published_at')->limit(self::LATEST_TRAILS_COUNT)->get(),
         ]);
     }
 }

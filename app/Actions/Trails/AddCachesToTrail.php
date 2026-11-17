@@ -62,6 +62,8 @@ class AddCachesToTrail
                 $added[] = $code;
                 $free--;
             }
+
+            $trail->refreshStatistics();
         });
 
         return new AddCachesResult($added, $failures);

@@ -52,3 +52,50 @@
         display: none !important;
     }
 }
+
+/* Leaflet route map: numbered station markers and popups */
+@layer components {
+    .ct-marker {
+        @apply grid size-[34px] place-items-center rounded-full border-[3px] border-paper bg-forest-700 font-sans text-sm font-bold text-paper shadow-lg;
+    }
+
+    .ct-marker--start {
+        @apply bg-forest-500;
+    }
+
+    .ct-marker--end {
+        @apply bg-trail-500;
+    }
+
+    .ct-marker--disabled {
+        @apply bg-amber-600;
+    }
+
+    .ct-marker--archived {
+        @apply bg-sand-300 text-ink-muted line-through;
+    }
+
+    .ct-popup {
+        @apply font-sans;
+    }
+
+    .ct-popup__title {
+        @apply m-0 font-serif text-base font-bold text-forest-900;
+    }
+
+    .ct-popup__meta {
+        @apply mt-0.5 mb-0 text-xs text-ink-muted;
+    }
+
+    .ct-popup__flag {
+        @apply mt-1.5 mb-0 text-xs font-semibold uppercase tracking-wide text-forest-600;
+    }
+
+    .ct-popup__hint {
+        @apply mt-1.5 mb-0 text-xs font-medium text-red-800;
+    }
+
+    .leaflet-container {
+        @apply font-sans;
+    }
+}

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\DistanceMethod;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
+use App\Support\GeoDistance;
 use Database\Factories\TrailFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,6 +51,13 @@ class Trail extends Model
             'transportations' => AsEnumCollection::of(Transportation::class),
             'visibility' => TrailVisibility::class,
             'published_at' => 'datetime',
+            'cache_count' => 'integer',
+            'average_difficulty' => 'float',
+            'average_terrain' => 'float',
+            'total_distance_meters' => 'integer',
+            'distance_method' => DistanceMethod::class,
+            'start_latitude' => 'float',
+            'start_longitude' => 'float',
         ];
     }
 
@@ -99,6 +108,27 @@ class Trail extends Model
     }
 
     /**
+     * Recalculates the key figures from the caches in their current order (specification 4.4, step 4).
+     * The distance is the sum of straight lines between the stations until a routing service is available.
+     */
+    public function refreshStatistics(): void
+    {
+        $caches = $this->caches()->get();
+
+        $this->forceFill([
+            'cache_count' => $caches->count(),
+            'average_difficulty' => $caches->isEmpty() ? null : round($caches->avg('difficulty'), 2),
+            'average_terrain' => $caches->isEmpty() ? null : round($caches->avg('terrain'), 2),
+            'total_distance_meters' => $caches->isEmpty() ? null : (int) round(GeoDistance::alongPath(
+                $caches->map(fn (TrailCache $cache): array => [$cache->latitude, $cache->longitude]),
+            )),
+            'distance_method' => $caches->isEmpty() ? null : DistanceMethod::StraightLine,
+            'start_latitude' => $caches->first()?->latitude,
+            'start_longitude' => $caches->first()?->longitude,
+        ])->saveQuietly();
+    }
+
+    /**
      * Moves a cache to a new zero-based position; the other caches keep their relative order.
      */
     public function moveCache(TrailCache $cache, int $position): void
@@ -129,6 +159,8 @@ class Trail extends Model
                     $cache->update(['position' => $position]);
                 }
             });
+
+            $this->refreshStatistics();
         });
     }
 
@@ -195,6 +227,42 @@ class Trail extends Model
             preg_split('/\R\s*\R/', trim((string) $this->description)) ?: [],
             fn (string $paragraph): bool => trim($paragraph) !== '',
         ));
+    }
+
+    /**
+     * Numbered markers for the route map, in the creator's order.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function mapMarkers(): array
+    {
+        return $this->caches->values()
+            ->map(fn (TrailCache $cache, int $index): array => $cache->toMapMarker($index + 1))
+            ->all();
+    }
+
+    /**
+     * Approximate total distance, e.g. "ca. 850 m" or "ca. 3,2 km"; null without caches.
+     */
+    public function distanceLabel(): ?string
+    {
+        if ($this->total_distance_meters === null) {
+            return null;
+        }
+
+        $distance = $this->total_distance_meters < 1000
+            ? (round($this->total_distance_meters / 10) * 10).' m'
+            : number_format($this->total_distance_meters / 1000, 1, ',', '.').' km';
+
+        return __('approx. :distance', ['distance' => $distance]);
+    }
+
+    /**
+     * Average rating on the 1 to 5 scale, e.g. "2,0 / 5"; null without caches.
+     */
+    public static function ratingAverageLabel(?float $average): ?string
+    {
+        return $average === null ? null : number_format($average, 1, ',', '.').' / 5';
     }
 
     public function durationHours(): int

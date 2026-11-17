@@ -9,7 +9,7 @@
         <x-card class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="text-2xl font-bold">{{ __('Caches') }}</h2>
-                <p class="mt-1 text-sm text-ink-muted">{{ trans_choice(':count cache in this route.|:count caches in this route.', $trail->caches_count) }}</p>
+                <p class="mt-1 text-sm text-ink-muted">{{ trans_choice(':count cache in this route.|:count caches in this route.', $trail->cache_count) }}</p>
             </div>
             <x-button variant="secondary" :href="route('trails.caches', $trail)">
                 <x-icon name="route" class="size-4" />

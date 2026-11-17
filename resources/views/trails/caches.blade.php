@@ -8,6 +8,10 @@
     </div>
 
     <div class="mx-auto -mt-20 max-w-3xl px-4 sm:px-6 lg:px-8">
+        @error('publish')
+            <x-alert type="info" class="mb-6">{{ $message }}</x-alert>
+        @enderror
+
         @if (session('status') === 'trail-created')
             <x-alert class="mb-6">{{ __('Your route has been saved as a draft. Now add the caches.') }}</x-alert>
         @endif

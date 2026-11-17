@@ -1,10 +1,11 @@
 @props(['current', 'trail' => null])
 
-{{-- Progress of the route editor; the remaining steps of specification 4.4 follow in phase 4. --}}
+{{-- Progress of the route editor (specification 4.4): general information, caches and order, preview. --}}
 @php
     $steps = [
         1 => ['label' => __('General information'), 'url' => $trail?->exists ? route('trails.edit', $trail) : null],
         2 => ['label' => __('Caches and order'), 'url' => $trail?->exists ? route('trails.caches', $trail) : null],
+        3 => ['label' => __('Preview'), 'url' => $trail?->exists && $trail->cache_count >= App\Models\Trail::minCachesToPublish() ? route('trails.preview', $trail) : null],
     ];
 @endphp
 
