@@ -1,9 +1,30 @@
-{{-- Conifer forest silhouette on top of the footer, tiled at its natural size so trees never get stretched. --}}
-<svg {{ $attributes->class(['block h-[104px] w-full']) }} aria-hidden="true">
+{{-- Forest silhouette on top of the footer, built from the tree image in public/images/tree.png.
+     The white tree is used as a mask so the silhouette takes the current text colour; a 720px wide
+     group of trees with varied sizes repeats seamlessly (trees crossing the edge continue on the other side). --}}
+@php
+    // [x, y, width, height] within a 720 x 112 tile.
+    $trees = [
+        [0, 22, 68, 90], [60, 16, 72, 96], [115, 46, 50, 66], [156, 46, 50, 66], [188, 52, 45, 60],
+        [227, 34, 59, 78], [257, 16, 72, 96], [305, 34, 59, 78], [337, 16, 72, 96], [375, 46, 50, 66],
+        [419, 52, 45, 60], [452, 16, 72, 96], [489, 34, 59, 78], [520, 40, 54, 72], [553, 40, 54, 72],
+        [592, 28, 63, 84], [638, 40, 54, 72], [667, 34, 59, 78], [-53, 34, 59, 78], [705, 4, 81, 108],
+        [-15, 4, 81, 108],
+    ];
+    $id = 'treeline-'.Str::random(6);
+@endphp
+
+<svg {{ $attributes->class(['block h-[112px] w-full']) }} aria-hidden="true">
     <defs>
-        <pattern id="treeline-pattern" width="720" height="104" patternUnits="userSpaceOnUse">
-            <path fill="currentColor" d="M0 104L0 100 -10 100 -5 72 3 69 -2 51 7 48 12 23 17 48 26 51 21 69 29 72 34 100 21 100 26 73 34 70 29 53 38 50 43 26 48 50 57 53 52 70 60 73 65 100 56 100 60 73 66 70 62 53 69 50 74 26 78 50 85 53 80 70 87 73 91 100 78 100 84 71 93 68 87 48 97 45 103 19 109 45 119 48 113 68 122 71 128 100 120 100 124 75 130 72 126 55 133 52 136 30 140 52 147 55 143 72 149 75 153 100 143 100 147 83 153 80 149 70 156 67 160 53 164 67 171 70 167 80 173 83 177 100 163 100 169 84 178 81 172 72 182 69 188 56 194 69 204 72 198 81 207 84 213 100 201 100 206 70 214 67 209 47 218 44 223 17 228 44 237 47 232 67 240 70 245 100 237 100 243 85 252 82 246 73 256 70 262 58 267 70 277 73 271 82 280 85 286 100 272 100 276 84 282 81 278 71 284 68 288 55 292 68 298 71 294 81 300 84 304 100 298 100 302 79 309 76 304 64 312 61 316 43 320 61 328 64 323 76 330 79 334 100 328 100 333 78 341 75 336 60 345 57 350 38 355 57 364 60 359 75 367 78 372 100 359 100 365 81 373 78 368 65 377 62 383 46 389 62 398 65 393 78 401 81 407 100 393 100 397 70 404 67 400 48 407 45 412 18 416 45 423 48 419 67 426 70 430 100 420 100 425 85 434 82 428 73 437 70 442 58 448 70 457 73 452 82 460 85 465 100 458 100 463 70 471 67 466 47 475 44 480 17 485 44 494 47 489 67 497 70 502 100 492 100 497 72 505 69 500 51 508 48 514 23 519 48 527 51 522 69 530 72 535 100 528 100 533 78 539 75 535 60 542 57 547 38 552 57 559 60 555 75 561 78 566 100 557 100 563 78 571 75 565 62 574 59 580 40 586 59 595 62 589 75 597 78 603 100 597 100 601 72 607 69 603 50 609 47 613 22 617 47 623 50 619 69 625 72 629 100 622 100 627 83 635 80 630 69 638 66 643 52 648 66 656 69 651 80 659 83 664 100 654 100 659 83 667 80 662 71 670 68 675 54 680 68 688 71 683 80 691 83 696 100 690 100 694 80 699 77 695 65 701 62 705 45 709 62 715 65 711 77 716 80 720 100 711 100 715 74 720 71 717 54 723 51 726 28 730 51 736 54 733 71 738 74 742 100 720 100 720 104Z" />
+        <pattern id="{{ $id }}-pattern" width="720" height="112" patternUnits="userSpaceOnUse">
+            @foreach ($trees as [$x, $y, $width, $height])
+                <image href="{{ asset('images/tree.png') }}" x="{{ $x }}" y="{{ $y }}" width="{{ $width }}" height="{{ $height }}" preserveAspectRatio="none" />
+            @endforeach
         </pattern>
+        <mask id="{{ $id }}-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="112">
+            <rect width="100%" height="112" fill="url(#{{ $id }}-pattern)" />
+        </mask>
     </defs>
-    <rect width="100%" height="104" fill="url(#treeline-pattern)" />
+    <rect width="100%" height="112" fill="currentColor" mask="url(#{{ $id }}-mask)" />
+    {{-- Forest floor covering the trunks, so the trees stand on the footer without thin gaps between them --}}
+    <rect y="100" width="100%" height="12" fill="currentColor" />
 </svg>
