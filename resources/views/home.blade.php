@@ -131,9 +131,25 @@
         {{-- Popular routes --}}
         <div class="relative mt-28">
             <h2 class="text-center text-4xl font-bold">{{ __('Popular routes') }}</h2>
-            <x-empty-state class="mx-auto mt-10 max-w-2xl" icon="heart" :title="__('No popular routes yet')">
-                {{ __('As soon as routes are rated, the community favorites will appear here.') }}
-            </x-empty-state>
+            @if ($popularTrails->isEmpty())
+                <x-empty-state class="mx-auto mt-10 max-w-2xl" icon="heart" :title="__('No popular routes yet')">
+                    {{ __('As soon as routes are saved as favorites, the community favorites will appear here.') }}
+                </x-empty-state>
+            @else
+                <div class="mt-10 grid gap-6 md:grid-cols-3">
+                    @foreach ($popularTrails as $trail)
+                        <x-trail-card :trail="$trail" />
+                    @endforeach
+                </div>
+                @auth
+                    <p class="mt-6 text-center">
+                        <a href="{{ route('trails.index', ['sort' => 'popular']) }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-forest-700 hover:underline">
+                            {{ __('Show all popular routes') }}
+                            <x-icon name="arrow-right" class="size-4" />
+                        </a>
+                    </p>
+                @endauth
+            @endif
         </div>
     </section>
 

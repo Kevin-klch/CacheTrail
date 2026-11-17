@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -59,6 +60,9 @@ class Trail extends Model
             'distance_method' => DistanceMethod::class,
             'start_latitude' => 'float',
             'start_longitude' => 'float',
+            'favorite_count' => 'integer',
+            'rating_count' => 'integer',
+            'average_rating' => 'float',
         ];
     }
 
@@ -96,6 +100,51 @@ class Trail extends Model
     public function caches(): HasMany
     {
         return $this->hasMany(TrailCache::class)->orderBy('position');
+    }
+
+    /**
+     * @return HasMany<TrailRating, $this>
+     */
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(TrailRating::class);
+    }
+
+    /**
+     * Users who saved this trail as a favorite.
+     *
+     * @return BelongsToMany<User, $this>
+     */
+    public function favoritedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'trail_favorites')->withTimestamps();
+    }
+
+    public function isFavoritedBy(User $user): bool
+    {
+        return $this->favoritedBy()->whereKey($user->id)->exists();
+    }
+
+    /**
+     * Recalculates the favorite and rating figures used for sorting by popularity and rating.
+     */
+    public function refreshCommunityStatistics(): void
+    {
+        $average = $this->ratings()->avg('rating');
+
+        $this->forceFill([
+            'favorite_count' => $this->favoritedBy()->count(),
+            'rating_count' => $this->ratings()->count(),
+            'average_rating' => $average === null ? null : round((float) $average, 2),
+        ])->saveQuietly();
+    }
+
+    /**
+     * Average rating in the usual short form, e.g. "4,7"; null without ratings.
+     */
+    public function averageRatingLabel(): ?string
+    {
+        return $this->average_rating === null ? null : number_format($this->average_rating, 1, ',', '.');
     }
 
     public static function minCachesToPublish(): int

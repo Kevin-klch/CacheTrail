@@ -8,6 +8,11 @@
             {{ $trail->distanceFromLabel($location) }}
         </span>
     @endif
+    @can('view', $trail)
+        <div class="absolute right-3 top-3 z-10">
+            <livewire:favorite-button :trail="$trail" :key="'favorite-'.$trail->id" />
+        </div>
+    @endcan
 
     <div class="flex flex-1 flex-col p-5">
         <h3 class="text-2xl font-bold leading-tight">
@@ -15,7 +20,9 @@
                 {{ $trail->name }}
             </a>
         </h3>
-        <p class="mt-1 text-sm text-ink-muted">{{ __('by :name', ['name' => $trail->user->name]) }}</p>
+        <p class="mt-1 text-sm text-ink-muted">
+            {{ __('by') }} <a href="{{ $trail->user->profileUrl() }}" class="relative z-10 font-medium text-forest-700 hover:underline">{{ $trail->user->name }}</a>
+        </p>
 
         <x-trail-stats :trail="$trail" class="mt-4" />
 

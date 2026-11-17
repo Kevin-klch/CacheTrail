@@ -22,6 +22,12 @@
             <dd class="font-medium">{{ number_format($trail->average_difficulty, 1, ',', '') }} / {{ number_format($trail->average_terrain, 1, ',', '') }}</dd>
         </div>
     @endif
+    @if ($trail->rating_count > 0)
+        <div class="inline-flex items-center gap-1.5">
+            <dt><x-icon name="star" class="size-4 fill-current text-trail-500" /><span class="sr-only">{{ __('Rating') }}</span></dt>
+            <dd class="font-medium">{{ $trail->averageRatingLabel() }} <span class="font-normal text-ink-muted">({{ $trail->rating_count }})</span></dd>
+        </div>
+    @endif
     <div class="inline-flex items-center gap-1.5">
         <dt class="sr-only">{{ __('Means of transport') }}</dt>
         <dd class="text-forest-700"><x-transport-icons :transportations="$trail->transportations" /></dd>

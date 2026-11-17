@@ -19,7 +19,14 @@
                 </div>
                 <h1 class="mt-2 text-4xl font-bold leading-tight sm:text-5xl">{{ $trail->name }}</h1>
                 <div class="mt-3 h-1 w-40 rounded-full bg-gradient-to-r from-trail-500 to-transparent"></div>
-                <p class="mt-4 text-ink-muted">{{ __('Created by :name', ['name' => $trail->user->name]) }}</p>
+                <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+                    <p class="text-ink-muted">
+                        {{ __('Created by') }} <a href="{{ $trail->user->profileUrl() }}" class="font-semibold text-forest-700 hover:underline">{{ $trail->user->name }}</a>
+                    </p>
+                    @if (! ($isPreview ?? false) && $trail->isPublished())
+                        <livewire:favorite-button :trail="$trail" :large="true" />
+                    @endif
+                </div>
 
                 <div class="mt-8 space-y-4 text-lg leading-relaxed text-ink">
                     @foreach ($trail->descriptionParagraphs() as $paragraph)
@@ -68,6 +75,10 @@
                         @endif
                     @endif
                 </section>
+
+                @if (! ($isPreview ?? false) && $trail->isPublished())
+                    <livewire:trail-ratings :trail="$trail" />
+                @endif
             </article>
 
             <aside class="space-y-6 lg:sticky lg:top-6 lg:self-start">
@@ -79,6 +90,14 @@
                             {{ $trail->transportationLabel() }}
                         </x-stat>
                         <x-stat :label="__('Caches')" icon="route">{{ $trail->cache_count }}</x-stat>
+                        <x-stat :label="__('Rating')" icon="star">
+                            @if ($trail->rating_count > 0)
+                                {{ $trail->averageRatingLabel() }} / 5
+                                <span class="block text-xs font-normal text-ink-muted">{{ trans_choice('(:count rating)|(:count ratings)', $trail->rating_count) }}</span>
+                            @else
+                                –
+                            @endif
+                        </x-stat>
                         <x-stat :label="__('Length')" icon="map">
                             @if ($trail->distanceLabel())
                                 {{ $trail->distanceLabel() }}

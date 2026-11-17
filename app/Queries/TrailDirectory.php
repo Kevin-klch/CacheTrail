@@ -73,6 +73,12 @@ class TrailDirectory
     {
         match ($sort) {
             TrailSort::Newest => $query->latest('published_at'),
+            TrailSort::Popular => $query->orderByDesc('favorite_count')->latest('published_at'),
+            TrailSort::BestRated => $query
+                ->orderByRaw('case when rating_count >= ? then 0 else 1 end', [TrailSort::MIN_RATINGS_FOR_RANKING])
+                ->orderByRaw('average_rating is null')
+                ->orderByDesc('average_rating')
+                ->orderByDesc('rating_count'),
             TrailSort::Shortest => $query->orderByRaw('total_distance_meters is null')->orderBy('total_distance_meters'),
             TrailSort::Longest => $query->orderByRaw('total_distance_meters is null')->orderByDesc('total_distance_meters'),
             TrailSort::Nearest => $location === null

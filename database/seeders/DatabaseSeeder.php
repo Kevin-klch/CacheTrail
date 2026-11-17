@@ -23,6 +23,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
         ]);
 
-        $this->call(TrailSeeder::class);
+        $this->call([TrailSeeder::class, CommunitySeeder::class]);
     }
 }

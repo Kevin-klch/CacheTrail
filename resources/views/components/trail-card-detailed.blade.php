@@ -16,6 +16,11 @@
             {{ $trail->distanceFromLabel($location) }}
         </span>
     @endif
+    @can('view', $trail)
+        <div class="absolute right-4 top-4 z-10">
+            <livewire:favorite-button :trail="$trail" :key="'favorite-detailed-'.$trail->id" />
+        </div>
+    @endcan
 
     <div class="p-6 sm:p-8">
         <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
@@ -26,7 +31,7 @@
                     </a>
                 </h3>
                 <p class="mt-1 text-sm text-ink-muted">
-                    {{ __('by :name', ['name' => $trail->user->name]) }}
+                    {{ __('by') }} <a href="{{ $trail->user->profileUrl() }}" class="relative z-10 font-medium text-forest-700 hover:underline">{{ $trail->user->name }}</a>
                     @if ($trail->published_at)
                         · {{ $trail->published_at->translatedFormat('j. F Y') }}
                     @endif
