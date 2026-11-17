@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Enums\ReportReason;
 use App\Models\Report;
+use App\Models\TrailRating;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Gate;
@@ -70,7 +71,9 @@ class ReportButton extends Component
     private function reportable(): Model
     {
         $class = Relation::getMorphedModel($this->reportableType);
+        $reportable = $class::query()->findOrFail($this->reportableId);
 
-        return $class::query()->findOrFail($this->reportableId);
+        // The policy needs the route and its author to decide whether the item may be reported.
+        return $reportable->load($reportable instanceof TrailRating ? ['trail.user'] : ['user']);
     }
 }

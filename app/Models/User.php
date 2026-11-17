@@ -29,6 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $attributes = [
         'role' => UserRole::User,
+        'blocked_at' => null,
     ];
 
     /**

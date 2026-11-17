@@ -128,10 +128,15 @@ class TrailRatings extends Component
 
     public function render(): View
     {
-        $this->trail->refresh();
+        $this->trail->refresh()->loadMissing('user');
+
+        $ratings = $this->trail->visibleRatings()->with('user')->latest()->paginate(self::PER_PAGE);
+
+        // Every rating belongs to this trail; setting it avoids one query per rating in the policy checks.
+        $ratings->getCollection()->each->setRelation('trail', $this->trail);
 
         return view('livewire.trail-ratings', [
-            'ratings' => $this->trail->visibleRatings()->with('user')->latest()->paginate(self::PER_PAGE),
+            'ratings' => $ratings,
             'ownRating' => $this->ownRating(),
             'canRate' => Gate::allows('create', [TrailRating::class, $this->trail]),
         ]);
