@@ -6,7 +6,7 @@
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 
-        <x-input name="email" type="email" :label="__('Email address')" autocomplete="email" required autofocus />
+        <x-input name="email" :label="__('Email address or username')" autocomplete="username" required autofocus />
         <x-input name="password" type="password" :label="__('Password')" autocomplete="current-password" required />
 
         <div class="flex items-center justify-between gap-4 text-sm">

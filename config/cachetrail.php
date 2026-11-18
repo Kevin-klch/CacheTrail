@@ -4,6 +4,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | First Admin Account
+    |--------------------------------------------------------------------------
+    |
+    | Password of the "admin" owner account created by the database seeder
+    | outside local development (locally it is always "admin"). Without a
+    | password no admin account is seeded.
+    |
+    */
+
+    'admin_password' => env('CACHETRAIL_ADMIN_PASSWORD'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Languages
     |--------------------------------------------------------------------------
     |

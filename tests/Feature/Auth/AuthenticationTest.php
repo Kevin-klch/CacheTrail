@@ -29,6 +29,16 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticatedAs($user);
     }
 
+    public function test_users_can_log_in_with_their_username_in_any_case(): void
+    {
+        $user = User::factory()->create(['name' => 'TestCacher']);
+
+        $this->post(route('login.store'), ['email' => 'testcacher', 'password' => 'password'])
+            ->assertRedirect(route('home'));
+
+        $this->assertAuthenticatedAs($user);
+    }
+
     public function test_users_cannot_log_in_with_an_invalid_password(): void
     {
         $user = User::factory()->create();

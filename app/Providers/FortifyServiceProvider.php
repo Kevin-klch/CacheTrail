@@ -36,7 +36,9 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::confirmPasswordView(fn () => view('auth.confirm-password'));
 
         Fortify::authenticateUsing(function (Request $request): ?User {
-            $user = User::where('email', $request->input(Fortify::username()))->first();
+            // Log in with the email address or the username (e.g. "TestCacher").
+            $login = trim((string) $request->input(Fortify::username()));
+            $user = User::where('email', $login)->first() ?? User::findByName($login);
 
             if ($user === null || ! Hash::check((string) $request->input('password'), $user->password)) {
                 return null;
