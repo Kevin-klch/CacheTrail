@@ -18,7 +18,7 @@
     </div>
 
     <div class="mx-auto -mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_22rem]">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_26rem]">
             {{-- Info box --}}
             <x-card>
                 <h2 class="text-2xl font-bold">{{ __('About :name', ['name' => $profile->name]) }}</h2>
