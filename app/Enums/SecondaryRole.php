@@ -30,6 +30,17 @@ enum SecondaryRole: string
         };
     }
 
+    /**
+     * Text colour of the role symbol in compact places (route cards, ratings).
+     */
+    public function iconClasses(): string
+    {
+        return match ($this) {
+            self::Developer => 'text-[#3d5a80]',
+            self::Supporter => 'text-[#c9971c]',
+        };
+    }
+
     public function icon(): string
     {
         return match ($this) {

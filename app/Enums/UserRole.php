@@ -63,6 +63,19 @@ enum UserRole: string
         };
     }
 
+    /**
+     * Text colour of the role symbol in compact places (route cards, ratings).
+     */
+    public function iconClasses(): string
+    {
+        return match ($this) {
+            self::Owner => 'text-[#c9971c]',
+            self::Admin => 'text-trail-500',
+            self::Moderator => 'text-forest-500',
+            self::User => 'text-ink-muted',
+        };
+    }
+
     public function icon(): string
     {
         return match ($this) {
