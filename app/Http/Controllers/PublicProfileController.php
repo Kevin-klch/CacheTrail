@@ -12,6 +12,11 @@ use Illuminate\View\View;
  */
 class PublicProfileController extends Controller
 {
+    /**
+     * Number of most recently completed routes listed on the profile.
+     */
+    public const int RECENT_COMPLETIONS = 3;
+
     public function __invoke(string $user): View|RedirectResponse
     {
         $profile = User::with('geocachingAccount')->findOrFail((int) $user);
@@ -33,7 +38,12 @@ class PublicProfileController extends Controller
             'trails' => $trails,
             'likesReceived' => (int) $profile->trails()->published()->sum('like_count'),
             'completedCount' => $profile->completedTrails()->count(),
-            'lastCompleted' => $profile->completedTrails()->published()->orderByPivot('completed_at', 'desc')->first(),
+            'recentCompletions' => $profile->completedTrails()
+                ->published()
+                ->with('caches:id,trail_id,position,latitude,longitude')
+                ->orderByPivot('completed_at', 'desc')
+                ->limit(self::RECENT_COMPLETIONS)
+                ->get(),
         ]);
     }
 }

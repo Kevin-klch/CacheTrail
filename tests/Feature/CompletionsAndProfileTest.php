@@ -52,8 +52,35 @@ class CompletionsAndProfileTest extends TestCase
         $this->actingAs(User::factory()->create())
             ->get($user->profileUrl())
             ->assertOk()
-            ->assertSeeInOrder(['Zuletzt absolviert:', 'Neue Runde'])
+            ->assertSeeInOrder(['Zuletzt absolviert', '2 Routen insgesamt absolviert', 'Neue Runde', 'Alte Runde'])
             ->assertSeeInOrder(['Absolvierte Routen', '2']);
+    }
+
+    public function test_the_profile_lists_only_the_most_recently_completed_routes(): void
+    {
+        $user = User::factory()->create();
+
+        foreach (['Erste', 'Zweite', 'Dritte', 'Vierte'] as $days => $name) {
+            $user->completedTrails()->attach(
+                Trail::factory()->published()->create(['name' => "{$name} Runde"]),
+                ['completed_at' => now()->subDays(10 - $days)],
+            );
+        }
+
+        $this->actingAs(User::factory()->create())
+            ->get($user->profileUrl())
+            ->assertSeeInOrder(['Vierte Runde', 'Dritte Runde', 'Zweite Runde'])
+            ->assertDontSee('Erste Runde')
+            ->assertSee('4 Routen insgesamt absolviert');
+    }
+
+    public function test_profiles_without_completed_routes_say_so(): void
+    {
+        $user = User::factory()->create(['name' => 'Neuling']);
+
+        $this->actingAs(User::factory()->create())
+            ->get($user->profileUrl())
+            ->assertSee('Neuling hat noch keine Route absolviert.');
     }
 
     public function test_the_info_box_can_be_edited_and_is_shown_on_the_profile(): void
