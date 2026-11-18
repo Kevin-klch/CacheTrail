@@ -38,6 +38,17 @@
 
         <x-trail-stats :trail="$trail" size="large" class="mt-5" />
 
+        @if (($badges = $trail->propertyBadges()) || $trail->hasParking())
+            <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-forest-800">
+                @foreach ($badges as [$icon, $label])
+                    <li class="inline-flex items-center gap-1.5"><x-icon :name="$icon" class="size-4 text-forest-600" />{{ $label }}</li>
+                @endforeach
+                @if ($trail->hasParking())
+                    <li class="inline-flex items-center gap-1.5"><span class="grid size-4 place-items-center rounded bg-[#3d5a80] text-[0.6rem] font-bold text-white" aria-hidden="true">P</span>{{ __('Parking') }}</li>
+                @endif
+            </ul>
+        @endif
+
         @if ($equipment = $trail->equipmentLabels())
             <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">
                 <span class="inline-flex items-center gap-1.5 font-medium text-forest-800">

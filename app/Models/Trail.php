@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Enums\DistanceMethod;
+use App\Enums\TrailAttribute;
+use App\Enums\TrailShape;
 use App\Enums\TrailTool;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
+use App\Support\Coordinates;
 use App\Support\Format;
 use App\Support\GeoDistance;
 use App\Support\UserLocation;
@@ -23,7 +26,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'description', 'estimated_duration_minutes', 'transportations', 'tools', 'other_tools'])]
+#[Fillable(['name', 'description', 'estimated_duration_minutes', 'transportations', 'tools', 'other_tools', 'shape', 'suitability', 'parking_latitude', 'parking_longitude'])]
 class Trail extends Model
 {
     /** @use HasFactory<TrailFactory> */
@@ -43,6 +46,10 @@ class Trail extends Model
         'visibility' => TrailVisibility::Draft,
         'tools' => '[]',
         'other_tools' => null,
+        'shape' => null,
+        'suitability' => '[]',
+        'parking_latitude' => null,
+        'parking_longitude' => null,
     ];
 
     /**
@@ -56,6 +63,10 @@ class Trail extends Model
             'estimated_duration_minutes' => 'integer',
             'transportations' => AsEnumCollection::of(Transportation::class),
             'tools' => AsEnumCollection::of(TrailTool::class),
+            'shape' => TrailShape::class,
+            'suitability' => AsEnumCollection::of(TrailAttribute::class),
+            'parking_latitude' => 'float',
+            'parking_longitude' => 'float',
             'visibility' => TrailVisibility::class,
             'published_at' => 'datetime',
             'cache_count' => 'integer',
@@ -433,6 +444,49 @@ class Trail extends Model
         }
 
         return $labels;
+    }
+
+    public function hasParking(): bool
+    {
+        return $this->parking_latitude !== null && $this->parking_longitude !== null;
+    }
+
+    /**
+     * The parking spot in geocaching notation, e.g. "N 51° 28.338 E 006° 31.212".
+     */
+    public function parkingLabel(): ?string
+    {
+        return $this->hasParking() ? Coordinates::format($this->parking_latitude, $this->parking_longitude) : null;
+    }
+
+    /**
+     * The parking spot for the route map.
+     *
+     * @return array{latitude: float, longitude: float, label: string}|null
+     */
+    public function parkingMarker(): ?array
+    {
+        return $this->hasParking()
+            ? ['latitude' => $this->parking_latitude, 'longitude' => $this->parking_longitude, 'label' => $this->parkingLabel()]
+            : null;
+    }
+
+    /**
+     * Shape and suitability as list of [icon, label] for the properties of a trail.
+     *
+     * @return list<array{0: string, 1: string}>
+     */
+    public function propertyBadges(): array
+    {
+        $badges = $this->shape ? [[$this->shape->icon(), $this->shape->label()]] : [];
+
+        foreach (TrailAttribute::cases() as $attribute) {
+            if (($this->suitability ?? collect())->contains($attribute)) {
+                $badges[] = [$attribute->icon(), $attribute->label()];
+            }
+        }
+
+        return $badges;
     }
 
     public function imageUrl(): ?string

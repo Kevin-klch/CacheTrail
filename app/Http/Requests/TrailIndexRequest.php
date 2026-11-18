@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TrailAttribute;
+use App\Enums\TrailShape;
 use App\Enums\TrailSort;
 use App\Enums\Transportation;
 use App\Models\Trail;
@@ -34,6 +36,10 @@ class TrailIndexRequest extends FormRequest
         return [
             'q' => ['nullable', 'string', 'max:100'],
             'transportation' => ['nullable', Rule::enum(Transportation::class)],
+            'shape' => ['nullable', Rule::enum(TrailShape::class)],
+            'suitability' => ['nullable', 'array'],
+            'suitability.*' => ['distinct', Rule::enum(TrailAttribute::class)],
+            'parking' => ['nullable', 'boolean'],
             'min_hours' => ['nullable', 'numeric', 'min:0', 'max:72'],
             'max_hours' => ['nullable', 'numeric', 'min:0', 'max:72'],
             'min_caches' => ['nullable', 'integer', 'min:0', 'max:100'],
@@ -72,7 +78,7 @@ class TrailIndexRequest extends FormRequest
     {
         return array_filter(
             collect($this->validated())->except(['sort', 'view'])->all(),
-            fn (mixed $value): bool => $value !== null && $value !== '',
+            fn (mixed $value): bool => $value !== null && $value !== '' && $value !== [] && $value !== false && $value !== '0',
         );
     }
 

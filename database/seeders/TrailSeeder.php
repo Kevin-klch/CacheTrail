@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Actions\Trails\AddCachesToTrail;
+use App\Enums\TrailAttribute;
+use App\Enums\TrailShape;
 use App\Enums\TrailTool;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
@@ -24,6 +26,9 @@ class TrailSeeder extends Seeder
             [
                 'user' => $testUser,
                 'name' => 'Waldabenteuer am Niederrhein',
+                'shape' => TrailShape::Loop,
+                'suitability' => [TrailAttribute::KidFriendly, TrailAttribute::DogFriendly],
+                'parking' => [51.4716, 6.5189],
                 'caches' => 'GCCT01 GCCT02 GCCT03 GCCT04 GCCT05 GCCT06 GCCT07 GCCT08',
                 'minutes' => 120,
                 'transportations' => [Transportation::Foot, Transportation::Bike],
@@ -36,6 +41,8 @@ class TrailSeeder extends Seeder
             [
                 'user' => $testUser,
                 'name' => 'Zechenrunde im Revier',
+                'shape' => TrailShape::Loop,
+                'suitability' => [TrailAttribute::KidFriendly, TrailAttribute::StrollerFriendly],
                 'caches' => 'GCCT11 GCCT12 GCCT13 GCCT14 GCCT15 GCCT16',
                 'minutes' => 150,
                 'transportations' => [Transportation::Foot],
@@ -47,6 +54,9 @@ class TrailSeeder extends Seeder
             [
                 'user' => $admin,
                 'name' => 'Rheinufer-Radtour',
+                'shape' => TrailShape::OneWay,
+                'suitability' => [TrailAttribute::DogFriendly],
+                'parking' => [51.3255, 6.7212],
                 'caches' => 'GCCT21 GCCT22 GCCT23 GCCT24 GCCT25 GCCT26 GCCT27 GCCT28',
                 'minutes' => 300,
                 'transportations' => [Transportation::Bike],
@@ -57,6 +67,9 @@ class TrailSeeder extends Seeder
             [
                 'user' => $admin,
                 'name' => 'Familienrunde am Weiher',
+                'shape' => TrailShape::Loop,
+                'suitability' => [TrailAttribute::KidFriendly, TrailAttribute::StrollerFriendly, TrailAttribute::DogFriendly],
+                'parking' => [51.4212, 6.6012],
                 'caches' => 'GCCT31 GCCT32 GCCT33 GCCT34 GCCT35',
                 'minutes' => 60,
                 'transportations' => [Transportation::Foot],
@@ -84,6 +97,10 @@ class TrailSeeder extends Seeder
                 'transportations' => $data['transportations'],
                 'tools' => $data['tools'] ?? [],
                 'other_tools' => $data['other_tools'] ?? null,
+                'shape' => $data['shape'] ?? null,
+                'suitability' => $data['suitability'] ?? [],
+                'parking_latitude' => $data['parking'][0] ?? null,
+                'parking_longitude' => $data['parking'][1] ?? null,
             ]);
             $trail->user()->associate($data['user']);
             $trail->visibility = $data['visibility'];

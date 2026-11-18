@@ -98,6 +98,21 @@
         @case('chevron-down')
             <path d="m6 9 6 6 6-6" />
             @break
+        @case('loop')
+            <path d="M20 12a8 8 0 1 1-2.34-5.66" /><path d="M20 4v4h-4" />
+            @break
+        @case('kids')
+            <circle cx="9" cy="5" r="2" /><circle cx="16.5" cy="8" r="1.6" /><path d="M9 8v6m0 0-2.5 6M9 14l2.5 6M6 10.5l3-1.5 3 1.5M16.5 10.5v4m0 0-1.8 5m1.8-5 1.8 5" />
+            @break
+        @case('stroller')
+            <path d="M4 5h2l2.5 9h9.5a4 4 0 0 0-4-7H11" /><path d="M11 7v7" /><circle cx="9.5" cy="18.5" r="1.8" /><circle cx="17" cy="18.5" r="1.8" />
+            @break
+        @case('dog')
+            <path d="M10 5.5 8 3.5 5.5 6v3.5L4 11v2h3.5l1 1.5V20h2v-3.5h5V20h2v-6.5l1.5-2V8" /><path d="M10 5.5c2-.5 5.5-.5 8.5 2.5" />
+            @break
+        @case('moon')
+            <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />
+            @break
         @case('globe')
             <circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z" />
             @break

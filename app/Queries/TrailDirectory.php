@@ -36,6 +36,18 @@ class TrailDirectory
             $query->suitableFor(Transportation::from($filters['transportation']));
         }
 
+        if (isset($filters['shape'])) {
+            $query->where('shape', $filters['shape']);
+        }
+
+        foreach ($filters['suitability'] ?? [] as $attribute) {
+            $query->whereJsonContains('suitability', $attribute);
+        }
+
+        if (! empty($filters['parking'])) {
+            $query->whereNotNull('parking_latitude');
+        }
+
         $this->between($query, 'estimated_duration_minutes', $filters['min_hours'] ?? null, $filters['max_hours'] ?? null, 60);
         $this->between($query, 'cache_count', $filters['min_caches'] ?? null, $filters['max_caches'] ?? null);
         $this->between($query, 'total_distance_meters', $filters['min_km'] ?? null, $filters['max_km'] ?? null, 1000);

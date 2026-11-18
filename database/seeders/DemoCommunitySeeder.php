@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Actions\Trails\AddCachesToTrail;
 use App\Enums\SecondaryRole;
+use App\Enums\TrailAttribute;
+use App\Enums\TrailShape;
 use App\Enums\TrailTool;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
@@ -104,6 +106,9 @@ class DemoCommunitySeeder extends Seeder
             [
                 'user' => 'Mia.Moorhuhn',
                 'name' => 'Römerspuren in Xanten',
+                'shape' => TrailShape::OneWay,
+                'suitability' => [TrailAttribute::KidFriendly],
+                'parking' => [51.658, 6.4432],
                 'caches' => 'GCCT61 GCCT62 GCCT63 GCCT64 GCCT65 GCCT66',
                 'minutes' => 150,
                 'transportations' => [Transportation::Foot],
@@ -115,6 +120,9 @@ class DemoCommunitySeeder extends Seeder
             [
                 'user' => 'Rheinpirat',
                 'name' => 'Hochofen-Tour im Landschaftspark',
+                'shape' => TrailShape::Loop,
+                'suitability' => [TrailAttribute::NightFriendly],
+                'parking' => [51.4801, 6.7788],
                 'caches' => 'GCCT67 GCCT68 GCCT69 GCCT70 GCCT71 GCCT72',
                 'minutes' => 180,
                 'transportations' => [Transportation::Foot],
@@ -126,6 +134,9 @@ class DemoCommunitySeeder extends Seeder
             [
                 'user' => 'KaffeeUndKoordinaten',
                 'name' => 'Klosterrunde Kamp',
+                'shape' => TrailShape::Loop,
+                'suitability' => [TrailAttribute::KidFriendly, TrailAttribute::StrollerFriendly, TrailAttribute::DogFriendly],
+                'parking' => [51.5026, 6.5392],
                 'caches' => 'GCCT73 GCCT74 GCCT75 GCCT76 GCCT77',
                 'minutes' => 75,
                 'transportations' => [Transportation::Foot],
@@ -137,6 +148,8 @@ class DemoCommunitySeeder extends Seeder
             [
                 'user' => 'Mia.Moorhuhn',
                 'name' => 'Rätselpfad im Stadtwald',
+                'shape' => TrailShape::Loop,
+                'suitability' => [TrailAttribute::NightFriendly],
                 'caches' => 'GCCT78 GCCT79 GCCT80 GCCT81 GCCT82',
                 'minutes' => 120,
                 'transportations' => [Transportation::Foot, Transportation::Bike],
@@ -148,6 +161,9 @@ class DemoCommunitySeeder extends Seeder
             [
                 'user' => 'Rheinpirat',
                 'name' => 'Deichtour Wesel',
+                'shape' => TrailShape::OneWay,
+                'suitability' => [TrailAttribute::DogFriendly],
+                'parking' => [51.656, 6.6098],
                 'caches' => 'GCCT83 GCCT84 GCCT85 GCCT86 GCCT87 GCCT88',
                 'minutes' => 210,
                 'transportations' => [Transportation::Bike],
@@ -177,6 +193,10 @@ class DemoCommunitySeeder extends Seeder
                 'transportations' => $data['transportations'],
                 'tools' => $data['tools'],
                 'other_tools' => $data['other_tools'],
+                'shape' => $data['shape'] ?? null,
+                'suitability' => $data['suitability'] ?? [],
+                'parking_latitude' => $data['parking'][0] ?? null,
+                'parking_longitude' => $data['parking'][1] ?? null,
             ]);
             $trail->user()->associate($users[$data['user']]);
             $trail->visibility = $data['published_days_ago'] === null ? TrailVisibility::Draft : TrailVisibility::Published;

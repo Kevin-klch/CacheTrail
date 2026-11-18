@@ -115,6 +115,10 @@
         @apply bg-trail-500;
     }
 
+    .ct-marker--parking {
+        @apply size-[30px] rounded-lg bg-[#3d5a80] font-bold;
+    }
+
     .ct-marker--disabled {
         @apply bg-amber-600;
     }
@@ -179,6 +183,10 @@
 
     .ct-popup__number--end {
         @apply bg-trail-500;
+    }
+
+    .ct-popup__number--parking {
+        @apply rounded-lg bg-[#3d5a80];
     }
 
     .ct-popup__number--disabled {

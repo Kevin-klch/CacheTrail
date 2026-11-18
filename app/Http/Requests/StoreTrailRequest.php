@@ -2,9 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TrailAttribute;
+use App\Enums\TrailShape;
 use App\Enums\TrailTool;
 use App\Enums\Transportation;
 use App\Models\Trail;
+use App\Support\Coordinates;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -36,6 +40,14 @@ class StoreTrailRequest extends FormRequest
             'tools' => ['nullable', 'array'],
             'tools.*' => ['required', 'distinct', Rule::enum(TrailTool::class)],
             'other_tools' => ['nullable', 'string', 'max:'.self::OTHER_TOOLS_MAX_LENGTH],
+            'shape' => ['nullable', Rule::enum(TrailShape::class)],
+            'suitability' => ['nullable', 'array'],
+            'suitability.*' => ['required', 'distinct', Rule::enum(TrailAttribute::class)],
+            'parking' => ['nullable', 'string', 'max:60', function (string $attribute, mixed $value, Closure $fail): void {
+                if (Coordinates::parse((string) $value) === null) {
+                    $fail(__('Please enter the parking spot as coordinates, e.g. N 51° 28.338 E 006° 31.212 or 51.4723, 6.5202.'));
+                }
+            }],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:'.self::MAX_IMAGE_KILOBYTES],
         ];
     }
@@ -69,6 +81,10 @@ class StoreTrailRequest extends FormRequest
             'tools' => __('Equipment'),
             'tools.*' => __('Equipment'),
             'other_tools' => __('Other equipment'),
+            'shape' => __('Type of route'),
+            'suitability' => __('Suitable for'),
+            'suitability.*' => __('Suitable for'),
+            'parking' => __('Parking'),
             'image' => __('Cover image'),
         ];
     }
@@ -79,7 +95,7 @@ class StoreTrailRequest extends FormRequest
     }
 
     /**
-     * @return array{name: string, description: string, estimated_duration_minutes: int, transportations: list<Transportation>, tools: list<TrailTool>, other_tools: ?string}
+     * @return array{name: string, description: string, estimated_duration_minutes: int, transportations: list<Transportation>, tools: list<TrailTool>, other_tools: ?string, shape: ?string, suitability: list<TrailAttribute>, parking_latitude: ?float, parking_longitude: ?float}
      */
     public function trailAttributes(): array
     {
@@ -90,6 +106,25 @@ class StoreTrailRequest extends FormRequest
             'transportations' => $this->selectedTransportations(),
             'tools' => $this->selectedTools(),
             'other_tools' => $this->validated('other_tools'),
+            'shape' => $this->validated('shape'),
+            'suitability' => array_values(array_filter(
+                TrailAttribute::cases(),
+                fn (TrailAttribute $attribute): bool => in_array($attribute->value, $this->validated('suitability') ?? [], true),
+            )),
+            ...$this->parkingCoordinates(),
+        ];
+    }
+
+    /**
+     * @return array{parking_latitude: ?float, parking_longitude: ?float}
+     */
+    private function parkingCoordinates(): array
+    {
+        $parking = filled($this->validated('parking')) ? Coordinates::parse($this->validated('parking')) : null;
+
+        return [
+            'parking_latitude' => $parking['latitude'] ?? null,
+            'parking_longitude' => $parking['longitude'] ?? null,
         ];
     }
 

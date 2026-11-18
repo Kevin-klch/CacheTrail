@@ -3,7 +3,7 @@
 @use('App\Http\Requests\TrailIndexRequest')
 
 @php
-    $advancedFilters = ['min_hours', 'max_hours', 'min_caches', 'max_caches', 'min_km', 'max_km', 'min_difficulty', 'max_difficulty', 'min_terrain', 'max_terrain'];
+    $advancedFilters = ['min_hours', 'max_hours', 'min_caches', 'max_caches', 'min_km', 'max_km', 'min_difficulty', 'max_difficulty', 'min_terrain', 'max_terrain', 'shape', 'suitability', 'parking'];
     $hasAdvancedFilters = collect($advancedFilters)->contains(fn ($key) => isset($filters[$key]));
     $viewQuery = $view === 'compact' ? [] : ['view' => $view];
 @endphp
@@ -154,7 +154,29 @@
                     <x-range-filter :label="__('Length')" name="km" form="directory-filter" :values="$filters" :max="1000" step="0.5" unit="km" />
                     <x-range-filter :label="__('Difficulty')" name="difficulty" form="directory-filter" :values="$filters" :min="1" :max="5" step="0.5" />
                     <x-range-filter :label="__('Terrain')" name="terrain" form="directory-filter" :values="$filters" :min="1" :max="5" step="0.5" />
+
+                    <x-select name="shape" form="directory-filter" :label="__('Type of route')" :value="$filters['shape'] ?? ''" :placeholder="__('Any')"
+                        :options="collect(App\Enums\TrailShape::cases())->mapWithKeys(fn ($shape) => [$shape->value => $shape->label()])->all()" />
                 </div>
+
+                <fieldset class="mt-5">
+                    <legend class="mb-2 block text-sm font-medium text-forest-900">{{ __('Suitable for') }}</legend>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach (App\Enums\TrailAttribute::cases() as $attribute)
+                            <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-sand-300 bg-white px-3.5 py-1.5 text-sm font-medium transition hover:border-forest-500 has-checked:border-forest-700 has-checked:bg-forest-700 has-checked:text-paper">
+                                <input type="checkbox" name="suitability[]" value="{{ $attribute->value }}" form="directory-filter" class="sr-only"
+                                    @checked(in_array($attribute->value, $filters['suitability'] ?? [], true))>
+                                <x-icon :name="$attribute->icon()" class="size-4" />
+                                {{ $attribute->label() }}
+                            </label>
+                        @endforeach
+                        <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-sand-300 bg-white px-3.5 py-1.5 text-sm font-medium transition hover:border-forest-500 has-checked:border-forest-700 has-checked:bg-forest-700 has-checked:text-paper">
+                            <input type="checkbox" name="parking" value="1" form="directory-filter" class="sr-only" @checked(! empty($filters['parking']))>
+                            <span class="grid size-4 place-items-center rounded bg-[#3d5a80] text-[0.6rem] font-bold text-white" aria-hidden="true">P</span>
+                            {{ __('With parking') }}
+                        </label>
+                    </div>
+                </fieldset>
                 <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
                     <p class="text-xs text-ink-muted">{{ __('Length is measured as the crow flies between the stations.') }}</p>
                     <x-button form="directory-filter">{{ __('Apply filters') }}</x-button>

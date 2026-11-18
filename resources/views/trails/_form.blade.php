@@ -82,6 +82,53 @@
         </div>
     </fieldset>
 
+    <fieldset>
+        <legend class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Type of route') }} <span class="font-normal text-ink-muted">({{ __('optional') }})</span></legend>
+        @php
+            $selectedShape = old('shape', $trail->shape?->value);
+        @endphp
+        <div class="flex flex-wrap gap-2">
+            @foreach (['' => [__('Not specified'), null], ...collect(App\Enums\TrailShape::cases())->mapWithKeys(fn ($shape) => [$shape->value => [$shape->label(), $shape->icon()]])->all()] as $value => [$label, $icon])
+                <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-sand-300 bg-white px-3.5 py-2 text-sm font-medium transition hover:border-forest-500 has-checked:border-forest-700 has-checked:bg-forest-700 has-checked:text-paper has-focus-visible:ring-4 has-focus-visible:ring-forest-500/25">
+                    <input type="radio" name="shape" value="{{ $value }}" class="sr-only" @checked((string) $selectedShape === (string) $value)>
+                    @if ($icon)
+                        <x-icon :name="$icon" class="size-4" />
+                    @endif
+                    {{ $label }}
+                </label>
+            @endforeach
+        </div>
+        @error('shape')
+            <p class="mt-1.5 text-sm text-red-700">{{ $message }}</p>
+        @enderror
+    </fieldset>
+
+    <fieldset>
+        <legend class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Suitable for') }} <span class="font-normal text-ink-muted">({{ __('optional') }})</span></legend>
+        @php
+            $selectedSuitability = old('suitability', $trail->suitability?->map(fn ($attribute) => $attribute->value)->all() ?? []);
+        @endphp
+        <div class="flex flex-wrap gap-2">
+            @foreach (App\Enums\TrailAttribute::cases() as $attribute)
+                <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-sand-300 bg-white px-3.5 py-2 text-sm font-medium transition hover:border-forest-500 has-checked:border-forest-700 has-checked:bg-forest-700 has-checked:text-paper has-focus-visible:ring-4 has-focus-visible:ring-forest-500/25">
+                    <input type="checkbox" name="suitability[]" value="{{ $attribute->value }}" class="sr-only"
+                        @checked(in_array($attribute->value, (array) $selectedSuitability, true))>
+                    <x-icon :name="$attribute->icon()" class="size-4" />
+                    {{ $attribute->label() }}
+                </label>
+            @endforeach
+        </div>
+        @if ($errors->has('suitability') || $errors->has('suitability.*'))
+            <p class="mt-1.5 text-sm text-red-700">{{ $errors->first('suitability') ?: $errors->first('suitability.*') }}</p>
+        @endif
+    </fieldset>
+
+    <div class="max-w-xl">
+        <x-input name="parking" :label="__('Parking (optional)')" :value="$trail->parkingLabel()" maxlength="60"
+            :placeholder="__('e.g. N 51° 28.338 E 006° 31.212')"
+            :hint="__('Coordinates of a good parking spot. It is shown on the map with a link for navigation.')" />
+    </div>
+
     <div>
         <span class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Cover image') }}</span>
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start">

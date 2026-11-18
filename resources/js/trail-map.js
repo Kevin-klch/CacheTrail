@@ -196,6 +196,26 @@ function popupContent(cache, labels, total, goTo) {
     return root;
 }
 
+function parkingPopup(parking, labels) {
+    const root = element('div', 'ct-popup ct-popup--cache');
+    const header = element('div', 'ct-popup__header');
+    const heading = element('div', 'ct-popup__heading');
+
+    heading.append(element('p', 'ct-popup__title', labels.parking), element('p', 'ct-popup__subline', parking.label));
+    header.append(element('span', 'ct-popup__number ct-popup__number--parking', 'P'), heading);
+
+    const actions = element('div', 'ct-popup__actions');
+    actions.append(popupAction(
+        `https://www.google.com/maps/dir/?api=1&destination=${parking.latitude},${parking.longitude}`,
+        labels.navigate,
+        ICONS.navigate,
+    ));
+
+    root.append(header, actions);
+
+    return root;
+}
+
 function directoryPopup(route, labels) {
     const root = element('div', 'ct-popup');
     const link = element('a', 'ct-popup__link', labels.view);
@@ -289,7 +309,7 @@ export function registerShareLocation(Alpine) {
  * Listens for "trail-caches-updated" window events to redraw without a page reload.
  */
 export function registerTrailMap(Alpine) {
-    Alpine.data('trailMap', (initialCaches = [], labels = {}) => ({
+    Alpine.data('trailMap', (initialCaches = [], labels = {}, parking = null) => ({
         map: null,
         layer: null,
 
@@ -312,8 +332,28 @@ export function registerTrailMap(Alpine) {
         render(caches) {
             this.layer.clearLayers();
 
+            if (parking) {
+                L.marker([parking.latitude, parking.longitude], {
+                    icon: L.divIcon({
+                        className: '',
+                        html: element('span', 'ct-marker ct-marker--parking', 'P').outerHTML,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15],
+                        popupAnchor: [0, -16],
+                    }),
+                    title: labels.parking,
+                    keyboard: true,
+                })
+                    .bindPopup(parkingPopup(parking, labels), { className: 'ct-leaflet-popup', minWidth: 220 })
+                    .addTo(this.layer);
+            }
+
             if (caches.length === 0) {
-                this.map.setView([51.16, 10.45], 5);
+                if (parking) {
+                    this.map.setView([parking.latitude, parking.longitude], 15);
+                } else {
+                    this.map.setView([51.16, 10.45], 5);
+                }
 
                 return;
             }

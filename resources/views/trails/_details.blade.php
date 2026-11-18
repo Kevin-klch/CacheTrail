@@ -2,10 +2,10 @@
         @if ($trail->imageUrl() && $trail->caches->isNotEmpty())
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-[3fr_2fr]">
                 <x-trail-image :trail="$trail" class="aspect-[16/10] w-full rounded-[2rem] shadow-2xl shadow-forest-950/20" />
-                <x-trail-map :markers="$trail->mapMarkers()" class="aspect-[16/10] w-full lg:aspect-auto" />
+                <x-trail-map :markers="$trail->mapMarkers()" :parking="$trail->parkingMarker()" class="aspect-[16/10] w-full lg:aspect-auto" />
             </div>
         @elseif ($trail->caches->isNotEmpty())
-            <x-trail-map :markers="$trail->mapMarkers()" class="aspect-[4/3] w-full sm:aspect-[21/9]" />
+            <x-trail-map :markers="$trail->mapMarkers()" :parking="$trail->parkingMarker()" class="aspect-[4/3] w-full sm:aspect-[21/9]" />
         @else
             <x-trail-image :trail="$trail" class="aspect-[21/9] w-full rounded-[2rem] shadow-2xl shadow-forest-950/20" />
         @endif
@@ -131,6 +131,39 @@
                         {{ __('Last updated on :date', ['date' => App\Support\Format::date($trail->updated_at)]) }}
                     </p>
                 </x-card>
+
+                @if ($trail->propertyBadges() || $trail->hasParking())
+                    <x-card class="p-5 sm:p-6">
+                        <h2 class="flex items-center gap-2 text-xl font-bold">
+                            <x-icon name="sliders" class="text-forest-600" />
+                            {{ __('Properties') }}
+                        </h2>
+                        @if ($badges = $trail->propertyBadges())
+                            <ul class="mt-3 flex flex-wrap gap-2">
+                                @foreach ($badges as [$icon, $label])
+                                    <li class="inline-flex items-center gap-1.5 rounded-full bg-forest-50 px-3 py-1 text-sm font-medium text-forest-800 ring-1 ring-forest-600/15">
+                                        <x-icon :name="$icon" class="size-4" />
+                                        {{ $label }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        @if ($trail->hasParking())
+                            <div @class(['flex items-start gap-3', 'mt-4 border-t border-sand-200 pt-4' => $badges])>
+                                <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-[#3d5a80] text-sm font-bold text-white" aria-hidden="true">P</span>
+                                <div class="min-w-0 text-sm">
+                                    <p class="font-semibold text-forest-900">{{ __('Parking') }}</p>
+                                    <p class="font-mono text-ink-muted">{{ $trail->parkingLabel() }}</p>
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ $trail->parking_latitude }},{{ $trail->parking_longitude }}" target="_blank" rel="noopener noreferrer"
+                                        class="mt-1 inline-flex items-center gap-1.5 font-semibold text-forest-700 hover:underline">
+                                        {{ __('Start navigation') }}
+                                        <x-icon name="external" class="size-3.5" />
+                                    </a>
+                                </div>
+                            </div>
+                        @endif
+                    </x-card>
+                @endif
 
                 <x-card class="p-5 sm:p-6">
                     <h2 class="flex items-center gap-2 text-xl font-bold">
