@@ -22,8 +22,11 @@
             <span class="font-mono font-medium text-forest-700">{{ $cache->cache_code }}</span>
         @endif
         <span>{{ $cache->cache_type->label() }}</span>
-        <span>{{ $cache->ratingLabel() }}</span>
     </p>
+    <div class="mt-2 flex flex-wrap gap-2">
+        <x-rating-pips :label="__('Difficulty')" short="D" :value="$cache->difficulty" />
+        <x-rating-pips :label="__('Terrain')" short="T" :value="$cache->terrain" />
+    </div>
     @if ($cache->cache_status->hint())
         <p @class([
             'mt-1.5 inline-flex items-center gap-1.5 text-sm font-medium',

@@ -58,7 +58,7 @@
                     <x-stat :label="__('Likes received')" icon="heart">{{ $likesReceived }}</x-stat>
                 </dl>
                 @unless ($account)
-                    <p class="mt-4 border-t border-sand-200 pt-4 text-xs text-ink-muted">{{ __('Geocaching.com figures appear once the account is connected.') }}</p>
+                    <p class="border-t border-sand-200 pt-4 text-xs text-ink-muted">{{ __('Geocaching.com figures appear once the account is connected.') }}</p>
                 @endunless
             </x-card>
         </div>

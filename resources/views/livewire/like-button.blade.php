@@ -9,7 +9,8 @@
         'px-5 py-2.5 text-sm' => $large,
         'size-10' => ! $large,
         'bg-trail-500 text-white hover:bg-trail-600' => $liked,
-        'bg-paper/95 text-forest-800 hover:bg-white' => ! $liked,
+        'bg-paper/95 text-forest-800 hover:bg-white' => ! $liked && ! $large,
+        'bg-white text-forest-800 ring-1 ring-forest-700/20 hover:bg-forest-50 hover:ring-forest-700/40' => ! $liked && $large,
     ])
 >
     <x-icon name="heart" @class(['size-5', 'fill-current' => $liked]) />

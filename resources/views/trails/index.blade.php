@@ -14,7 +14,7 @@
     </x-page-header>
 
     <div class="mx-auto -mt-20 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <x-card class="p-4 sm:p-6" x-data="{ advanced: @js($hasAdvancedFilters || $errors->any()) }">
+        <x-card class="p-4 sm:p-6" x-data="{ advanced: {{ Js::from($hasAdvancedFilters || $errors->any()) }} }">
             {{-- Search bar; all other filter fields belong to this form via the "form" attribute --}}
             <form id="directory-filter" method="GET" action="{{ route('trails.index') }}" role="search">
                 @if ($view !== 'compact')

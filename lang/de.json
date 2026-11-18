@@ -10,6 +10,7 @@
     ":count route on the map|:count routes on the map": ":count Route auf der Karte|:count Routen auf der Karte",
     ":count route|:count routes": ":count Route|:count Routen",
     ":count star|:count stars": ":count Stern|:count Sterne",
+    ":label :value of 5": ":label :value von 5",
     ":name has not published any routes yet.": ":name hat noch keine Routen veröffentlicht.",
     ":name has not written anything about themselves yet.": ":name hat noch nichts über sich geschrieben.",
     ":status by :name on :date": ":status von :name am :date",

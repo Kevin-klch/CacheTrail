@@ -122,7 +122,7 @@
                         <x-stat :label="__('Difficulty')" icon="compass">{{ App\Models\Trail::ratingAverageLabel($trail->average_difficulty) ?? '–' }}</x-stat>
                         <x-stat :label="__('Terrain')" icon="map">{{ App\Models\Trail::ratingAverageLabel($trail->average_terrain) ?? '–' }}</x-stat>
                     </dl>
-                    <p class="mt-4 border-t border-sand-200 pt-4 text-xs text-ink-muted">
+                    <p class="border-t border-sand-200 pt-4 text-xs text-ink-muted">
                         @if ($trail->published_at)
                             {{ __('Published on :date', ['date' => $trail->published_at->translatedFormat('j. F Y')]) }}<br>
                         @endif

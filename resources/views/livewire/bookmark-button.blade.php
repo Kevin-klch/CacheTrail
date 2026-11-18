@@ -9,7 +9,8 @@
         'px-5 py-2.5 text-sm' => $large,
         'size-10' => ! $large,
         'bg-forest-700 text-paper hover:bg-forest-800' => $bookmarked,
-        'bg-paper/95 text-forest-800 hover:bg-white' => ! $bookmarked,
+        'bg-paper/95 text-forest-800 hover:bg-white' => ! $bookmarked && ! $large,
+        'bg-white text-forest-800 ring-1 ring-forest-700/20 hover:bg-forest-50 hover:ring-forest-700/40' => ! $bookmarked && $large,
     ])
 >
     <x-icon name="bookmark" @class(['size-5', 'fill-current' => $bookmarked]) />
