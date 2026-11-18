@@ -21,6 +21,11 @@ class UpdateUserPassword implements UpdatesUserPasswords
      */
     public function update(User $user, array $input): void
     {
+        if ($user->isFeedbackAccount()) {
+            throw ValidationException::withMessages(['password' => __('The shared feedback account cannot be changed.')])
+                ->errorBag('updatePassword');
+        }
+
         Validator::make($input, [
             'current_password' => ['required', 'string', 'current_password:web'],
             'password' => $this->passwordRules(),

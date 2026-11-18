@@ -77,6 +77,10 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        if ($user->isFeedbackAccount()) {
+            return back()->withErrors(['password' => __('The shared feedback account cannot be deleted.')], 'deleteAccount');
+        }
+
         Auth::logout();
 
         $user->delete();

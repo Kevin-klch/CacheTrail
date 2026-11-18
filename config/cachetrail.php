@@ -70,6 +70,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Feedback Version
+    |--------------------------------------------------------------------------
+    |
+    | Shared account for testers. Its login details are shown on the login
+    | page; email address, password and account deletion are locked.
+    |
+    */
+
+    'feedback' => [
+        'email' => env('CACHETRAIL_FEEDBACK_EMAIL', 'feedback@example.com'),
+        'password' => env('CACHETRAIL_FEEDBACK_PASSWORD', 'cachetrail-testen'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Imprint and Privacy Policy
     |--------------------------------------------------------------------------
     |
@@ -101,7 +116,7 @@ return [
 
         // Slug of the route shown to visitors as an example (home page and /beispielroute).
         // Falls back to the most liked published route.
-        'example' => env('CACHETRAIL_EXAMPLE_TRAIL'),
+        'example' => env('CACHETRAIL_EXAMPLE_TRAIL', 'waldabenteuer-am-niederrhein'),
     ],
 
 ];

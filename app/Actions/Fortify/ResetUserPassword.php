@@ -21,6 +21,10 @@ class ResetUserPassword implements ResetsUserPasswords
      */
     public function reset(User $user, array $input): void
     {
+        if ($user->isFeedbackAccount()) {
+            throw ValidationException::withMessages(['email' => __('The shared feedback account cannot be changed.')]);
+        }
+
         Validator::make($input, [
             'password' => $this->passwordRules(),
         ])->validate();

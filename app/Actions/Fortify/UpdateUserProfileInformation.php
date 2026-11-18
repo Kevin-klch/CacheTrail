@@ -22,6 +22,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update(User $user, array $input): void
     {
+        if ($user->isFeedbackAccount() && ($input['email'] ?? null) !== $user->email) {
+            throw ValidationException::withMessages(['email' => __('The shared feedback account cannot be changed.')])
+                ->errorBag('updateProfileInformation');
+        }
+
         Validator::make($input, [
             'email' => [
                 'required',
