@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Trail;
 use App\Models\TrailRating;
+use App\Services\Badges\BadgeAwarder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Livewire\Attributes\Locked;
@@ -39,7 +40,7 @@ class TrailRatings extends Component
         $this->trail = $trail;
     }
 
-    public function save(): void
+    public function save(BadgeAwarder $badges): void
     {
         $existing = $this->ownRating();
 
@@ -64,6 +65,12 @@ class TrailRatings extends Component
         $this->trail->refreshCommunityStatistics();
         $this->reset(['rating', 'comment', 'editing']);
         session()->flash('rating-status', $existing ? __('Your rating has been updated.') : __('Thank you for your rating!'));
+
+        $earned = $badges->award(auth()->user());
+
+        if ($earned->isNotEmpty()) {
+            $this->dispatch('badges-earned', badges: BadgeAwarder::notices($earned));
+        }
     }
 
     public function edit(): void

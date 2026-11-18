@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Trail;
+use App\Services\Badges\BadgeAwarder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -25,7 +26,7 @@ class CompleteButton extends Component
         $this->completedAt = $this->trail->completedBy()->whereKey(auth()->id())->first()?->pivot->completed_at;
     }
 
-    public function toggle(): void
+    public function toggle(BadgeAwarder $badges): void
     {
         Gate::authorize('view', $this->trail);
 
@@ -41,6 +42,12 @@ class CompleteButton extends Component
         $now = now();
         $this->trail->completedBy()->syncWithoutDetaching([$user->id => ['completed_at' => $now]]);
         $this->completedAt = $now->toDateTimeString();
+
+        $earned = $badges->award($user);
+
+        if ($earned->isNotEmpty()) {
+            $this->dispatch('badges-earned', badges: BadgeAwarder::notices($earned));
+        }
     }
 
     public function render(): View

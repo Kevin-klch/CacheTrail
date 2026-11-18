@@ -56,6 +56,10 @@
             </div>
         </footer>
 
+        @auth
+            <x-badge-notices />
+        @endauth
+
         @livewireScriptConfig
     </body>
 </html>

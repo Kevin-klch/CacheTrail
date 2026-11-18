@@ -135,6 +135,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * @return HasMany<UserBadge, $this>
+     */
+    public function badges(): HasMany
+    {
+        return $this->hasMany(UserBadge::class);
+    }
+
+    /**
      * Public profile address, e.g. /nutzer/42-erika-muster. The number identifies the user,
      * the name part only makes the address readable (names are not unique).
      */

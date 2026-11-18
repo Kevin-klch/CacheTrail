@@ -24,5 +24,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([TrailSeeder::class, CommunitySeeder::class]);
+
+        // Hand out the badges the demo accounts have earned with the seeded data.
+        $this->command->callSilent('badges:award');
     }
 }

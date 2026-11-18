@@ -87,6 +87,47 @@
             </x-card>
         </div>
 
+        {{-- Badges --}}
+        <x-card class="mt-6">
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h2 class="flex items-center gap-2 text-2xl font-bold">
+                    <x-icon name="award" class="text-forest-600" />
+                    {{ __('Badges') }}
+                </h2>
+                @if ($badges->isNotEmpty())
+                    <span class="text-sm text-ink-muted">{{ trans_choice(':count badge|:count badges', $badges->count()) }}</span>
+                @endif
+            </div>
+
+            @if ($badges->isEmpty())
+                <p class="mt-3 text-ink-muted">
+                    @if (auth()->user()->is($profile))
+                        {{ __('Complete, rate or publish routes to earn your first badges.') }}
+                    @else
+                        {{ __(':name has not earned any badges yet.', ['name' => $profile->name]) }}
+                    @endif
+                </p>
+            @else
+                <ul class="mt-6 grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($badges as ['badge' => $earned, 'isNew' => $isNew])
+                        <li class="flex items-center gap-4">
+                            <x-badge-medal :badge="$earned->badge" :level="$earned->level" size="lg" />
+                            <div class="min-w-0">
+                                <p class="flex flex-wrap items-center gap-2 font-heading text-lg font-bold leading-tight text-forest-900">
+                                    {{ $earned->name() }}
+                                    @if ($isNew)
+                                        <span class="rounded-full bg-trail-500 px-2 py-0.5 font-sans text-[0.65rem] font-bold uppercase tracking-wider text-white">{{ __('New') }}</span>
+                                    @endif
+                                </p>
+                                <p class="text-sm text-ink">{{ $earned->description() }}</p>
+                                <p class="text-xs text-ink-muted">{{ __('Earned on :date', ['date' => $earned->earned_at->translatedFormat('j. F Y')]) }}</p>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </x-card>
+
         <h2 class="mt-12 text-3xl font-bold">{{ __('Routes by :name', ['name' => $profile->name]) }}</h2>
 
         @if ($trails->isEmpty())

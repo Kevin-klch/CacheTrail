@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Trail;
+use App\Services\Badges\BadgeAwarder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use Livewire\Attributes\Locked;
@@ -28,7 +29,7 @@ class LikeButton extends Component
         $this->liked = $trail->isLikedBy(auth()->user());
     }
 
-    public function toggle(): void
+    public function toggle(BadgeAwarder $badges): void
     {
         Gate::authorize('view', $this->trail);
 
@@ -42,6 +43,9 @@ class LikeButton extends Component
 
         $this->trail->refreshCommunityStatistics();
         $this->liked = ! $this->liked;
+
+        // Likes count towards the badges of the route's creator.
+        $badges->award($this->trail->user);
     }
 
     public function render(): View

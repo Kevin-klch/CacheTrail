@@ -9,6 +9,7 @@ use App\Http\Requests\TrailIndexRequest;
 use App\Http\Requests\UpdateTrailRequest;
 use App\Models\Trail;
 use App\Queries\TrailDirectory;
+use App\Services\Badges\BadgeAwarder;
 use App\Services\Geocaching\MockGeocacheProvider;
 use App\Services\Geocoding\PlaceGeocoder;
 use Illuminate\Http\RedirectResponse;
@@ -114,7 +115,7 @@ class TrailController extends Controller
         ]);
     }
 
-    public function publish(Trail $trail): RedirectResponse
+    public function publish(Trail $trail, BadgeAwarder $badges): RedirectResponse
     {
         Gate::authorize('update', $trail);
 
@@ -126,6 +127,7 @@ class TrailController extends Controller
 
         $trail->changeVisibility(TrailVisibility::Published);
         $trail->save();
+        $badges->awardAndFlash($trail->user);
 
         return redirect()->route('trails.show', $trail)->with('status', 'trail-published');
     }
@@ -137,7 +139,7 @@ class TrailController extends Controller
         return view('trails.edit', ['trail' => $trail]);
     }
 
-    public function update(UpdateTrailRequest $request, Trail $trail): RedirectResponse
+    public function update(UpdateTrailRequest $request, Trail $trail, BadgeAwarder $badges): RedirectResponse
     {
         $trail->fill($request->trailAttributes());
         $trail->changeVisibility($request->visibility());
@@ -151,6 +153,10 @@ class TrailController extends Controller
         }
 
         $trail->save();
+
+        if ($trail->isPublished()) {
+            $badges->awardAndFlash($trail->user);
+        }
 
         return redirect()->route('trails.show', $trail)->with('status', 'trail-updated');
     }

@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Badge;
 use App\Models\User;
+use App\Models\UserBadge;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 /**
@@ -32,8 +35,16 @@ class PublicProfileController extends Controller
             ->latest('published_at')
             ->paginate(TrailController::PER_PAGE);
 
+        $badges = $this->highestBadges($profile);
+
+        // The owner has now seen their new badges; they are marked as "Neu" only this once.
+        if (auth()->user()->is($profile)) {
+            $profile->badges()->whereNull('seen_at')->update(['seen_at' => now()]);
+        }
+
         return view('profiles.show', [
             'profile' => $profile,
+            'badges' => $badges,
             'account' => $profile->geocachingAccount,
             'trails' => $trails,
             'likesReceived' => (int) $profile->trails()->published()->sum('like_count'),
@@ -45,5 +56,26 @@ class PublicProfileController extends Controller
                 ->limit(self::RECENT_COMPLETIONS)
                 ->get(),
         ]);
+    }
+
+    /**
+     * The highest earned level of every badge, in the order of the Badge enum, each with an "isNew" flag
+     * that is set when the owner has not seen one of its levels yet.
+     *
+     * @return Collection<int, array{badge: UserBadge, isNew: bool}>
+     */
+    private function highestBadges(User $profile): Collection
+    {
+        $order = array_flip(array_map(fn (Badge $badge): string => $badge->value, Badge::cases()));
+        $showNew = auth()->user()->is($profile);
+
+        return $profile->badges()->get()
+            ->groupBy(fn (UserBadge $badge): string => $badge->badge->value)
+            ->sortBy(fn (Collection $levels, string $badge): int => $order[$badge])
+            ->map(fn (Collection $levels): array => [
+                'badge' => $levels->sortByDesc('level')->first(),
+                'isNew' => $showNew && $levels->contains(fn (UserBadge $badge): bool => $badge->isNew()),
+            ])
+            ->values();
     }
 }
