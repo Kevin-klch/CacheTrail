@@ -23,7 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::delete('/profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::put('/profil/infobox', [ProfileController::class, 'updateBio'])->name('profile.bio.update');
-    Route::put('/profil/bilder', [ProfileController::class, 'updateImages'])->name('profile.images.update');
+    Route::put('/profil/bilder', [ProfileController::class, 'updateImages'])->middleware('throttle:uploads')->name('profile.images.update');
 });
 
 // Moderation (admins and moderators) and user management (admins only).
@@ -31,6 +31,9 @@ Route::middleware(['auth', 'verified', 'can:moderate'])->prefix('admin')->name('
     Route::redirect('/', '/admin/meldungen')->name('index');
     Route::get('/meldungen', [Admin\ReportController::class, 'index'])->name('reports.index');
     Route::patch('/meldungen/{report}', [Admin\ReportController::class, 'update'])->name('reports.update');
+    Route::get('/feedback', [Admin\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::patch('/feedback/{feedback}', [Admin\FeedbackController::class, 'update'])->name('feedback.update');
+    Route::delete('/feedback/{feedback}', [Admin\FeedbackController::class, 'destroy'])->name('feedback.destroy');
 
     Route::middleware('can:admin')->group(function () {
         Route::get('/nutzer', [Admin\UserController::class, 'index'])->name('users.index');
@@ -40,16 +43,16 @@ Route::middleware(['auth', 'verified', 'can:moderate'])->prefix('admin')->name('
 
 Route::middleware(['auth', 'verified', 'premium'])->group(function () {
     Route::get('/routen', [TrailController::class, 'index'])->name('trails.index');
-    Route::post('/routen/standort', [UserLocationController::class, 'store'])->name('location.store');
+    Route::post('/routen/standort', [UserLocationController::class, 'store'])->middleware('throttle:location')->name('location.store');
     Route::delete('/routen/standort', [UserLocationController::class, 'destroy'])->name('location.destroy');
     Route::get('/routen/erstellen', [TrailController::class, 'create'])->name('trails.create');
-    Route::post('/routen', [TrailController::class, 'store'])->name('trails.store');
+    Route::post('/routen', [TrailController::class, 'store'])->middleware('throttle:uploads')->name('trails.store');
     Route::get('/routen/{trail}', [TrailController::class, 'show'])->name('trails.show');
     Route::get('/routen/{trail}/bearbeiten', [TrailController::class, 'edit'])->name('trails.edit');
     Route::get('/routen/{trail}/caches', [TrailController::class, 'caches'])->name('trails.caches');
     Route::get('/routen/{trail}/vorschau', [TrailController::class, 'preview'])->name('trails.preview');
     Route::post('/routen/{trail}/veroeffentlichen', [TrailController::class, 'publish'])->name('trails.publish');
-    Route::put('/routen/{trail}', [TrailController::class, 'update'])->name('trails.update');
+    Route::put('/routen/{trail}', [TrailController::class, 'update'])->middleware('throttle:uploads')->name('trails.update');
     Route::delete('/routen/{trail}', [TrailController::class, 'destroy'])->name('trails.destroy');
 
     Route::get('/meine-routen', MyTrailsController::class)->name('trails.mine');

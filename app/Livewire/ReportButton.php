@@ -8,7 +8,9 @@ use App\Models\TrailRating;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
@@ -18,6 +20,8 @@ use Livewire\Component;
  */
 class ReportButton extends Component
 {
+    public const int REPORTS_PER_HOUR = 10;
+
     #[Locked]
     public string $reportableType;
 
@@ -48,6 +52,14 @@ class ReportButton extends Component
             'reason' => ['required', Rule::enum(ReportReason::class)],
             'description' => ['nullable', 'string', 'max:1000'],
         ], attributes: ['reason' => __('Reason'), 'description' => __('Description')]);
+
+        $key = 'reports:'.auth()->id();
+
+        if (RateLimiter::tooManyAttempts($key, self::REPORTS_PER_HOUR)) {
+            throw ValidationException::withMessages(['reason' => __('You have sent a lot of reports in a short time. Please try again later.')]);
+        }
+
+        RateLimiter::hit($key, 3600);
 
         $report = new Report([
             'reason' => $validated['reason'],

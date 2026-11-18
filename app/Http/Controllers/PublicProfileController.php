@@ -22,7 +22,7 @@ class PublicProfileController extends Controller
 
     public function __invoke(string $user): View|RedirectResponse
     {
-        $profile = User::findByName($user) ?? $this->fromOldAddress($user);
+        $profile = User::findByName($user);
 
         abort_if($profile === null, 404);
 
@@ -60,14 +60,6 @@ class PublicProfileController extends Controller
                 ->limit(self::RECENT_COMPLETIONS)
                 ->get(),
         ]);
-    }
-
-    /**
-     * Profile addresses used to be "/nutzer/42-erika-muster"; such links still lead to the right profile.
-     */
-    private function fromOldAddress(string $user): ?User
-    {
-        return preg_match('/^(\d+)(-[a-z0-9-]*)?$/', $user, $matches) === 1 ? User::find((int) $matches[1]) : null;
     }
 
     /**

@@ -25,7 +25,8 @@ class ReportPolicy
         $trail = $reportable instanceof TrailRating ? $reportable->trail : $reportable;
 
         return $author !== null
-            && $author !== $user->id
+            // Many people share the feedback account, so they may report what another tester wrote with it.
+            && ($author !== $user->id || $user->isFeedbackAccount())
             && $trail instanceof Trail
             && Gate::forUser($user)->allows('view', $trail)
             && ! Report::query()->open()->whereBelongsTo($user)->whereMorphedTo('reportable', $reportable)->exists();

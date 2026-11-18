@@ -75,7 +75,7 @@ class CommunityDirectoryTest extends TestCase
         $this->assertStringEndsWith('/nutzer/Erika%20Muster', $author->profileUrl());
     }
 
-    public function test_other_spellings_and_old_addresses_redirect_to_the_profile(): void
+    public function test_other_spellings_redirect_to_the_profile(): void
     {
         $author = User::factory()->create(['name' => 'TestCacher']);
 
@@ -83,7 +83,7 @@ class CommunityDirectoryTest extends TestCase
 
         $this->get('/nutzer/TestCacher')->assertOk();
         $this->get('/nutzer/testcacher')->assertRedirect($author->profileUrl());
-        $this->get('/nutzer/'.$author->id.'-alter-name')->assertRedirect($author->profileUrl());
+        $this->get('/nutzer/'.$author->id)->assertNotFound();
         $this->get('/nutzer/Unbekannt')->assertNotFound();
         $this->get('/nutzer/999999')->assertNotFound();
     }

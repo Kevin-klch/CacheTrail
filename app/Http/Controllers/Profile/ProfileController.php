@@ -25,6 +25,8 @@ class ProfileController extends Controller
      */
     public function updateBio(Request $request): RedirectResponse
     {
+        abort_if($request->user()->isFeedbackAccount(), 403, __('The profile of the shared feedback account cannot be changed.'));
+
         $validated = $request->validateWithBag('updateBio', [
             'bio' => ['nullable', 'string', 'max:'.self::BIO_MAX_LENGTH],
         ], attributes: ['bio' => __('About me')]);
@@ -41,6 +43,8 @@ class ProfileController extends Controller
      */
     public function updateImages(Request $request): RedirectResponse
     {
+        abort_if($request->user()->isFeedbackAccount(), 403, __('The profile of the shared feedback account cannot be changed.'));
+
         $image = ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:'.self::MAX_IMAGE_KILOBYTES];
 
         $request->validateWithBag('updateImages', [

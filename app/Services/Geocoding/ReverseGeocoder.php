@@ -37,6 +37,10 @@ class ReverseGeocoder
 
     private function lookup(float $latitude, float $longitude): ?string
     {
+        if (! NominatimThrottle::allows()) {
+            return null;
+        }
+
         try {
             $response = Http::withUserAgent(config('app.name').' route directory (Laravel)')
                 ->acceptJson()

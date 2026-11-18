@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Services\Geocoding\NominatimThrottle;
 use App\Services\Geocoding\ReverseGeocoder;
 use App\Support\UserLocation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -36,7 +37,38 @@ class ReverseGeocodingTest extends TestCase
         $geocoder = $this->app->make(ReverseGeocoder::class);
 
         $this->assertNull($geocoder->placeName(51.43, 6.76));
+        $this->travel(2)->seconds();
         $this->assertSame('Duisburg', $geocoder->placeName(51.43, 6.76));
+    }
+
+    public function test_nominatim_is_asked_at_most_once_per_second(): void
+    {
+        Http::fake(['*' => Http::response(['address' => ['city' => 'Duisburg']])]);
+
+        $geocoder = $this->app->make(ReverseGeocoder::class);
+
+        $this->assertSame('Duisburg', $geocoder->placeName(51.43, 6.76));
+        $this->assertNull($geocoder->placeName(52.52, 13.40));
+        Http::assertSentCount(1);
+
+        $this->travel(2)->seconds();
+        $this->assertSame('Duisburg', $geocoder->placeName(52.52, 13.40));
+        Http::assertSentCount(2);
+    }
+
+    public function test_one_visitor_cannot_trigger_lookups_without_end(): void
+    {
+        Http::fake(['*' => Http::response(['address' => ['city' => 'Duisburg']])]);
+        $this->actingAs(User::factory()->create());
+
+        $geocoder = $this->app->make(ReverseGeocoder::class);
+
+        foreach (range(1, NominatimThrottle::PER_VISITOR + 3) as $step) {
+            $this->travel(2)->seconds();
+            $geocoder->placeName(40 + $step / 10, 6.76);
+        }
+
+        Http::assertSentCount(NominatimThrottle::PER_VISITOR);
     }
 
     public function test_sharing_the_location_shows_the_place_name(): void

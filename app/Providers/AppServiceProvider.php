@@ -11,10 +11,13 @@ use App\Services\Geocaching\MockGeocacheProvider;
 use App\Services\Premium\ConfigPremiumAccessChecker;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 
@@ -50,6 +53,12 @@ class AppServiceProvider extends ServiceProvider
             'trail_rating' => TrailRating::class,
             'user' => User::class,
         ]);
+
+        // Creating and changing routes and pictures stores files; a script must not be able to fill the disk.
+        RateLimiter::for('uploads', fn (Request $request): Limit => Limit::perHour(60)->by($request->user()?->id ?: $request->ip()));
+
+        // Setting the location may ask Nominatim for the place name.
+        RateLimiter::for('location', fn (Request $request): Limit => Limit::perMinute(10)->by($request->user()?->id ?: $request->ip()));
 
         Gate::define('admin', fn (User $user): bool => $user->isAdmin());
         Gate::define('moderate', fn (User $user): bool => $user->canModerate());

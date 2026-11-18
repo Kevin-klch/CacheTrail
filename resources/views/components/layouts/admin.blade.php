@@ -9,8 +9,11 @@
             <h1 class="mt-1 text-4xl font-bold text-paper sm:text-5xl">{{ $title }}</h1>
 
             <nav class="mt-6 flex flex-wrap gap-2 text-sm" aria-label="{{ __('Administration') }}">
-                @php $openReports = App\Models\Report::open()->count(); @endphp
-                @foreach (array_filter(['admin.reports.index' => [__('Reports'), 'flag', $openReports], 'admin.users.index' => Gate::allows('admin') ? [__('Users'), 'user', null] : null]) as $routeName => [$label, $icon, $badge])
+                @php
+                    $openReports = App\Models\Report::open()->count();
+                    $openFeedback = App\Models\Feedback::open()->count();
+                @endphp
+                @foreach (array_filter(['admin.reports.index' => [__('Reports'), 'flag', $openReports], 'admin.feedback.index' => [__('Feedback'), 'mail', $openFeedback], 'admin.users.index' => Gate::allows('admin') ? [__('Users'), 'user', null] : null]) as $routeName => [$label, $icon, $badge])
                     <a href="{{ route($routeName) }}" @class([
                         'inline-flex items-center gap-2 rounded-full px-4 py-2 font-medium transition',
                         'bg-paper text-forest-900' => request()->routeIs($routeName),

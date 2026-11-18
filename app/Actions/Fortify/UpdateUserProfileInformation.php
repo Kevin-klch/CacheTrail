@@ -4,6 +4,7 @@ namespace App\Actions\Fortify;
 
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -20,6 +21,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      *
      * @throws ValidationException
      */
+    public const int EMAIL_CHANGES_PER_HOUR = 3;
+
     public function update(User $user, array $input): void
     {
         if ($user->isFeedbackAccount() && ($input['email'] ?? null) !== $user->email) {
@@ -38,6 +41,14 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         ])->validateWithBag('updateProfileInformation');
 
         if ($input['email'] !== $user->email && $user instanceof MustVerifyEmail) {
+            // Each change sends a confirmation email to the new address, so changes are limited.
+            if (RateLimiter::tooManyAttempts('email-change:'.$user->id, self::EMAIL_CHANGES_PER_HOUR)) {
+                throw ValidationException::withMessages(['email' => __('You have changed your email address several times. Please try again later.')])
+                    ->errorBag('updateProfileInformation');
+            }
+
+            RateLimiter::hit('email-change:'.$user->id, 3600);
+
             $user->forceFill([
                 'email' => $input['email'],
                 'email_verified_at' => null,

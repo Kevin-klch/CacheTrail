@@ -61,6 +61,10 @@
             <x-badge-notices />
         @endauth
 
+        @if (config('cachetrail.feedback.button'))
+            <livewire:feedback-button />
+        @endif
+
         @livewireScriptConfig
     </body>
 </html>

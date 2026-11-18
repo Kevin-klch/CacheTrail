@@ -44,6 +44,7 @@
             </form>
         </x-card>
 
+        @unless ($user->isFeedbackAccount())
         <x-card id="bilder">
             <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>
@@ -137,6 +138,7 @@
                 <x-button>{{ __('Save info box') }}</x-button>
             </form>
         </x-card>
+        @endunless
 
         <x-card>
             <h2 class="text-2xl font-bold">{{ __('Geocaching.com account') }}</h2>
@@ -164,7 +166,7 @@
         @if ($user->isFeedbackAccount())
             <x-card class="border-trail-400/40! bg-[#fbebe4]!">
                 <h2 class="text-2xl font-bold">{{ __('Shared feedback account') }}</h2>
-                <p class="mt-1 text-sm text-ink">{{ __('Everybody trying out CacheTrail uses this account, so its email address and password cannot be changed and it cannot be deleted. Register your own account if you want to try that.') }}</p>
+                <p class="mt-1 text-sm text-ink">{{ __('Everybody trying out CacheTrail uses this account, so its email address, password, pictures and info box cannot be changed and it cannot be deleted. Register your own account if you want to try that.') }}</p>
             </x-card>
         @else
         <x-card>

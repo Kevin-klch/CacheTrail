@@ -14,7 +14,8 @@ class SetLocale
 {
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $request->user()?->locale ?? $request->session()->get('locale');
+        $user = $request->user();
+        $locale = ($user?->isFeedbackAccount() ? null : $user?->locale) ?? $request->session()->get('locale');
 
         if (is_string($locale) && array_key_exists($locale, config('cachetrail.locales'))) {
             app()->setLocale($locale);

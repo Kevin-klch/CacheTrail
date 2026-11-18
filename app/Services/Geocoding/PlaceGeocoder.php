@@ -63,6 +63,10 @@ class PlaceGeocoder
      */
     private function lookup(string $query): UserLocation|false|null
     {
+        if (! NominatimThrottle::allows()) {
+            return false;
+        }
+
         try {
             $response = Http::withUserAgent(config('app.name').' route directory (Laravel)')
                 ->acceptJson()

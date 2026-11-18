@@ -98,6 +98,9 @@ return [
 
         'email' => env('CACHETRAIL_FEEDBACK_EMAIL', 'feedback@example.com'),
         'password' => env('CACHETRAIL_FEEDBACK_PASSWORD', 'cachetrail-testen'),
+
+        // Floating "Feedback" button on every page; messages appear under Administration → Feedback.
+        'button' => (bool) env('CACHETRAIL_FEEDBACK_BUTTON', true),
     ],
 
     /*

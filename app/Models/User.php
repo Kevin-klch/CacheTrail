@@ -236,7 +236,8 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
      */
     public function isFeedbackAccount(): bool
     {
-        return $this->email === config('cachetrail.feedback.email');
+        // Without demo data there is no shared account; the address is then an ordinary one.
+        return config('cachetrail.feedback.demo_data') && $this->email === config('cachetrail.feedback.email');
     }
 
     public function hasSecondaryRole(SecondaryRole $role): bool

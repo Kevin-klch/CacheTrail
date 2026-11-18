@@ -19,7 +19,11 @@ class LocaleController extends Controller
         ])['locale'];
 
         $request->session()->put('locale', $locale);
-        $request->user()?->forceFill(['locale' => $locale])->save();
+
+        // The shared feedback account is used by many people at once; each of them keeps their own language.
+        if ($request->user() && ! $request->user()->isFeedbackAccount()) {
+            $request->user()->forceFill(['locale' => $locale])->save();
+        }
 
         return back();
     }

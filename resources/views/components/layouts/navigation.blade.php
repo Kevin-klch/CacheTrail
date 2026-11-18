@@ -1,6 +1,7 @@
 @php
     $hasPremiumAccess = auth()->check() && Gate::allows('premium');
-    $openReports = Gate::allows('moderate') ? App\Models\Report::open()->count() : 0;
+    // Open reports and new feedback, shown as a dot on the account menu for moderators.
+    $openReports = Gate::allows('moderate') ? App\Models\Report::open()->count() + App\Models\Feedback::open()->count() : 0;
 
     $items = auth()->check() ? [
         ['route' => 'trails.index', 'label' => __('Discover routes'), 'icon' => 'compass'],

@@ -4,6 +4,7 @@ namespace App\Actions\Fortify;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -20,6 +21,8 @@ class CreateNewUser implements CreatesNewUsers
      *
      * @throws ValidationException
      */
+    public const int REGISTRATIONS_PER_HOUR = 5;
+
     public function create(array $input): User
     {
         $input['name'] = trim((string) ($input['name'] ?? ''));
@@ -36,6 +39,15 @@ class CreateNewUser implements CreatesNewUsers
             ],
             'password' => $this->passwordRules(),
         ], attributes: ['name' => __('Geocaching username')])->validate();
+
+        // Every registration sends an email, so one connection may only create a few accounts per hour.
+        $key = 'register:'.request()->ip();
+
+        if (RateLimiter::tooManyAttempts($key, self::REGISTRATIONS_PER_HOUR)) {
+            throw ValidationException::withMessages(['email' => __('Too many accounts have been created from your connection. Please try again later.')]);
+        }
+
+        RateLimiter::hit($key, 3600);
 
         return User::create([
             'name' => $input['name'],

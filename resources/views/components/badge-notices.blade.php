@@ -17,7 +17,7 @@
     }"
     x-init="add(@js(session(App\Services\Badges\BadgeAwarder::SESSION_KEY, [])))"
     x-on:badges-earned.window="add($event.detail.badges ?? [])"
-    class="pointer-events-none fixed inset-x-4 bottom-4 z-50 flex flex-col items-end gap-3 sm:inset-x-auto sm:right-6 sm:bottom-6"
+    class="pointer-events-none fixed inset-x-4 bottom-20 z-50 flex flex-col items-end gap-3 sm:inset-x-auto sm:right-6 sm:bottom-24"
     aria-live="polite"
 >
     <template x-for="item in items" :key="item.id">
