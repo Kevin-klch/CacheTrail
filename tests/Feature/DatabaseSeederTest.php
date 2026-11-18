@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Trail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,18 +9,20 @@ class DatabaseSeederTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_demo_data_can_be_seeded(): void
+    public function test_the_main_version_starts_without_demo_data(): void
     {
         $this->seed();
 
-        $this->assertDatabaseCount('users', 8);
-        $this->assertSame(9, Trail::published()->count());
-        $this->assertSame(11, Trail::count());
-        $this->assertDatabaseCount('trail_caches', 61);
-        $this->assertDatabaseCount('trail_ratings', 15);
-        $this->assertDatabaseCount('trail_completions', 13);
-        $this->assertDatabaseCount('geocaching_accounts', 5);
-        $this->assertSame(2, Trail::where('slug', 'waldabenteuer-am-niederrhein')->value('like_count'));
-        $this->assertTrue(Trail::published()->get()->every(fn (Trail $trail): bool => $trail->hasEnoughCachesToPublish()));
+        $this->assertDatabaseCount('users', 0);
+        $this->assertDatabaseCount('trails', 0);
+        $this->assertDatabaseCount('trail_ratings', 0);
+    }
+
+    public function test_a_fresh_site_without_routes_still_works(): void
+    {
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Noch keine Routen')
+            ->assertDontSee(route('trails.example'));
     }
 }

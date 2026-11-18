@@ -101,7 +101,7 @@ return [
 
         // Slug of the route shown to visitors as an example (home page and /beispielroute).
         // Falls back to the most liked published route.
-        'example' => env('CACHETRAIL_EXAMPLE_TRAIL', 'waldabenteuer-am-niederrhein'),
+        'example' => env('CACHETRAIL_EXAMPLE_TRAIL'),
     ],
 
 ];
