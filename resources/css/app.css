@@ -60,6 +60,11 @@
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.5rem), 0 100%);
     }
 
+    /* clip-path puts the header on its own layer; the content that overlaps it from below must stay on top. */
+    .slant-bottom + * {
+        position: relative;
+    }
+
     @media (min-width: 640px) {
         .slant-bottom {
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5rem), 0 100%);

@@ -1,5 +1,5 @@
 <x-layouts.app :title="__('Example route')" :description="__('See what a geocaching route on CacheTrail looks like: map, caches in the recommended order and all key figures.')">
-    <div class="rounded-b-[2.5rem] bg-forest-700 pb-40 pt-10 text-paper sm:rounded-b-[4rem] sm:pt-14">
+    <div class="slant-bottom bg-forest-700 pb-40 pt-10 text-paper sm:pt-14">
         <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6 px-4 sm:px-6 lg:px-8">
             <div class="max-w-2xl">
                 <p class="text-sm font-semibold uppercase tracking-widest text-trail-400">{{ __('Example route') }}</p>

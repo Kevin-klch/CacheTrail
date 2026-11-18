@@ -1,5 +1,5 @@
 <x-layouts.app :title="__('Caches of :name', ['name' => $trail->name])">
-    <div class="rounded-b-[2.5rem] bg-forest-700 pb-28 pt-10 text-paper sm:rounded-b-[4rem] sm:pt-14">
+    <div class="slant-bottom bg-forest-700 pb-28 pt-10 text-paper sm:pt-14">
         <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
             <p class="text-sm font-semibold uppercase tracking-widest text-trail-400">{{ __('Route editor') }}</p>
             <h1 class="mt-1 text-4xl font-bold text-paper sm:text-5xl">{{ $trail->name }}</h1>
