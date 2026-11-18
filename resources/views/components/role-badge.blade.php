@@ -4,7 +4,7 @@
      secondary roles (supporter, developer). --}}
 @foreach ($user->roleBadges() as $role)
     <span {{ $attributes->class([
-        'relative z-10 inline-flex items-center gap-1 rounded-full align-middle font-sans font-bold uppercase leading-none tracking-wider',
+        'relative z-10 inline-flex items-center gap-1 rounded-full align-baseline font-sans font-bold uppercase leading-none tracking-wider',
         'px-1.5 py-0.5 text-[0.6rem]' => $size === 'sm',
         'px-3 py-1.5 text-xs' => $size === 'lg',
         $role->badgeClasses(),

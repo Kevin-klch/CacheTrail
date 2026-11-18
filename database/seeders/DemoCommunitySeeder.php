@@ -24,6 +24,8 @@ class DemoCommunitySeeder extends Seeder
         $users = $this->createUsers();
         $this->createTrails($addCaches, $users);
         $this->createActivity($users);
+
+        $this->call(DemoProfileImagesSeeder::class);
     }
 
     /**

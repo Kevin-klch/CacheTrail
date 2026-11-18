@@ -13,7 +13,7 @@
             <x-avatar :user="$profile" class="size-24 text-4xl ring-4 ring-paper/90 shadow-xl" />
             <div>
                 <p class="text-sm font-semibold uppercase tracking-widest text-trail-400">{{ __('Geocacher') }}</p>
-                <h1 class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-2 text-4xl font-bold text-paper sm:text-5xl">
+                <h1 class="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-2 text-4xl font-bold text-paper sm:text-5xl">
                     {{ $profile->name }}
                     <x-role-badge :user="$profile" size="lg" />
                 </h1>
