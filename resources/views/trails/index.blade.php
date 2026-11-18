@@ -21,7 +21,8 @@
                     <input type="hidden" name="view" value="{{ $view }}">
                 @endif
 
-                <div class="flex items-center gap-2 rounded-full border border-sand-300 bg-paper/60 p-1.5 pl-5 transition focus-within:border-forest-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-forest-500/15">
+                <div class="flex flex-wrap items-center gap-2 sm:flex-nowrap">
+                <div class="flex min-w-0 flex-1 items-center gap-2 rounded-full border border-sand-300 bg-paper/60 p-1.5 pl-5 transition focus-within:border-forest-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-forest-500/15">
                     <x-icon name="search" class="text-ink-muted" />
                     <label for="q" class="sr-only">{{ __('Search') }}</label>
                     <input id="q" name="q" type="search" value="{{ $filters['q'] ?? '' }}" placeholder="{{ __('Place, region or route name') }}"
@@ -30,7 +31,7 @@
                     <label for="radius" class="sr-only">{{ __('Radius') }}</label>
                     <select id="radius" name="radius" title="{{ __('Search within a radius of the place you entered') }}"
                         @class([
-                            'shrink-0 rounded-full border py-2 pl-3 pr-8 text-sm font-semibold focus:border-forest-500 focus:outline-none focus:ring-4 focus:ring-forest-500/15',
+                            'shrink-0 rounded-full border py-2 pl-4 pr-10 text-sm font-semibold focus:border-forest-500 focus:outline-none focus:ring-4 focus:ring-forest-500/15',
                             'border-forest-600 bg-forest-50 text-forest-800' => isset($filters['radius']),
                             'border-sand-300 bg-white text-ink-muted' => ! isset($filters['radius']),
                         ])>
@@ -39,10 +40,11 @@
                             <option value="{{ $km }}" @selected((int) ($filters['radius'] ?? 0) === $km)>{{ __('+ :count km', ['count' => $km]) }}</option>
                         @endforeach
                     </select>
-                    @if ($filters !== [])
-                        <a href="{{ route('trails.index', $viewQuery) }}" class="hidden shrink-0 rounded-full px-3 py-2 text-sm font-medium text-ink-muted hover:text-forest-800 sm:inline">{{ __('Reset') }}</a>
-                    @endif
-                    <x-button variant="accent" class="shrink-0 px-6">{{ __('Search') }}</x-button>
+                </div>
+                <x-button variant="accent" class="shrink-0 px-6 py-3">{{ __('Search') }}</x-button>
+                @if ($filters !== [])
+                    <a href="{{ route('trails.index', $viewQuery) }}" class="shrink-0 rounded-full px-3 py-2 text-sm font-medium text-ink-muted hover:text-forest-800">{{ __('Reset') }}</a>
+                @endif
                 </div>
             </form>
 
