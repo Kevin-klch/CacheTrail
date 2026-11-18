@@ -20,7 +20,7 @@ class FeedbackButton extends Component
     public const int MESSAGE_MAX_LENGTH = 3000;
 
     /** Messages one visitor may send within ten minutes. */
-    public const int MAX_ATTEMPTS = 5;
+    public const int MAX_ATTEMPTS = 20;
 
     #[Locked]
     public ?string $pageUrl = null;
@@ -62,7 +62,8 @@ class FeedbackButton extends Component
             'contact' => __('Email address'),
         ]);
 
-        $key = 'feedback:'.(auth()->id() ?? request()->ip());
+        // Testers sharing the feedback account each get their own allowance.
+        $key = 'feedback:'.(auth()->check() && ! auth()->user()->isFeedbackAccount() ? auth()->id() : request()->ip());
 
         if (RateLimiter::tooManyAttempts($key, self::MAX_ATTEMPTS)) {
             throw ValidationException::withMessages([

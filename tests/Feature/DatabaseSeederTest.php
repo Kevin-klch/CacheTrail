@@ -74,13 +74,16 @@ class DatabaseSeederTest extends TestCase
         $this->assertDatabaseCount('trail_ratings', 15);
         $this->assertDatabaseCount('trail_completions', 14);
         $this->assertDatabaseCount('geocaching_accounts', 5);
-        $this->assertSame(2, Trail::where('slug', 'waldabenteuer-am-niederrhein')->value('like_count'));
+        // Two likes from the demo community, one from the feedback account.
+        $this->assertSame(3, Trail::where('slug', 'waldabenteuer-am-niederrhein')->value('like_count'));
         $this->assertTrue(Trail::published()->get()->every(fn (Trail $trail): bool => $trail->hasEnoughCachesToPublish()));
         $this->assertGreaterThan(0, User::firstWhere('email', 'rheinpirat@example.com')->badges()->count());
 
         $feedback = User::firstWhere('email', config('cachetrail.feedback.email'));
         $this->assertTrue(Hash::check(config('cachetrail.feedback.password'), $feedback->password));
         $this->assertFalse($feedback->isAdmin());
+        $this->assertCount(3, $feedback->likedTrails);
+        $this->assertCount(3, $feedback->bookmarkedTrails);
         $this->assertTrue(Hash::check('password', User::firstWhere('email', 'rheinpirat@example.com')->password));
 
         $this->get(route('login'))->assertSee(config('cachetrail.feedback.email'));

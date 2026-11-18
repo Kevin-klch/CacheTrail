@@ -8,6 +8,7 @@ use App\Livewire\FeedbackButton;
 use App\Models\Feedback;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -111,6 +112,26 @@ class FeedbackTest extends TestCase
         $component->set('category', 'idea')->set('message', 'Noch eine Idee')->call('submit')->assertHasErrors('message');
 
         $this->assertSame(FeedbackButton::MAX_ATTEMPTS, Feedback::count());
+    }
+
+    public function test_testers_on_the_shared_account_each_have_their_own_limit(): void
+    {
+        config(['cachetrail.feedback.demo_data' => true]);
+        $account = User::factory()->create(['email' => config('cachetrail.feedback.email')]);
+
+        // Other testers used up the allowance of the account; it counts per connection instead.
+        foreach (range(1, FeedbackButton::MAX_ATTEMPTS) as $attempt) {
+            RateLimiter::hit('feedback:'.$account->id, 600);
+        }
+
+        $component = Livewire::actingAs($account)->test(FeedbackButton::class)
+            ->set('category', 'bug')->set('message', 'Hier klemmt etwas')->call('submit')->assertHasNoErrors();
+
+        foreach (range(1, FeedbackButton::MAX_ATTEMPTS) as $attempt) {
+            RateLimiter::hit('feedback:127.0.0.1', 600);
+        }
+
+        $component->set('category', 'bug')->set('message', 'Noch ein Fehler')->call('submit')->assertHasErrors('message');
     }
 
     public function test_moderators_read_and_close_feedback(): void

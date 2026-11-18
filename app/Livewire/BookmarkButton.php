@@ -19,18 +19,26 @@ class BookmarkButton extends Component
     #[Locked]
     public bool $large = false;
 
+    /**
+     * The shared feedback account only shows the routes marked for it; testers cannot change them.
+     */
+    #[Locked]
+    public bool $readOnly = false;
+
     public bool $bookmarked = false;
 
     public function mount(Trail $trail, bool $large = false): void
     {
         $this->trail = $trail;
         $this->large = $large;
+        $this->readOnly = (bool) auth()->user()?->isFeedbackAccount();
         $this->bookmarked = $trail->isBookmarkedBy(auth()->user());
     }
 
     public function toggle(): void
     {
         Gate::authorize('view', $this->trail);
+        abort_if($this->readOnly, 403);
 
         $user = auth()->user();
 

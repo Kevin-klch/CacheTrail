@@ -22,11 +22,16 @@ class FeedbackAccountSeeder extends Seeder
         ]);
 
         $user->forceFill([
-            'bio' => "Willkommen! Mit diesem Konto kannst du CacheTrail ausprobieren: Routen entdecken, merken, bewerten, als absolviert markieren und eigene Routen anlegen.\n\nDas Konto wird von allen Testerinnen und Testern gemeinsam genutzt.",
+            'bio' => "Willkommen! Mit diesem Konto kannst du CacheTrail ausprobieren: Routen entdecken, bewerten, als absolviert markieren und eigene Routen anlegen.\n\nDas Konto wird von allen Testerinnen und Testern gemeinsam genutzt.",
         ])->save();
 
-        // A little activity, so the lists are not empty on the first visit.
-        $user->bookmarkedTrails()->attach(Trail::whereIn('name', ['Römerspuren in Xanten', 'Deichtour Wesel'])->pluck('id'));
+        // Testers cannot like or save routes with the shared account, so a few are marked for them to see how it looks.
+        $user->bookmarkedTrails()->attach(Trail::whereIn('name', ['Römerspuren in Xanten', 'Deichtour Wesel', 'Rheinufer-Radtour'])->pluck('id'));
+
+        $likedTrails = Trail::whereIn('name', ['Römerspuren in Xanten', 'Klosterrunde Kamp', 'Waldabenteuer am Niederrhein'])->get();
+        $user->likedTrails()->attach($likedTrails->pluck('id'));
+        $likedTrails->each->refreshCommunityStatistics();
+
         $user->completedTrails()->attach(Trail::where('name', 'Klosterrunde Kamp')->value('id'), ['completed_at' => now()->subDay()]);
     }
 }

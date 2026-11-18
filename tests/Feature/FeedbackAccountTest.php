@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Livewire\BookmarkButton;
+use App\Livewire\LikeButton;
 use App\Models\Report;
 use App\Models\Trail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class FeedbackAccountTest extends TestCase
@@ -111,6 +114,36 @@ class FeedbackAccountTest extends TestCase
 
         $this->assertTrue($account->can('create', [Report::class, $trail]));
         $this->assertFalse($ownTrail->user->can('create', [Report::class, $ownTrail]));
+    }
+
+    public function test_testers_cannot_like_or_save_routes_with_the_shared_account(): void
+    {
+        $account = $this->feedbackAccount();
+        $trail = Trail::factory()->published()->create();
+
+        Livewire::actingAs($account)->test(LikeButton::class, ['trail' => $trail])
+            ->assertDontSeeHtml('wire:click')
+            ->call('toggle')
+            ->assertForbidden();
+        Livewire::actingAs($account)->test(BookmarkButton::class, ['trail' => $trail])
+            ->assertDontSeeHtml('wire:click')
+            ->call('toggle')
+            ->assertForbidden();
+
+        $this->assertFalse($trail->isLikedBy($account));
+        $this->assertFalse($trail->isBookmarkedBy($account));
+    }
+
+    public function test_the_routes_marked_for_the_shared_account_are_shown(): void
+    {
+        $account = $this->feedbackAccount();
+        $trail = Trail::factory()->published()->create();
+        $account->likedTrails()->attach($trail);
+        $account->bookmarkedTrails()->attach($trail);
+
+        Livewire::actingAs($account)->test(LikeButton::class, ['trail' => $trail, 'large' => true])->assertSee('Gefällt dir');
+        Livewire::actingAs($account)->test(BookmarkButton::class, ['trail' => $trail, 'large' => true])->assertSee('Für später gemerkt');
+        $this->get(route('bookmarks.index'))->assertSee($trail->name);
     }
 
     public function test_without_demo_data_the_address_is_an_ordinary_account(): void

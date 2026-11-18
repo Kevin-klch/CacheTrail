@@ -20,18 +20,26 @@ class LikeButton extends Component
     #[Locked]
     public bool $large = false;
 
+    /**
+     * The shared feedback account only shows the routes marked for it; testers cannot change them.
+     */
+    #[Locked]
+    public bool $readOnly = false;
+
     public bool $liked = false;
 
     public function mount(Trail $trail, bool $large = false): void
     {
         $this->trail = $trail;
         $this->large = $large;
+        $this->readOnly = (bool) auth()->user()?->isFeedbackAccount();
         $this->liked = $trail->isLikedBy(auth()->user());
     }
 
     public function toggle(BadgeAwarder $badges): void
     {
         Gate::authorize('view', $this->trail);
+        abort_if($this->readOnly, 403);
 
         $user = auth()->user();
 
