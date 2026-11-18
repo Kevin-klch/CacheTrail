@@ -1,7 +1,8 @@
 @props(['title', 'eyebrow' => null])
 
-<div class="slant-bottom bg-forest-700 pb-28 pt-10 text-paper sm:pt-14">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+<div class="slant-bottom relative overflow-hidden bg-forest-700 pb-28 pt-10 text-paper sm:pt-14">
+    <x-contour-lines />
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         @if ($eyebrow)
             <p class="text-sm font-semibold uppercase tracking-widest text-trail-400">{{ $eyebrow }}</p>
         @endif

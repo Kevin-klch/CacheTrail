@@ -1,6 +1,7 @@
 <x-layouts.app :title="__('Example route')" :description="__('See what a geocaching route on CacheTrail looks like: map, caches in the recommended order and all key figures.')">
-    <div class="slant-bottom bg-forest-700 pb-40 pt-10 text-paper sm:pt-14">
-        <div class="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6 px-4 sm:px-6 lg:px-8">
+    <div class="slant-bottom relative overflow-hidden bg-forest-700 pb-40 pt-10 text-paper sm:pt-14">
+        <x-contour-lines />
+        <div class="relative mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-6 px-4 sm:px-6 lg:px-8">
             <div class="max-w-2xl">
                 <p class="text-sm font-semibold uppercase tracking-widest text-trail-400">{{ __('Example route') }}</p>
                 <h1 class="mt-1 text-4xl font-bold text-paper sm:text-5xl">{{ __('This is what a route looks like') }}</h1>

@@ -8,6 +8,8 @@
             <img src="{{ $profile->coverUrl() }}" alt="" class="absolute inset-0 -z-10 size-full object-cover">
             {{-- Keeps the name readable on bright images --}}
             <div class="absolute inset-0 -z-10 bg-gradient-to-t from-forest-900/90 via-forest-900/45 to-forest-900/10"></div>
+        @else
+            <x-contour-lines class="-z-10" />
         @endif
         <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:px-6 lg:px-8">
             <x-avatar :user="$profile" class="size-24 text-4xl ring-4 ring-paper/90 shadow-xl" />

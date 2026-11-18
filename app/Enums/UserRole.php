@@ -58,7 +58,7 @@ enum UserRole: string
         return match ($this) {
             self::Owner => 'bg-forest-950 text-[#f1d98f] ring-1 ring-[#c9971c]',
             self::Admin => 'bg-trail-500 text-white',
-            self::Moderator => 'bg-forest-700 text-paper',
+            self::Moderator => 'bg-forest-500 text-white ring-1 ring-forest-300/50',
             self::User => 'bg-sand-200 text-ink',
         };
     }

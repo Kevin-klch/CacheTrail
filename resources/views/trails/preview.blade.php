@@ -1,6 +1,7 @@
 <x-layouts.app :title="__('Preview of :name', ['name' => $trail->name])">
-    <div class="slant-bottom bg-forest-700 pb-40 pt-10 text-paper sm:pt-14">
-        <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="slant-bottom relative overflow-hidden bg-forest-700 pb-40 pt-10 text-paper sm:pt-14">
+        <x-contour-lines />
+        <div class="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <p class="text-sm font-semibold uppercase tracking-widest text-trail-400">{{ __('Route editor') }}</p>
             <h1 class="mt-1 text-4xl font-bold text-paper sm:text-5xl">{{ __('Preview') }}</h1>
             <p class="mt-3 max-w-2xl text-lg text-forest-100/90">{{ __('This is how other geocachers will see your route. Check everything before publishing.') }}</p>
