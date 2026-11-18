@@ -37,6 +37,62 @@
             </form>
         </x-card>
 
+        <x-card id="bilder">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                    <h2 class="text-2xl font-bold">{{ __('Profile picture and cover image') }}</h2>
+                    <p class="mt-1 text-sm text-ink-muted">{{ __('Shown on your public profile. JPG, PNG or WebP, up to 5 MB.') }}</p>
+                </div>
+                <a href="{{ $user->profileUrl() }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-forest-700 hover:underline">
+                    {{ __('View public profile') }}
+                    <x-icon name="arrow-right" class="size-4" />
+                </a>
+            </div>
+
+            @if (session('status') === 'images-updated')
+                <x-alert class="mt-6">{{ __('Your images have been saved.') }}</x-alert>
+            @endif
+
+            <form method="POST" action="{{ route('profile.images.update') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+                @csrf
+                @method('PUT')
+
+                {{-- Preview: cover with the profile picture on top, like on the public profile --}}
+                <div class="relative overflow-hidden rounded-2xl bg-forest-700">
+                    @if ($user->coverUrl())
+                        <img src="{{ $user->coverUrl() }}" alt="{{ __('Current cover image') }}" class="h-36 w-full object-cover">
+                    @else
+                        <div class="grid h-36 place-items-center text-sm text-forest-100/80">{{ __('No cover image yet') }}</div>
+                    @endif
+                    <x-avatar :user="$user" class="absolute bottom-3 left-4 size-16 text-2xl ring-4 ring-paper" />
+                </div>
+
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    @foreach (['avatar' => [__('Profile picture'), __('Square images work best, at least 100 × 100 pixels.'), $user->avatar_path], 'cover' => [__('Cover image'), __('Wide images work best, at least 600 × 150 pixels.'), $user->cover_path]] as $field => [$label, $hint, $current])
+                        <div class="space-y-2">
+                            <label for="{{ $field }}" class="block text-sm font-medium text-forest-900">{{ $label }}</label>
+                            <input id="{{ $field }}" name="{{ $field }}" type="file" accept="image/jpeg,image/png,image/webp"
+                                class="block w-full text-sm text-ink-muted file:mr-4 file:rounded-full file:border-0 file:bg-forest-100 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-forest-800 hover:file:bg-forest-200">
+                            @if ($errors->updateImages->has($field))
+                                <p class="text-sm text-red-700">{{ $errors->updateImages->first($field) }}</p>
+                            @else
+                                <p class="text-sm text-ink-muted">{{ $hint }}</p>
+                            @endif
+                            @if ($current)
+                                <label class="inline-flex items-center gap-2 text-sm text-ink-muted">
+                                    <input type="hidden" name="remove_{{ $field }}" value="0">
+                                    <input type="checkbox" name="remove_{{ $field }}" value="1" class="size-4 rounded border-sand-300 accent-forest-700">
+                                    {{ __('Remove') }}
+                                </label>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+
+                <x-button>{{ __('Save images') }}</x-button>
+            </form>
+        </x-card>
+
         <x-card id="infobox">
             <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>

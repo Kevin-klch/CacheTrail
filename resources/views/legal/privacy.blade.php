@@ -51,7 +51,7 @@
 
             <h2>6. Was andere von dir sehen</h2>
             <p>
-                CacheTrail ist eine Community-Plattform. Angemeldete Nutzerinnen und Nutzer sehen dein öffentliches Profil mit deinem Namen,
+                CacheTrail ist eine Community-Plattform. Angemeldete Nutzerinnen und Nutzer sehen dein öffentliches Profil mit deinem Namen, deinem Profil- und Titelbild (falls hochgeladen),
                 deinem Infotext, dem Datum deiner Registrierung, der Anzahl deiner absolvierten und veröffentlichten Routen,
                 den zuletzt absolvierten Routen, deinen Abzeichen und der Zahl der „Gefällt mir“ für deine Routen. Außerdem sehen sie deine veröffentlichten
                 Routen mit Beschreibung, Titelbild und Caches sowie deine Bewertungen. Eine einzelne Beispielroute ist auch ohne Anmeldung

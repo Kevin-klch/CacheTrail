@@ -1,9 +1,16 @@
 <x-layouts.app :title="$profile->name">
-    <div class="rounded-b-[2.5rem] bg-forest-700 pb-28 pt-10 text-paper sm:rounded-b-[4rem] sm:pt-14">
+    <div @class([
+        'relative isolate overflow-hidden rounded-b-[2.5rem] bg-forest-700 pb-28 text-paper sm:rounded-b-[4rem]',
+        'pt-10 sm:pt-14' => ! $profile->coverUrl(),
+        'pt-32 sm:pt-44' => $profile->coverUrl(),
+    ])>
+        @if ($profile->coverUrl())
+            <img src="{{ $profile->coverUrl() }}" alt="" class="absolute inset-0 -z-10 size-full object-cover">
+            {{-- Keeps the name readable on bright images --}}
+            <div class="absolute inset-0 -z-10 bg-gradient-to-t from-forest-900/90 via-forest-900/45 to-forest-900/10"></div>
+        @endif
         <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:px-6 lg:px-8">
-            <span class="grid size-20 shrink-0 place-items-center rounded-full bg-paper font-heading text-4xl font-bold text-forest-800" aria-hidden="true">
-                {{ mb_strtoupper(mb_substr($profile->name, 0, 1)) }}
-            </span>
+            <x-avatar :user="$profile" class="size-24 text-4xl ring-4 ring-paper/90 shadow-xl" />
             <div>
                 <p class="text-sm font-semibold uppercase tracking-widest text-trail-400">{{ __('Geocacher') }}</p>
                 <h1 class="mt-1 text-4xl font-bold text-paper sm:text-5xl">{{ $profile->name }}</h1>

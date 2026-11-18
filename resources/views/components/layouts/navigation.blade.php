@@ -49,9 +49,7 @@
                         x-bind:aria-expanded="menu.toString()"
                         aria-controls="user-menu"
                     >
-                        <span class="grid size-9 place-items-center rounded-full bg-paper font-heading text-lg font-bold text-forest-800" aria-hidden="true">
-                            {{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}
-                        </span>
+                        <x-avatar :user="auth()->user()" class="size-9 text-lg" />
                         <x-icon name="chevron-down" class="size-4 transition" x-bind:class="menu && 'rotate-180'" />
                         <span class="sr-only">{{ __('Account menu') }}</span>
                         @if ($openReports > 0)

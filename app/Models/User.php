@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 #[Fillable(['name', 'email', 'password'])]
@@ -32,6 +33,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'role' => UserRole::User,
         'blocked_at' => null,
         'bio' => null,
+        'avatar_path' => null,
+        'cover_path' => null,
     ];
 
     /**
@@ -56,6 +59,28 @@ class User extends Authenticatable implements MustVerifyEmail
         static::deleting(function (User $user): void {
             $user->trails()->each(fn (Trail $trail) => $trail->delete());
         });
+
+        static::deleted(function (User $user): void {
+            Storage::disk('public')->delete(array_filter([$user->avatar_path, $user->cover_path]));
+        });
+    }
+
+    public function avatarUrl(): ?string
+    {
+        return $this->avatar_path ? Storage::disk('public')->url($this->avatar_path) : null;
+    }
+
+    public function coverUrl(): ?string
+    {
+        return $this->cover_path ? Storage::disk('public')->url($this->cover_path) : null;
+    }
+
+    /**
+     * First letter of the name, shown instead of a profile picture.
+     */
+    public function initial(): string
+    {
+        return mb_strtoupper(mb_substr($this->name, 0, 1));
     }
 
     public function isBlocked(): bool
