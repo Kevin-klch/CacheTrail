@@ -39,6 +39,7 @@
                         <a href="{{ route('home') }}" class="hover:text-white">{{ __('Home') }}</a>
                         <a href="{{ route('trails.index') }}" class="hover:text-white">{{ __('Discover routes') }}</a>
                         <a href="{{ route('trails.create') }}" class="hover:text-white">{{ __('Create route') }}</a>
+                        <a href="{{ route('about') }}" class="hover:text-white">{{ __('About CacheTrail') }}</a>
                     </nav>
                     <p class="text-sm leading-relaxed text-forest-100/80 md:text-right">
                         {{ __('CacheTrail is a community project by geocachers for geocachers.') }}

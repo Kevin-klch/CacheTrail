@@ -6,6 +6,12 @@
                 <p class="text-sm font-semibold uppercase tracking-widest text-trail-400">{{ __('Example route') }}</p>
                 <h1 class="mt-1 text-4xl font-bold text-paper sm:text-5xl">{{ __('This is what a route looks like') }}</h1>
                 <p class="mt-3 text-lg text-forest-100/90">{{ __('Every route shows the caches on a map and in the order recommended by the creator, together with duration, length, difficulty and terrain.') }}</p>
+                @guest
+                    <a href="{{ route('about') }}#neu" class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-trail-400 hover:underline">
+                        {{ __('What is geocaching? Briefly explained') }}
+                        <x-icon name="arrow-right" class="size-4" />
+                    </a>
+                @endguest
             </div>
             @guest
                 <div class="flex flex-wrap gap-3">

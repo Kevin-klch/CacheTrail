@@ -68,6 +68,16 @@
                     <p>{{ __('No more puzzling together single caches on a crowded map. On CacheTrail, geocachers share complete routes, each in the order they recommend.') }}</p>
                     <p>{{ __('Only have an hour and want a nice walk with your kids? Filter by distance, duration, difficulty and means of transport and only see the routes that really fit.') }}</p>
                 </div>
+                <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
+                    <a href="{{ route('about') }}" class="inline-flex items-center gap-1.5 text-forest-700 hover:underline">
+                        {{ __('Why CacheTrail exists') }}
+                        <x-icon name="arrow-right" class="size-4" />
+                    </a>
+                    <a href="{{ route('about') }}#neu" class="inline-flex items-center gap-1.5 text-forest-700 hover:underline">
+                        {{ __('New to geocaching?') }}
+                        <x-icon name="arrow-right" class="size-4" />
+                    </a>
+                </div>
             </div>
 
             <div>

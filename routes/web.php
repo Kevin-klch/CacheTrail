@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/beispielroute', ExampleTrailController::class)->name('trails.example');
+Route::view('/ueber-cachetrail', 'about')->name('about');
 Route::post('/sprache', LocaleController::class)->name('locale.update');
 Route::view('/impressum', 'legal.imprint')->name('legal.imprint');
 Route::view('/datenschutz', 'legal.privacy')->name('legal.privacy');
