@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\GeocacheProvider;
 use App\Data\GeocacheData;
 use App\Enums\CacheStatus;
 use App\Enums\CacheType;
@@ -69,7 +70,7 @@ class TrailCache extends Model
     /**
      * Data for one numbered marker on the route map.
      *
-     * @return array{number: int, code: string, name: string, type: string, rating: string, latitude: float, longitude: float, archived: bool, disabled: bool, hint: ?string}
+     * @return array{number: int, code: string, name: string, type: string, rating: string, difficulty: float, terrain: float, status: string, url: ?string, latitude: float, longitude: float, archived: bool, disabled: bool, hint: ?string}
      */
     public function toMapMarker(int $number): array
     {
@@ -79,6 +80,10 @@ class TrailCache extends Model
             'name' => $this->cache_name,
             'type' => $this->cache_type->label(),
             'rating' => $this->ratingLabel(),
+            'difficulty' => $this->difficulty,
+            'terrain' => $this->terrain,
+            'status' => $this->cache_status->label(),
+            'url' => app(GeocacheProvider::class)->cacheUrl($this->cache_code),
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'archived' => $this->cache_status === CacheStatus::Archived,

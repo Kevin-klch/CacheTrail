@@ -95,6 +95,144 @@
         @apply mt-1.5 mb-0 text-xs font-medium text-red-800;
     }
 
+    /* Station info card, similar to the cache popup on Geocaching.com */
+    .ct-leaflet-popup .leaflet-popup-content-wrapper {
+        @apply overflow-hidden rounded-2xl p-0! shadow-xl;
+    }
+
+    .ct-leaflet-popup .leaflet-popup-content {
+        @apply m-0! text-sm leading-normal;
+    }
+
+    /* Leaflet's own stylesheet is unlayered and adds large paragraph margins. */
+    .ct-leaflet-popup .leaflet-popup-content p {
+        margin: 0 !important;
+    }
+
+    .ct-leaflet-popup a.leaflet-popup-close-button {
+        @apply top-2 right-2 size-7 rounded-full text-lg leading-7 text-ink-muted hover:bg-sand-100 hover:text-ink;
+    }
+
+    .ct-popup--cache {
+        @apply text-sm text-ink;
+    }
+
+    .ct-popup__header {
+        @apply flex items-start gap-3 border-b border-sand-200 px-4 pt-4 pb-3 pr-10;
+    }
+
+    .ct-popup__number {
+        @apply grid size-8 shrink-0 place-items-center rounded-full bg-forest-700 text-sm font-bold text-paper;
+    }
+
+    .ct-popup__number--start {
+        @apply bg-forest-500;
+    }
+
+    .ct-popup__number--end {
+        @apply bg-trail-500;
+    }
+
+    .ct-popup__number--disabled {
+        @apply bg-amber-600;
+    }
+
+    .ct-popup__number--archived {
+        @apply bg-sand-300 text-ink-muted;
+    }
+
+    .ct-popup__heading {
+        @apply flex min-w-0 flex-col gap-1 pt-1;
+    }
+
+    .ct-popup--cache .ct-popup__title {
+        @apply text-lg leading-tight;
+    }
+
+    .ct-popup__subline {
+        @apply flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-muted;
+    }
+
+    .ct-popup__code {
+        @apply font-mono font-semibold text-forest-700;
+    }
+
+    .ct-popup__tag {
+        @apply rounded-full bg-forest-100 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-forest-700;
+    }
+
+    .ct-popup__tag--end {
+        @apply bg-trail-400/20 text-trail-600;
+    }
+
+    .ct-popup__figures {
+        @apply m-0 grid gap-1.5 px-4 py-3;
+    }
+
+    .ct-popup__row {
+        @apply flex items-center justify-between gap-4;
+    }
+
+    .ct-popup__label {
+        @apply text-ink-muted;
+    }
+
+    .ct-popup__value {
+        @apply m-0 font-semibold text-forest-900;
+    }
+
+    .ct-popup__rating {
+        @apply inline-flex items-center gap-2;
+    }
+
+    .ct-pips {
+        @apply inline-flex gap-1;
+    }
+
+    .ct-pip {
+        @apply size-2.5 rounded-full border border-forest-600;
+    }
+
+    .ct-pip--full {
+        @apply bg-forest-600;
+    }
+
+    .ct-pip--half {
+        background: linear-gradient(90deg, var(--color-forest-600) 50%, transparent 50%);
+    }
+
+    .ct-popup--cache .ct-popup__hint {
+        @apply mx-4 mt-0 mb-3 rounded-xl bg-red-50 px-3 py-2;
+    }
+
+    .ct-popup--cache .ct-popup__hint--disabled {
+        @apply bg-amber-50 text-amber-800;
+    }
+
+    .ct-popup__actions {
+        @apply flex flex-wrap gap-x-4 gap-y-2 border-t border-sand-200 px-4 py-3;
+    }
+
+    .ct-popup__action {
+        @apply inline-flex items-center gap-1.5 font-semibold text-forest-700! no-underline hover:underline;
+    }
+
+    .ct-popup__icon {
+        @apply size-4 shrink-0;
+    }
+
+    .ct-popup__pager {
+        @apply flex items-center justify-between gap-3 border-t border-sand-200 bg-sand-100/60 px-4 py-2 text-xs text-ink-muted;
+    }
+
+    .ct-popup__pager-buttons {
+        @apply inline-flex gap-1;
+    }
+
+    .ct-popup__pager-button {
+        @apply grid size-7 cursor-pointer place-items-center rounded-full border border-sand-300 bg-white text-forest-800 transition hover:border-forest-500 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-sand-300;
+    }
+
     .ct-pin {
         @apply block size-7 rounded-full rounded-br-none border-[3px] border-paper bg-forest-700 shadow-lg;
         transform: rotate(45deg);

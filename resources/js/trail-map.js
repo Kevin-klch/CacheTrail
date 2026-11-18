@@ -39,16 +39,159 @@ function markerIcon(cache, isStart, isEnd) {
     });
 }
 
-function popupContent(cache, labels) {
-    const root = element('div', 'ct-popup');
-    const title = element('p', 'ct-popup__title', `${cache.number}. ${cache.name}`);
-    const meta = element('p', 'ct-popup__meta', `${cache.code} · ${cache.type} · ${cache.rating}`);
+const SVG_NS = 'http://www.w3.org/2000/svg';
 
-    root.append(title, meta);
+/**
+ * Small line icon (paths from the x-icon component), built without innerHTML.
+ */
+function icon(paths) {
+    const svg = document.createElementNS(SVG_NS, 'svg');
 
-    if (cache.isStart) root.append(element('p', 'ct-popup__flag', labels.start));
-    if (cache.isEnd) root.append(element('p', 'ct-popup__flag', labels.end));
-    if (cache.hint) root.append(element('p', 'ct-popup__hint', cache.hint));
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '1.75');
+    svg.setAttribute('stroke-linecap', 'round');
+    svg.setAttribute('stroke-linejoin', 'round');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('class', 'ct-popup__icon');
+
+    paths.forEach((d) => {
+        const path = document.createElementNS(SVG_NS, 'path');
+        path.setAttribute('d', d);
+        svg.append(path);
+    });
+
+    return svg;
+}
+
+const ICONS = {
+    external: ['M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5'],
+    navigate: ['M3 11 21 3l-8 18-2-8Z'],
+    previous: ['m15 18-6-6 6-6'],
+    next: ['m9 18 6-6-6-6'],
+};
+
+/**
+ * Difficulty or terrain (1–5 in half steps) as five pips, like the stars on Geocaching.com.
+ */
+function ratingPips(value) {
+    const pips = element('span', 'ct-pips');
+
+    for (let index = 1; index <= 5; index++) {
+        const state = value >= index ? 'full' : value >= index - 0.5 ? 'half' : 'empty';
+        pips.append(element('span', `ct-pip ct-pip--${state}`));
+    }
+
+    return pips;
+}
+
+function formatRating(value) {
+    return String(value).replace('.', ',');
+}
+
+function popupRow(label, value) {
+    const row = element('div', 'ct-popup__row');
+    const valueNode = element('dd', 'ct-popup__value');
+
+    if (value instanceof Node) {
+        valueNode.append(value);
+    } else {
+        valueNode.textContent = value;
+    }
+
+    row.append(element('dt', 'ct-popup__label', label), valueNode);
+
+    return row;
+}
+
+function popupAction(href, label, iconPaths) {
+    const link = element('a', 'ct-popup__action');
+
+    link.href = href;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.append(icon(iconPaths), element('span', null, label));
+
+    return link;
+}
+
+/**
+ * Info card of one station: number, name and code, difficulty and terrain, status, links and
+ * buttons to step through the stations in the recommended order.
+ */
+function popupContent(cache, labels, total, goTo) {
+    const root = element('div', 'ct-popup ct-popup--cache');
+
+    // Header: station number like the marker, name, code and type.
+    const header = element('div', 'ct-popup__header');
+    const badgeClasses = ['ct-popup__number'];
+    if (cache.isStart) badgeClasses.push('ct-popup__number--start');
+    if (cache.isEnd) badgeClasses.push('ct-popup__number--end');
+    if (cache.disabled) badgeClasses.push('ct-popup__number--disabled');
+    if (cache.archived) badgeClasses.push('ct-popup__number--archived');
+
+    const heading = element('div', 'ct-popup__heading');
+    heading.append(element('p', 'ct-popup__title', cache.name));
+
+    const subline = element('p', 'ct-popup__subline');
+    subline.append(element('span', 'ct-popup__code', cache.code), element('span', null, cache.type));
+    if (cache.isStart) subline.append(element('span', 'ct-popup__tag', labels.start));
+    if (cache.isEnd) subline.append(element('span', 'ct-popup__tag ct-popup__tag--end', labels.end));
+    heading.append(subline);
+
+    header.append(element('span', badgeClasses.join(' '), String(cache.number)), heading);
+    root.append(header);
+
+    // Key figures.
+    const figures = element('dl', 'ct-popup__figures');
+    if (typeof cache.difficulty === 'number') {
+        const difficulty = element('span', 'ct-popup__rating');
+        difficulty.append(ratingPips(cache.difficulty), element('span', null, formatRating(cache.difficulty)));
+        figures.append(popupRow(labels.difficulty, difficulty));
+    }
+    if (typeof cache.terrain === 'number') {
+        const terrain = element('span', 'ct-popup__rating');
+        terrain.append(ratingPips(cache.terrain), element('span', null, formatRating(cache.terrain)));
+        figures.append(popupRow(labels.terrain, terrain));
+    }
+    if (cache.status) figures.append(popupRow(labels.status, cache.status));
+    root.append(figures);
+
+    if (cache.hint) root.append(element('div', cache.disabled ? 'ct-popup__hint ct-popup__hint--disabled' : 'ct-popup__hint', cache.hint));
+
+    // Actions.
+    const actions = element('div', 'ct-popup__actions');
+    if (cache.url) actions.append(popupAction(cache.url, labels.openCache, ICONS.external));
+    actions.append(popupAction(
+        `https://www.google.com/maps/dir/?api=1&destination=${cache.latitude},${cache.longitude}`,
+        labels.navigate,
+        ICONS.navigate,
+    ));
+    root.append(actions);
+
+    // Step through the stations.
+    if (total > 1) {
+        const pager = element('div', 'ct-popup__pager');
+        pager.append(element('span', null, labels.station.replace(':number', cache.number).replace(':total', total)));
+
+        const buttons = element('span', 'ct-popup__pager-buttons');
+        [[-1, labels.previous, ICONS.previous], [1, labels.next, ICONS.next]].forEach(([step, label, paths]) => {
+            const button = element('button', 'ct-popup__pager-button');
+            const target = cache.number - 1 + step;
+
+            button.type = 'button';
+            button.title = label;
+            button.setAttribute('aria-label', label);
+            button.disabled = target < 0 || target >= total;
+            button.append(icon(paths));
+            button.addEventListener('click', () => goTo(target));
+            buttons.append(button);
+        });
+
+        pager.append(buttons);
+        root.append(pager);
+    }
 
     return root;
 }
@@ -181,17 +324,33 @@ export function registerTrailMap(Alpine) {
                 L.polyline(points, { color: TRAIL_COLOR, weight: 4, opacity: 0.85, dashArray: '8 10', lineCap: 'round' }).addTo(this.layer);
             }
 
+            const markers = [];
+            const goTo = (index) => {
+                const marker = markers[index];
+
+                if (marker) {
+                    this.map.panTo(marker.getLatLng());
+                    marker.openPopup();
+                }
+            };
+
             caches.forEach((cache, index) => {
                 const isStart = index === 0;
                 const isEnd = index === caches.length - 1 && caches.length > 1;
 
-                L.marker([cache.latitude, cache.longitude], {
+                const marker = L.marker([cache.latitude, cache.longitude], {
                     icon: markerIcon(cache, isStart, isEnd),
                     title: `${cache.number}. ${cache.name}`,
                     keyboard: true,
                 })
-                    .bindPopup(popupContent({ ...cache, isStart, isEnd }, labels))
+                    .bindPopup(popupContent({ ...cache, isStart, isEnd }, labels, caches.length, goTo), {
+                        minWidth: 280,
+                        maxWidth: 320,
+                        className: 'ct-leaflet-popup',
+                    })
                     .addTo(this.layer);
+
+                markers.push(marker);
             });
 
             this.map.fitBounds(this.layer.getBounds(), { padding: [36, 36], maxZoom: 17 });
