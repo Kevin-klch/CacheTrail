@@ -1,7 +1,7 @@
 <x-layouts.app :title="$profile->name">
     <div class="rounded-b-[2.5rem] bg-forest-700 pb-28 pt-10 text-paper sm:rounded-b-[4rem] sm:pt-14">
         <div class="mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:px-6 lg:px-8">
-            <span class="grid size-20 shrink-0 place-items-center rounded-full bg-paper font-serif text-4xl font-bold text-forest-800" aria-hidden="true">
+            <span class="grid size-20 shrink-0 place-items-center rounded-full bg-paper font-heading text-4xl font-bold text-forest-800" aria-hidden="true">
                 {{ mb_strtoupper(mb_substr($profile->name, 0, 1)) }}
             </span>
             <div>

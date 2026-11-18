@@ -33,7 +33,7 @@
                 <div class="mx-auto grid grid-cols-1 max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
                     <div>
                         <x-logo inverted />
-                        <p class="mt-4 max-w-xs font-serif text-lg italic text-forest-100/90">{{ __('Discover routes. Find adventures.') }}</p>
+                        <p class="mt-4 max-w-xs font-heading text-lg text-forest-100/90">{{ __('Discover routes. Find adventures.') }}</p>
                     </div>
                     <nav aria-label="{{ __('Footer navigation') }}" class="flex flex-col gap-2 text-sm">
                         <a href="{{ route('home') }}" class="hover:text-white">{{ __('Home') }}</a>

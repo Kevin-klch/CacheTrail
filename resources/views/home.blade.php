@@ -47,7 +47,7 @@
                         @endforeach
                     </svg>
                     <div class="px-2 pb-1 pt-4">
-                        <p class="font-serif text-xl font-bold text-forest-900">{{ __('Your next route') }}</p>
+                        <p class="font-heading text-xl font-bold text-forest-900">{{ __('Your next route') }}</p>
                         <div class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-ink-muted">
                             <span class="inline-flex items-center gap-1.5"><x-icon name="route" class="size-4" /> 4 {{ __('caches') }}</span>
                             <span class="inline-flex items-center gap-1.5"><x-icon name="map" class="size-4" /> {{ __('Your order') }}</span>
@@ -86,7 +86,7 @@
                                     <a href="{{ route('trails.show', $trail) }}" class="flex items-center gap-4 px-5 py-3 transition hover:bg-white">
                                         <x-trail-image :trail="$trail" class="aspect-square w-12 shrink-0 rounded-xl" />
                                         <span class="min-w-0 flex-1">
-                                            <span class="block truncate font-serif text-lg font-bold text-forest-900">{{ $trail->name }}</span>
+                                            <span class="block truncate font-heading text-lg font-bold text-forest-900">{{ $trail->name }}</span>
                                             <span class="flex items-center gap-3 text-sm text-ink-muted">
                                                 <span class="inline-flex items-center gap-1"><x-icon name="clock" class="size-3.5" /> {{ $trail->durationLabel() }}</span>
                                                 <x-transport-icons :transportations="$trail->transportations" />
@@ -117,7 +117,7 @@
                     ['icon' => 'share', 'title' => __('Share'), 'text' => __('Combine existing caches into your own route and show others your favorite tour.')],
                 ] as $index => $step)
                     <x-card class="relative bg-white">
-                        <span class="absolute right-6 top-5 font-serif text-5xl font-bold text-sand-200">{{ $index + 1 }}</span>
+                        <span class="absolute right-6 top-5 font-heading text-5xl font-bold text-sand-200">{{ $index + 1 }}</span>
                         <span class="grid size-12 place-items-center rounded-2xl bg-forest-100 text-forest-700">
                             <x-icon :name="$step['icon']" class="size-6" />
                         </span>

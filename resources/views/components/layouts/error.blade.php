@@ -23,7 +23,7 @@
         <main class="relative flex flex-1 items-center overflow-hidden px-4 py-20">
             <x-trail-line class="absolute -left-10 top-0 hidden h-full w-40 text-trail-400/40 md:block" />
             <div class="relative mx-auto max-w-lg text-center">
-                <p class="font-serif text-7xl font-bold text-trail-500">{{ $code }}</p>
+                <p class="font-heading text-7xl font-bold text-trail-500">{{ $code }}</p>
                 <h1 class="mt-4 text-4xl font-bold">{{ $title }}</h1>
                 <p class="mt-4 text-lg text-ink-muted">{{ $message }}</p>
                 <div class="mt-8 flex flex-wrap justify-center gap-3">

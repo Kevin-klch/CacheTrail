@@ -4,7 +4,7 @@
 <div {{ $attributes->class(['min-w-0']) }}>
     <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
         <span @class([
-            'font-serif text-lg font-bold leading-tight',
+            'font-heading text-lg font-bold leading-tight',
             'text-forest-900' => $cache->cache_status !== App\Enums\CacheStatus::Archived,
             'text-ink-muted line-through decoration-1' => $cache->cache_status === App\Enums\CacheStatus::Archived,
         ])>{{ $cache->cache_name }}</span>

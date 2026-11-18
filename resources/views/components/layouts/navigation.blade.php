@@ -49,7 +49,7 @@
                         x-bind:aria-expanded="menu.toString()"
                         aria-controls="user-menu"
                     >
-                        <span class="grid size-9 place-items-center rounded-full bg-paper font-serif text-lg font-bold text-forest-800" aria-hidden="true">
+                        <span class="grid size-9 place-items-center rounded-full bg-paper font-heading text-lg font-bold text-forest-800" aria-hidden="true">
                             {{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}
                         </span>
                         <x-icon name="chevron-down" class="size-4 transition" x-bind:class="menu && 'rotate-180'" />

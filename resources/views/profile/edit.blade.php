@@ -82,15 +82,15 @@
                 <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                     <div class="rounded-2xl bg-sand-100/70 px-4 py-3">
                         <dt class="text-xs uppercase tracking-wide text-ink-muted">{{ __('Geocaches found') }}</dt>
-                        <dd class="mt-1 font-serif text-xl font-bold text-forest-900">{{ number_format((int) $user->geocachingAccount->finds_count, 0, ',', '.') }}</dd>
+                        <dd class="mt-1 font-heading text-xl font-bold text-forest-900">{{ number_format((int) $user->geocachingAccount->finds_count, 0, ',', '.') }}</dd>
                     </div>
                     <div class="rounded-2xl bg-sand-100/70 px-4 py-3">
                         <dt class="text-xs uppercase tracking-wide text-ink-muted">{{ __('Geocacher since') }}</dt>
-                        <dd class="mt-1 font-serif text-xl font-bold text-forest-900">{{ $user->geocachingAccount->member_since?->translatedFormat('F Y') ?? '–' }}</dd>
+                        <dd class="mt-1 font-heading text-xl font-bold text-forest-900">{{ $user->geocachingAccount->member_since?->translatedFormat('F Y') ?? '–' }}</dd>
                     </div>
                     <div class="rounded-2xl bg-sand-100/70 px-4 py-3">
                         <dt class="text-xs uppercase tracking-wide text-ink-muted">{{ __('Membership') }}</dt>
-                        <dd class="mt-1 font-serif text-xl font-bold text-forest-900">{{ ucfirst((string) $user->geocachingAccount->membership_status) ?: '–' }}</dd>
+                        <dd class="mt-1 font-heading text-xl font-bold text-forest-900">{{ ucfirst((string) $user->geocachingAccount->membership_status) ?: '–' }}</dd>
                     </div>
                 </dl>
             @else

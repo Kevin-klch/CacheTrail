@@ -4,9 +4,10 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-serif: 'Alegreya', ui-serif, Georgia, serif;
+    /* Headings, titles and large numbers */
+    --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
 
     /* Paper tones: page background and quiet surfaces */
     --color-paper: #f7f2e6;
@@ -45,7 +46,7 @@
     h1,
     h2,
     h3 {
-        @apply font-serif text-forest-900;
+        @apply font-heading text-forest-900;
     }
 
     [x-cloak] {
@@ -80,7 +81,7 @@
     }
 
     .ct-popup__title {
-        @apply m-0 font-serif text-base font-bold text-forest-900;
+        @apply m-0 font-heading text-base font-bold text-forest-900;
     }
 
     .ct-popup__meta {

@@ -9,7 +9,7 @@
         <circle cx="20" cy="20" r="2" @class(['fill-forest-800' => $inverted, 'fill-paper' => ! $inverted]) />
     </svg>
     <span @class([
-        'font-serif text-2xl font-bold tracking-tight',
+        'font-heading text-2xl font-bold tracking-tight',
         'text-paper' => $inverted,
         'text-forest-800' => ! $inverted,
     ])>Cache<span @class(['text-trail-400' => $inverted, 'text-trail-500' => ! $inverted])>Trail</span></span>

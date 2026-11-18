@@ -105,7 +105,7 @@
             ] as [$label, $value])
                 <div class="rounded-2xl bg-sand-100/70 px-4 py-3">
                     <dt class="text-xs font-medium uppercase tracking-wide text-ink-muted">{{ $label }}</dt>
-                    <dd class="mt-1 font-serif text-xl font-bold text-forest-900">{{ $value }}</dd>
+                    <dd class="mt-1 font-heading text-xl font-bold text-forest-900">{{ $value }}</dd>
                 </div>
             @endforeach
         </dl>

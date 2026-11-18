@@ -28,7 +28,7 @@
                             <x-trail-image :trail="$trail" class="aspect-[16/9] w-full shrink-0 rounded-xl sm:w-36" />
                             <div class="min-w-0 flex-1">
                                 <div class="flex flex-wrap items-center gap-2">
-                                    <a href="{{ route('trails.show', $trail) }}" class="font-serif text-xl font-bold text-forest-900 hover:underline">{{ $trail->name }}</a>
+                                    <a href="{{ route('trails.show', $trail) }}" class="font-heading text-xl font-bold text-forest-900 hover:underline">{{ $trail->name }}</a>
                                     <x-visibility-badge :visibility="$trail->visibility" />
                                 </div>
                                 <p class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-muted">

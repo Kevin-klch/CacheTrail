@@ -35,9 +35,9 @@
                                     · {{ $item instanceof App\Models\TrailRating ? __('Rating') : __('Route') }}
                                 </p>
                                 @if ($item === null)
-                                    <p class="mt-1 font-serif text-xl font-bold text-ink-muted">{{ __('The reported content no longer exists.') }}</p>
+                                    <p class="mt-1 font-heading text-xl font-bold text-ink-muted">{{ __('The reported content no longer exists.') }}</p>
                                 @else
-                                    <p class="mt-1 font-serif text-xl font-bold text-forest-900">
+                                    <p class="mt-1 font-heading text-xl font-bold text-forest-900">
                                         <a href="{{ route('trails.show', $trail) }}" class="hover:underline" target="_blank" rel="noopener">{{ $trail->name }}</a>
                                     </p>
                                     @if ($item instanceof App\Models\TrailRating)
