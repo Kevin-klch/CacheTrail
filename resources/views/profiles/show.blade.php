@@ -24,7 +24,7 @@
         </div>
     </div>
 
-    <div class="mx-auto -mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="relative mx-auto -mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_26rem]">
             {{-- Info box --}}
             <x-card>
