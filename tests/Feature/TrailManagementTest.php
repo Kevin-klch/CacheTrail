@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\TrailTool;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
 use App\Models\Trail;
@@ -135,6 +136,47 @@ class TrailManagementTest extends TestCase
             ->post(route('trails.store'), $this->validData(['transportations' => ['bike', 'foot']]));
 
         $this->assertEquals([Transportation::Foot, Transportation::Bike], Trail::sole()->transportations->all());
+    }
+
+    public function test_required_equipment_can_be_chosen_and_entered_freely(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->post(route('trails.store'), $this->validData([
+                'tools' => ['flashlight', 'tweezers'],
+                'other_tools' => '  Leiter  ',
+            ]))
+            ->assertSessionHasNoErrors();
+
+        $trail = Trail::sole();
+        $this->assertEquals([TrailTool::Tweezers, TrailTool::Flashlight], $trail->tools->all());
+        $this->assertSame('Leiter', $trail->other_tools);
+        $this->assertSame(['Pinzette', 'Taschenlampe', 'Leiter'], $trail->equipmentLabels());
+    }
+
+    public function test_equipment_is_optional_and_validated(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post(route('trails.store'), $this->validData())->assertSessionHasNoErrors();
+        $this->assertSame([], Trail::sole()->equipmentLabels());
+
+        $this->post(route('trails.store'), $this->validData([
+            'tools' => ['laser-sword'],
+            'other_tools' => str_repeat('a', 121),
+        ]))->assertSessionHasErrors(['tools.0', 'other_tools']);
+    }
+
+    public function test_the_detail_page_shows_the_required_equipment(): void
+    {
+        $trail = Trail::factory()->published()->create(['tools' => [TrailTool::UvLight], 'other_tools' => 'Wathose']);
+
+        $this->actingAs(User::factory()->create())
+            ->get(route('trails.show', $trail))
+            ->assertSeeInOrder(['Benötigte Ausrüstung', 'UV-Lampe', 'Wathose']);
+
+        $trail->update(['tools' => [], 'other_tools' => null]);
+
+        $this->get(route('trails.show', $trail))->assertSee('Keine besondere Ausrüstung nötig.');
     }
 
     public function test_slugs_are_unique_and_avoid_reserved_words(): void

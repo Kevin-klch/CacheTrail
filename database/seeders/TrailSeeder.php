@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Actions\Trails\AddCachesToTrail;
+use App\Enums\TrailTool;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
 use App\Models\Trail;
@@ -26,6 +27,8 @@ class TrailSeeder extends Seeder
                 'caches' => 'GCCT01 GCCT02 GCCT03 GCCT04 GCCT05 GCCT06 GCCT07 GCCT08',
                 'minutes' => 120,
                 'transportations' => [Transportation::Foot, Transportation::Bike],
+                'tools' => [TrailTool::Tweezers, TrailTool::Flashlight],
+                'other_tools' => 'Festes Schuhwerk',
                 'visibility' => TrailVisibility::Published,
                 'published_days_ago' => 2,
                 'description' => "Eine abwechslungsreiche Runde durch einen alten Laubwald mit kleinen Bachläufen und einer Aussichtsplattform am Ende.\n\nDer Weg ist größtenteils unbefestigt und bei Regen auch mal matschig. Festes Schuhwerk ist empfehlenswert.\n\nParken kannst du am Waldparkplatz an der Landstraße. Von dort sind es nur wenige Meter bis zur ersten Station.",
@@ -36,6 +39,7 @@ class TrailSeeder extends Seeder
                 'caches' => 'GCCT11 GCCT12 GCCT13 GCCT14 GCCT15 GCCT16',
                 'minutes' => 150,
                 'transportations' => [Transportation::Foot],
+                'tools' => [TrailTool::Magnet, TrailTool::Mirror, TrailTool::UvLight],
                 'visibility' => TrailVisibility::Published,
                 'published_days_ago' => 6,
                 'description' => "Mit dieser Runde erinnern wir an den Steinkohlenbergbau, der unsere Region geprägt hat.\n\nDie Stationen führen über das ehemalige Zechengelände, vorbei an Fördertürmen und alten Werkshallen. An einigen Stellen gibt es Infotafeln zur Geschichte.\n\nGlück auf!",
@@ -78,6 +82,8 @@ class TrailSeeder extends Seeder
                 'description' => $data['description'],
                 'estimated_duration_minutes' => $data['minutes'],
                 'transportations' => $data['transportations'],
+                'tools' => $data['tools'] ?? [],
+                'other_tools' => $data['other_tools'] ?? null,
             ]);
             $trail->user()->associate($data['user']);
             $trail->visibility = $data['visibility'];

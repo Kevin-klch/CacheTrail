@@ -98,6 +98,9 @@
         @case('chevron-down')
             <path d="m6 9 6 6 6-6" />
             @break
+        @case('tool')
+            <path d="M14.7 6.3a4 4 0 0 0-5.4 5.1L4 16.7V20h3.3l5.3-5.3a4 4 0 0 0 5.1-5.4l-2.5 2.5-2.4-.6-.6-2.4Z" />
+            @break
         @case('external')
             <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
             @break

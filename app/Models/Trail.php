@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\DistanceMethod;
+use App\Enums\TrailTool;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
 use App\Support\GeoDistance;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'description', 'estimated_duration_minutes', 'transportations'])]
+#[Fillable(['name', 'description', 'estimated_duration_minutes', 'transportations', 'tools', 'other_tools'])]
 class Trail extends Model
 {
     /** @use HasFactory<TrailFactory> */
@@ -39,6 +40,8 @@ class Trail extends Model
      */
     protected $attributes = [
         'visibility' => TrailVisibility::Draft,
+        'tools' => '[]',
+        'other_tools' => null,
     ];
 
     /**
@@ -51,6 +54,7 @@ class Trail extends Model
         return [
             'estimated_duration_minutes' => 'integer',
             'transportations' => AsEnumCollection::of(Transportation::class),
+            'tools' => AsEnumCollection::of(TrailTool::class),
             'visibility' => TrailVisibility::class,
             'published_at' => 'datetime',
             'cache_count' => 'integer',
@@ -412,6 +416,22 @@ class Trail extends Model
     public function transportationLabel(): string
     {
         return $this->transportations->map(fn (Transportation $mode): string => $mode->label())->implode(', ');
+    }
+
+    /**
+     * Labels of all equipment needed for the trail: the preset tools followed by the free text entry.
+     *
+     * @return list<string>
+     */
+    public function equipmentLabels(): array
+    {
+        $labels = ($this->tools ?? collect())->map(fn (TrailTool $tool): string => $tool->label())->values()->all();
+
+        if (filled($this->other_tools)) {
+            $labels[] = $this->other_tools;
+        }
+
+        return $labels;
     }
 
     public function imageUrl(): ?string

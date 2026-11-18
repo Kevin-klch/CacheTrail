@@ -130,6 +130,22 @@
                     </p>
                 </x-card>
 
+                <x-card class="p-5 sm:p-6">
+                    <h2 class="flex items-center gap-2 text-xl font-bold">
+                        <x-icon name="tool" class="text-forest-600" />
+                        {{ __('Required equipment') }}
+                    </h2>
+                    @if ($equipment = $trail->equipmentLabels())
+                        <ul class="mt-3 flex flex-wrap gap-2">
+                            @foreach ($equipment as $item)
+                                <li class="rounded-full bg-forest-50 px-3 py-1 text-sm font-medium text-forest-800 ring-1 ring-forest-600/15">{{ $item }}</li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="mt-2 text-sm text-ink-muted">{{ __('No special equipment needed.') }}</p>
+                    @endif
+                </x-card>
+
                 @if (! ($isPreview ?? false) && auth()->user()?->can('update', $trail))
                     <x-button variant="secondary" :href="route('trails.edit', $trail)" class="w-full">
                         <x-icon name="edit" class="size-4" />

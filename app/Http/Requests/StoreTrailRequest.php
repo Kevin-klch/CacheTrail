@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TrailTool;
 use App\Enums\Transportation;
 use App\Models\Trail;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -12,6 +13,8 @@ use Illuminate\Validation\Validator;
 class StoreTrailRequest extends FormRequest
 {
     public const int MAX_IMAGE_KILOBYTES = 5120;
+
+    public const int OTHER_TOOLS_MAX_LENGTH = 120;
 
     public function authorize(): bool
     {
@@ -30,6 +33,9 @@ class StoreTrailRequest extends FormRequest
             'duration_minutes' => ['required', 'integer', 'min:0', 'max:59'],
             'transportations' => ['required', 'array', 'min:1'],
             'transportations.*' => ['required', 'distinct', Rule::enum(Transportation::class)],
+            'tools' => ['nullable', 'array'],
+            'tools.*' => ['required', 'distinct', Rule::enum(TrailTool::class)],
+            'other_tools' => ['nullable', 'string', 'max:'.self::OTHER_TOOLS_MAX_LENGTH],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:'.self::MAX_IMAGE_KILOBYTES],
         ];
     }
@@ -60,6 +66,9 @@ class StoreTrailRequest extends FormRequest
             'duration_minutes' => __('Minutes'),
             'transportations' => __('Means of transport'),
             'transportations.*' => __('Means of transport'),
+            'tools' => __('Equipment'),
+            'tools.*' => __('Equipment'),
+            'other_tools' => __('Other equipment'),
             'image' => __('Cover image'),
         ];
     }
@@ -70,7 +79,7 @@ class StoreTrailRequest extends FormRequest
     }
 
     /**
-     * @return array{name: string, description: string, estimated_duration_minutes: int, transportations: list<Transportation>}
+     * @return array{name: string, description: string, estimated_duration_minutes: int, transportations: list<Transportation>, tools: list<TrailTool>, other_tools: ?string}
      */
     public function trailAttributes(): array
     {
@@ -79,7 +88,24 @@ class StoreTrailRequest extends FormRequest
             'description' => $this->validated('description'),
             'estimated_duration_minutes' => $this->durationInMinutes(),
             'transportations' => $this->selectedTransportations(),
+            'tools' => $this->selectedTools(),
+            'other_tools' => $this->validated('other_tools'),
         ];
+    }
+
+    /**
+     * The selected preset tools in their canonical order.
+     *
+     * @return list<TrailTool>
+     */
+    public function selectedTools(): array
+    {
+        $selected = $this->validated('tools') ?? [];
+
+        return array_values(array_filter(
+            TrailTool::cases(),
+            fn (TrailTool $tool): bool => in_array($tool->value, $selected, true),
+        ));
     }
 
     /**

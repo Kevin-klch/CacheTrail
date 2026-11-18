@@ -37,6 +37,16 @@
 
         <x-trail-stats :trail="$trail" size="large" class="mt-5" />
 
+        @if ($equipment = $trail->equipmentLabels())
+            <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-muted">
+                <span class="inline-flex items-center gap-1.5 font-medium text-forest-800">
+                    <x-icon name="tool" class="size-4" />
+                    {{ __('Equipment') }}:
+                </span>
+                {{ implode(' · ', $equipment) }}
+            </p>
+        @endif
+
         <div class="mt-5 space-y-3 leading-relaxed text-ink-muted">
             @foreach (array_slice($trail->descriptionParagraphs(), 0, 2) as $paragraph)
                 <p @class(['line-clamp-3' => $loop->first, 'line-clamp-2' => ! $loop->first])>{{ $paragraph }}</p>

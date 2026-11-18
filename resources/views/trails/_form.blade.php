@@ -57,6 +57,31 @@
         @endif
     </fieldset>
 
+    <fieldset>
+        <legend class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Required equipment') }} <span class="font-normal text-ink-muted">({{ __('optional') }})</span></legend>
+        @php
+            $selectedTools = old('tools', $trail->tools?->map(fn ($tool) => $tool->value)->all() ?? []);
+        @endphp
+        <div class="flex flex-wrap gap-2">
+            @foreach (App\Enums\TrailTool::cases() as $tool)
+                <label class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-sand-300 bg-white px-3.5 py-2 text-sm font-medium transition hover:border-forest-500 has-checked:border-forest-700 has-checked:bg-forest-700 has-checked:text-paper has-focus-visible:ring-4 has-focus-visible:ring-forest-500/25">
+                    <input type="checkbox" name="tools[]" value="{{ $tool->value }}" class="sr-only"
+                        @checked(in_array($tool->value, (array) $selectedTools, true))>
+                    <x-icon name="tool" class="size-4" />
+                    {{ $tool->label() }}
+                </label>
+            @endforeach
+        </div>
+        @if ($errors->has('tools') || $errors->has('tools.*'))
+            <p class="mt-1.5 text-sm text-red-700">{{ $errors->first('tools') ?: $errors->first('tools.*') }}</p>
+        @endif
+
+        <div class="mt-4 max-w-xl">
+            <x-input name="other_tools" :label="__('Other equipment')" :value="$trail->other_tools" :maxlength="App\Http\Requests\StoreTrailRequest::OTHER_TOOLS_MAX_LENGTH"
+                :placeholder="__('e.g. ladder, waders, screwdriver')" :hint="__('Anything else geocachers should bring along.')" />
+        </div>
+    </fieldset>
+
     <div>
         <span class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Cover image') }}</span>
         <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
