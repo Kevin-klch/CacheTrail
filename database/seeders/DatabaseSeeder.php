@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'moderator@example.com',
         ]);
 
-        $this->call([TrailSeeder::class, CommunitySeeder::class]);
+        $this->call([TrailSeeder::class, CommunitySeeder::class, DemoCommunitySeeder::class]);
 
         // Hand out the badges the demo accounts have earned with the seeded data.
         $this->command->callSilent('badges:award');

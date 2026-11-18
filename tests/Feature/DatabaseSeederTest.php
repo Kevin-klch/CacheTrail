@@ -14,14 +14,14 @@ class DatabaseSeederTest extends TestCase
     {
         $this->seed();
 
-        $this->assertDatabaseCount('users', 3);
-        $this->assertSame(4, Trail::published()->count());
-        $this->assertSame(5, Trail::count());
-        $this->assertDatabaseCount('trail_caches', 29);
-        $this->assertDatabaseCount('trail_ratings', 4);
-        $this->assertDatabaseCount('trail_completions', 2);
-        $this->assertDatabaseCount('geocaching_accounts', 1);
-        $this->assertSame(1, Trail::where('slug', 'waldabenteuer-am-niederrhein')->value('like_count'));
+        $this->assertDatabaseCount('users', 8);
+        $this->assertSame(9, Trail::published()->count());
+        $this->assertSame(11, Trail::count());
+        $this->assertDatabaseCount('trail_caches', 61);
+        $this->assertDatabaseCount('trail_ratings', 15);
+        $this->assertDatabaseCount('trail_completions', 13);
+        $this->assertDatabaseCount('geocaching_accounts', 5);
+        $this->assertSame(2, Trail::where('slug', 'waldabenteuer-am-niederrhein')->value('like_count'));
         $this->assertTrue(Trail::published()->get()->every(fn (Trail $trail): bool => $trail->hasEnoughCachesToPublish()));
     }
 }

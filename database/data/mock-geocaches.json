@@ -348,5 +348,325 @@
     "difficulty": 1.5,
     "terrain": 1.5,
     "status": "active"
+  },
+  {
+    "code": "GCCT61",
+    "name": "Am Hafentempel",
+    "latitude": 51.6588,
+    "longitude": 6.4448,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT62",
+    "name": "Amphitheater",
+    "latitude": 51.6612,
+    "longitude": 6.4466,
+    "type": "multi",
+    "difficulty": 2.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT63",
+    "name": "Legionärsweg",
+    "latitude": 51.6635,
+    "longitude": 6.4502,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT64",
+    "name": "Kriemhildmühle",
+    "latitude": 51.6622,
+    "longitude": 6.4551,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT65",
+    "name": "Dombaumeister",
+    "latitude": 51.6604,
+    "longitude": 6.4535,
+    "type": "mystery",
+    "difficulty": 3.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT66",
+    "name": "Klever Tor",
+    "latitude": 51.663,
+    "longitude": 6.4523,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT67",
+    "name": "Erzbunker",
+    "latitude": 51.4808,
+    "longitude": 6.7802,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT68",
+    "name": "Gasometer",
+    "latitude": 51.4823,
+    "longitude": 6.7831,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT69",
+    "name": "Hochofen 5",
+    "latitude": 51.484,
+    "longitude": 6.786,
+    "type": "traditional",
+    "difficulty": 2.5,
+    "terrain": 4.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT70",
+    "name": "Gießhalle",
+    "latitude": 51.4851,
+    "longitude": 6.7889,
+    "type": "multi",
+    "difficulty": 3.0,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT71",
+    "name": "Sinteranlage",
+    "latitude": 51.4836,
+    "longitude": 6.7915,
+    "type": "letterbox",
+    "difficulty": 2.5,
+    "terrain": 2.5,
+    "status": "temporarily_disabled"
+  },
+  {
+    "code": "GCCT72",
+    "name": "Krokodilwäldchen",
+    "latitude": 51.4815,
+    "longitude": 6.7898,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 3.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT73",
+    "name": "Klostergarten",
+    "latitude": 51.5032,
+    "longitude": 6.5401,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT74",
+    "name": "Terrassengarten",
+    "latitude": 51.5045,
+    "longitude": 6.5418,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT75",
+    "name": "Mönchsweg",
+    "latitude": 51.5068,
+    "longitude": 6.5446,
+    "type": "multi",
+    "difficulty": 2.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT76",
+    "name": "Kamper Berg",
+    "latitude": 51.5081,
+    "longitude": 6.5474,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 3.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT77",
+    "name": "Abteikirche",
+    "latitude": 51.505,
+    "longitude": 6.5462,
+    "type": "virtual",
+    "difficulty": 1.0,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT78",
+    "name": "Zahlenschloss",
+    "latitude": 51.3525,
+    "longitude": 6.577,
+    "type": "mystery",
+    "difficulty": 4.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT79",
+    "name": "Morsezeichen",
+    "latitude": 51.3541,
+    "longitude": 6.5802,
+    "type": "mystery",
+    "difficulty": 4.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT80",
+    "name": "Caesar am Teich",
+    "latitude": 51.3562,
+    "longitude": 6.5833,
+    "type": "mystery",
+    "difficulty": 3.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT81",
+    "name": "Sudoku-Eiche",
+    "latitude": 51.358,
+    "longitude": 6.581,
+    "type": "mystery",
+    "difficulty": 4.0,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT82",
+    "name": "Final: Schatzkiste",
+    "latitude": 51.3571,
+    "longitude": 6.5776,
+    "type": "multi",
+    "difficulty": 4.0,
+    "terrain": 2.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT83",
+    "name": "Zitadelle",
+    "latitude": 51.6552,
+    "longitude": 6.611,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT84",
+    "name": "Rheinbrücke",
+    "latitude": 51.6475,
+    "longitude": 6.605,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT85",
+    "name": "Lippemündung",
+    "latitude": 51.64,
+    "longitude": 6.615,
+    "type": "earthcache",
+    "difficulty": 2.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT86",
+    "name": "Schafe am Deich",
+    "latitude": 51.6305,
+    "longitude": 6.626,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT87",
+    "name": "Auesee",
+    "latitude": 51.6355,
+    "longitude": 6.645,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 2.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT88",
+    "name": "Fischertreppe",
+    "latitude": 51.646,
+    "longitude": 6.6385,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 2.0,
+    "status": "archived"
+  },
+  {
+    "code": "GCCT89",
+    "name": "Schlosspark",
+    "latitude": 51.451,
+    "longitude": 6.6215,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT90",
+    "name": "Grafschafter Museum",
+    "latitude": 51.4518,
+    "longitude": 6.624,
+    "type": "traditional",
+    "difficulty": 1.5,
+    "terrain": 1.0,
+    "status": "active"
+  },
+  {
+    "code": "GCCT91",
+    "name": "Kastell-Wall",
+    "latitude": 51.4532,
+    "longitude": 6.6268,
+    "type": "traditional",
+    "difficulty": 2.0,
+    "terrain": 1.5,
+    "status": "active"
+  },
+  {
+    "code": "GCCT92",
+    "name": "Freizeitpark",
+    "latitude": 51.4489,
+    "longitude": 6.629,
+    "type": "traditional",
+    "difficulty": 1.0,
+    "terrain": 1.5,
+    "status": "active"
   }
 ]
