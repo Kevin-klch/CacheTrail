@@ -54,6 +54,19 @@
     }
 }
 
+/* Header with a slanted lower edge (home page hero, profile cover): rises from left to right */
+@layer components {
+    .slant-bottom {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2.5rem), 0 100%);
+    }
+
+    @media (min-width: 640px) {
+        .slant-bottom {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5rem), 0 100%);
+        }
+    }
+}
+
 /* Long legal texts (imprint, privacy policy) */
 @layer components {
     .legal-text {

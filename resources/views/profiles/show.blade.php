@@ -1,6 +1,6 @@
 <x-layouts.app :title="$profile->name">
     <div @class([
-        'relative isolate overflow-hidden rounded-b-[2.5rem] bg-forest-700 pb-28 text-paper sm:rounded-b-[4rem]',
+        'slant-bottom relative isolate overflow-hidden bg-forest-700 pb-28 text-paper',
         'pt-10 sm:pt-14' => ! $profile->coverUrl(),
         'pt-32 sm:pt-44' => $profile->coverUrl(),
     ])>

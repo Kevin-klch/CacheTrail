@@ -1,6 +1,6 @@
 <x-layouts.app>
     {{-- Hero --}}
-    <section class="relative overflow-hidden rounded-b-[3rem] bg-forest-700 text-paper sm:rounded-b-[5rem]">
+    <section class="slant-bottom relative overflow-hidden bg-forest-700 text-paper">
         <svg class="absolute inset-0 h-full w-full text-forest-500/40" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1200 600" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
             <path d="M-50 480c160-60 260 20 420-30s240-170 420-140 260 120 460 60" />
             <path d="M-50 420c170-50 260 10 410-40s230-160 410-130 270 110 480 50" />
