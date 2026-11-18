@@ -28,7 +28,7 @@
                                 @if ($isSelf)
                                     <span class="ml-1 text-xs text-ink-muted">({{ __('you') }})</span>
                                 @endif
-                                <span class="block text-xs text-ink-muted">{{ __('Member since :date', ['date' => $user->created_at->translatedFormat('j. F Y')]) }}</span>
+                                <span class="block text-xs text-ink-muted">{{ __('Member since :date', ['date' => App\Support\Format::date($user->created_at)]) }}</span>
                                 @unless ($isSelf || ($user->isOwner() && ! auth()->user()->isOwner()))
                                     <details class="mt-1 text-xs">
                                         <summary class="cursor-pointer font-semibold text-forest-700">{{ __('Change username') }}</summary>

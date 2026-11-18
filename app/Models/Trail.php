@@ -6,6 +6,7 @@ use App\Enums\DistanceMethod;
 use App\Enums\TrailTool;
 use App\Enums\TrailVisibility;
 use App\Enums\Transportation;
+use App\Support\Format;
 use App\Support\GeoDistance;
 use App\Support\UserLocation;
 use Database\Factories\TrailFactory;
@@ -188,7 +189,7 @@ class Trail extends Model
      */
     public function averageRatingLabel(): ?string
     {
-        return $this->average_rating === null ? null : number_format($this->average_rating, 1, ',', '.');
+        return $this->average_rating === null ? null : Format::number($this->average_rating, 1);
     }
 
     public static function minCachesToPublish(): int
@@ -349,7 +350,7 @@ class Trail extends Model
 
         return $kilometers < 1
             ? __('less than 1 km away')
-            : __('approx. :distance away', ['distance' => number_format($kilometers, $kilometers < 10 ? 1 : 0, ',', '.').' km']);
+            : __('approx. :distance away', ['distance' => Format::number($kilometers, $kilometers < 10 ? 1 : 0).' km']);
     }
 
     /**
@@ -369,7 +370,7 @@ class Trail extends Model
                 trans_choice(':count cache|:count caches', $this->cache_count),
                 $this->distanceLabel(),
                 $this->average_difficulty !== null
-                    ? 'D/T '.number_format($this->average_difficulty, 1, ',', '').' / '.number_format($this->average_terrain, 1, ',', '')
+                    ? 'D/T '.Format::number($this->average_difficulty, 1).' / '.Format::number($this->average_terrain, 1)
                     : null,
             ])->filter()->implode(' · '),
             'distance' => $location ? $this->distanceFromLabel($location) : null,
@@ -387,9 +388,9 @@ class Trail extends Model
 
         $distance = $this->total_distance_meters < 1000
             ? (round($this->total_distance_meters / 10) * 10).' m'
-            : number_format($this->total_distance_meters / 1000, 1, ',', '.').' km';
+            : Format::number($this->total_distance_meters / 1000, 1).' km';
 
-        return __('approx. :distance', ['distance' => $distance]);
+        return __('~ :distance', ['distance' => $distance]);
     }
 
     /**
@@ -397,7 +398,7 @@ class Trail extends Model
      */
     public static function ratingAverageLabel(?float $average): ?string
     {
-        return $average === null ? null : number_format($average, 1, ',', '.').' / 5';
+        return $average === null ? null : Format::number($average, 1).' / 5';
     }
 
     public function durationHours(): int

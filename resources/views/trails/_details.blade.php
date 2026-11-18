@@ -126,9 +126,9 @@
                     </dl>
                     <p class="border-t border-sand-200 pt-4 text-xs text-ink-muted">
                         @if ($trail->published_at)
-                            {{ __('Published on :date', ['date' => $trail->published_at->translatedFormat('j. F Y')]) }}<br>
+                            {{ __('Published on :date', ['date' => App\Support\Format::date($trail->published_at)]) }}<br>
                         @endif
-                        {{ __('Last updated on :date', ['date' => $trail->updated_at->translatedFormat('j. F Y')]) }}
+                        {{ __('Last updated on :date', ['date' => App\Support\Format::date($trail->updated_at)]) }}
                     </p>
                 </x-card>
 

@@ -14,6 +14,7 @@
         'station' => __('Station :number of :total'),
         'previous' => __('Previous station'),
         'next' => __('Next station'),
+        'decimal' => App\Support\Format::decimalSeparator(),
     ]))"
     x-on:trail-caches-updated.window="update($event)"
     {{ $attributes->class(['relative isolate overflow-hidden rounded-[2rem] border border-sand-200 bg-sand-100 shadow-[0_12px_32px_-16px_rgb(26_50_38/0.25)]']) }}

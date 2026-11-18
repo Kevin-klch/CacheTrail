@@ -64,7 +64,7 @@
                                             <span class="block truncate font-heading text-lg font-bold text-forest-900">{{ $completed->name }}</span>
                                             <span class="flex items-center gap-1.5 text-sm text-ink-muted">
                                                 <x-icon name="calendar" class="size-3.5" />
-                                                {{ __('Completed on :date', ['date' => \Illuminate\Support\Carbon::parse($completed->pivot->completed_at)->translatedFormat('j. F Y')]) }}
+                                                {{ __('Completed on :date', ['date' => App\Support\Format::date(\Illuminate\Support\Carbon::parse($completed->pivot->completed_at))]) }}
                                             </span>
                                         </span>
                                         <x-icon name="arrow-right" class="size-4 text-forest-500" />
@@ -80,7 +80,7 @@
             <x-card class="p-5 sm:p-6">
                 <h2 class="sr-only">{{ __('Figures') }}</h2>
                 <dl>
-                    <x-stat :label="__('Geocaches found')" icon="compass">{{ $account?->finds_count !== null ? number_format($account->finds_count, 0, ',', '.') : '–' }}</x-stat>
+                    <x-stat :label="__('Geocaches found')" icon="compass">{{ $account?->finds_count !== null ? App\Support\Format::number($account->finds_count) : '–' }}</x-stat>
                     <x-stat :label="__('Geocacher since')" icon="calendar"><span class="whitespace-nowrap">{{ $account?->member_since?->translatedFormat('F Y') ?? '–' }}</span></x-stat>
                     <x-stat :label="__('On CacheTrail since')" icon="calendar"><span class="whitespace-nowrap">{{ $profile->created_at->translatedFormat('F Y') }}</span></x-stat>
                     <x-stat :label="__('Completed routes')" icon="check-circle">{{ $completedCount }}</x-stat>
@@ -126,7 +126,7 @@
                                     @endif
                                 </p>
                                 <p class="text-sm text-ink">{{ $earned->description() }}</p>
-                                <p class="text-xs text-ink-muted">{{ __('Earned on :date', ['date' => $earned->earned_at->translatedFormat('j. F Y')]) }}</p>
+                                <p class="text-xs text-ink-muted">{{ __('Earned on :date', ['date' => App\Support\Format::date($earned->earned_at)]) }}</p>
                             </div>
                         </li>
                     @endforeach

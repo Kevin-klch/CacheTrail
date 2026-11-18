@@ -73,7 +73,7 @@
                             <a href="{{ $item->user->profileUrl() }}" class="font-semibold text-forest-800 hover:underline">{{ $item->user->name }}</a>
                             <x-role-badge :user="$item->user" size="icon" />
                             <x-stars :value="$item->rating" />
-                            <span class="text-xs text-ink-muted">{{ $item->created_at->translatedFormat('j. F Y') }}</span>
+                            <span class="text-xs text-ink-muted">{{ App\Support\Format::date($item->created_at) }}</span>
                         </div>
                         <div class="flex flex-wrap items-center gap-3 text-sm">
                             <livewire:report-button :reportable="$item" :key="'report-rating-'.$item->id" />

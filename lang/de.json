@@ -54,7 +54,6 @@
     "An unexpected error occurred. We are sorry, please try again later.": "Ein unerwarteter Fehler ist aufgetreten. Das tut uns leid, bitte versuche es später noch einmal.",
     "Anything else geocachers should bring along.": "Alles, was man sonst noch mitbringen sollte.",
     "Apply filters": "Filter anwenden",
-    "approx. :distance": "ca. :distance",
     "approx. :distance away": "ca. :distance entfernt",
     "Archived": "Archiviert",
     "As soon as routes are liked, the community favorites will appear here.": "Sobald Routen ein „Gefällt mir“ bekommen, erscheinen hier die Lieblinge der Community.",
@@ -218,6 +217,7 @@
     "Info box": "Infobox",
     "JPG, PNG or WebP, up to 5 MB. Optional: without an image, the route gets a placeholder.": "JPG, PNG oder WebP, bis 5 MB. Optional: Ohne Bild bekommt die Route ein Platzhalter-Motiv.",
     "Keep as draft": "Als Entwurf behalten",
+    "Language": "Sprache",
     "Last updated on :date": "Zuletzt aktualisiert am :date",
     "Leave empty and save to remove your reply.": "Leer lassen und speichern, um deine Antwort zu entfernen.",
     "Legal": "Rechtliches",
@@ -260,7 +260,7 @@
     "Move down": "Nach unten",
     "Move up": "Nach oben",
     "Multi-cache": "Multi-Cache",
-    "My public profile": "Mein öffentliches Profil",
+    "My public profile": "Profil",
     "My routes": "Meine Routen",
     "Mystery": "Mystery",
     "Name": "Name",
@@ -444,6 +444,7 @@
     "This is not a valid GC code.": "Das ist kein gültiger GC-Code.",
     "This is what a route looks like": "So sieht eine Route aus",
     "This page does not exist (anymore). Maybe the route was removed or the address is misspelled.": "Diese Seite gibt es nicht (mehr). Vielleicht wurde die Route entfernt oder die Adresse ist falsch geschrieben.",
+    "This page is only available in German.": "Diese Seite gibt es nur auf Deutsch.",
     "This password reset link will expire in :count minutes.": "Dieser Link ist :count Minuten lang gültig.",
     "This route does not contain any caches yet.": "Diese Route enthält noch keine Caches.",
     "This route is already published.": "Diese Route ist bereits veröffentlicht.",
@@ -484,6 +485,7 @@
     "Welcome back": "Willkommen zurück",
     "welcome to CacheTrail! Please confirm your email address so you can discover, save and share routes.": "willkommen bei CacheTrail! Bitte bestätige deine E-Mail-Adresse, damit du Routen entdecken, merken und teilen kannst.",
     "Wherigo": "Wherigo",
+    "Which data CacheTrail processes, what for, and which rights you have.": "Welche Daten CacheTrail verarbeitet, wofür und welche Rechte du hast.",
     "Whoops!": "Hoppla!",
     "Wide images work best, at least 600 × 150 pixels.": "Am besten im Querformat, mindestens 600 × 150 Pixel.",
     "Wrong information": "Falsche Angaben",
@@ -523,5 +525,6 @@
     "Your route has been saved as a draft. Now add the caches.": "Deine Route wurde als Entwurf gespeichert. Füge jetzt die Caches hinzu.",
     "Your routes": "Deine Routen",
     "Your session has expired. Please reload the page and try again.": "Deine Sitzung ist abgelaufen. Bitte lade die Seite neu und versuche es noch einmal.",
-    "Your username cannot be changed. As soon as you connect your Geocaching.com account, it is taken over from there automatically.": "Dein Benutzername kann nicht geändert werden. Sobald du dein Geocaching.com-Konto verbindest, wird er automatisch von dort übernommen."
+    "Your username cannot be changed. As soon as you connect your Geocaching.com account, it is taken over from there automatically.": "Dein Benutzername kann nicht geändert werden. Sobald du dein Geocaching.com-Konto verbindest, wird er automatisch von dort übernommen.",
+    "~ :distance": "ca. :distance"
 }

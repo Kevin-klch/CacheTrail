@@ -35,7 +35,7 @@
                                     <span class="inline-flex items-center gap-1.5"><x-icon name="route" class="size-4" /> {{ trans_choice(':count cache|:count caches', $trail->cache_count) }}</span>
                                     <span class="inline-flex items-center gap-1.5"><x-icon name="clock" class="size-4" /> {{ $trail->durationLabel() }}</span>
                                     <x-transport-icons :transportations="$trail->transportations" />
-                                    <span>{{ __('Last updated on :date', ['date' => $trail->updated_at->translatedFormat('j. F Y')]) }}</span>
+                                    <span>{{ __('Last updated on :date', ['date' => App\Support\Format::date($trail->updated_at)]) }}</span>
                                 </p>
                             </div>
                             <div class="flex shrink-0 gap-2">

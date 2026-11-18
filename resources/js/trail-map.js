@@ -86,8 +86,8 @@ function ratingPips(value) {
     return pips;
 }
 
-function formatRating(value) {
-    return String(value).replace('.', ',');
+function formatRating(value, labels) {
+    return String(value).replace('.', labels.decimal ?? ',');
 }
 
 function popupRow(label, value) {
@@ -147,12 +147,12 @@ function popupContent(cache, labels, total, goTo) {
     const figures = element('dl', 'ct-popup__figures');
     if (typeof cache.difficulty === 'number') {
         const difficulty = element('span', 'ct-popup__rating');
-        difficulty.append(ratingPips(cache.difficulty), element('span', null, formatRating(cache.difficulty)));
+        difficulty.append(ratingPips(cache.difficulty), element('span', null, formatRating(cache.difficulty, labels)));
         figures.append(popupRow(labels.difficulty, difficulty));
     }
     if (typeof cache.terrain === 'number') {
         const terrain = element('span', 'ct-popup__rating');
-        terrain.append(ratingPips(cache.terrain), element('span', null, formatRating(cache.terrain)));
+        terrain.append(ratingPips(cache.terrain), element('span', null, formatRating(cache.terrain, labels)));
         figures.append(popupRow(labels.terrain, terrain));
     }
     if (cache.status) figures.append(popupRow(labels.status, cache.status));

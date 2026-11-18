@@ -6,6 +6,7 @@ use App\Contracts\GeocacheProvider;
 use App\Data\GeocacheData;
 use App\Enums\CacheStatus;
 use App\Enums\CacheType;
+use App\Support\Format;
 use Database\Factories\TrailCacheFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -97,7 +98,7 @@ class TrailCache extends Model
      */
     public function ratingLabel(): string
     {
-        $format = fn (float $value): string => str_replace('.', ',', (string) $value);
+        $format = fn (float $value): string => Format::rating($value);
 
         return 'D'.$format($this->difficulty).' / T'.$format($this->terrain);
     }

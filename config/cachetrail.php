@@ -4,6 +4,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Languages
+    |--------------------------------------------------------------------------
+    |
+    | Languages visitors can switch between. Texts use English keys with a
+    | German translation in lang/de.json; English needs no translation file.
+    |
+    */
+
+    'locales' => [
+        'de' => 'Deutsch',
+        'en' => 'English',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Premium Access
     |--------------------------------------------------------------------------
     |

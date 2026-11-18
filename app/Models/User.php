@@ -7,6 +7,7 @@ use App\Enums\UserRole;
 use App\Rules\UniqueUsername;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -42,6 +43,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'avatar_path' => null,
         'cover_path' => null,
         'secondary_roles' => '[]',
+        'locale' => null,
     ];
 
     /**
@@ -71,6 +73,14 @@ class User extends Authenticatable implements MustVerifyEmail
         static::deleted(function (User $user): void {
             Storage::disk('public')->delete(array_filter([$user->avatar_path, $user->cover_path]));
         });
+    }
+
+    /**
+     * Language for emails and the site, see SetLocale.
+     */
+    public function preferredLocale(): string
+    {
+        return $this->locale ?? config('app.locale');
     }
 
     public function avatarUrl(): ?string

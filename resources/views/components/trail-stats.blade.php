@@ -3,7 +3,7 @@
 {{-- Key figures of a trail as small tiles: icon and label on top, value below. Icons come from x-icon,
      so custom attribute icons can be swapped in there in one place. Compact cards use short labels. --}}
 @php
-    $format = fn (?float $value): string => $value === null ? '–' : number_format($value, 1, ',', '');
+    $format = fn (?float $value): string => $value === null ? '–' : App\Support\Format::number($value, 1);
     $compact = $size === 'compact';
 
     $tiles = [

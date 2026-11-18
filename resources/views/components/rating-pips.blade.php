@@ -2,7 +2,7 @@
 
 {{-- Difficulty or terrain (1–5 in half steps) as a chip with five pips, like the stars on Geocaching.com. --}}
 @php
-    $formatted = str_replace('.', ',', (string) (float) $value);
+    $formatted = App\Support\Format::rating((float) $value);
 @endphp
 
 <span {{ $attributes->class(['inline-flex items-center gap-1.5 rounded-full bg-forest-50 px-2.5 py-1 text-xs font-semibold text-forest-800 ring-1 ring-forest-600/15']) }}

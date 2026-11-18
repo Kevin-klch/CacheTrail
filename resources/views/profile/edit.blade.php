@@ -145,7 +145,7 @@
                 <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                     <div class="rounded-2xl bg-sand-100/70 px-4 py-3">
                         <dt class="text-xs uppercase tracking-wide text-ink-muted">{{ __('Geocaches found') }}</dt>
-                        <dd class="mt-1 font-heading text-xl font-bold text-forest-900">{{ number_format((int) $user->geocachingAccount->finds_count, 0, ',', '.') }}</dd>
+                        <dd class="mt-1 font-heading text-xl font-bold text-forest-900">{{ App\Support\Format::number((int) $user->geocachingAccount->finds_count) }}</dd>
                     </div>
                     <div class="rounded-2xl bg-sand-100/70 px-4 py-3">
                         <dt class="text-xs uppercase tracking-wide text-ink-muted">{{ __('Geocacher since') }}</dt>

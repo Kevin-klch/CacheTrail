@@ -54,14 +54,14 @@
                                     @endif
                                 @endif
                                 <p class="mt-3 text-sm text-ink-muted">
-                                    {{ __('Reported by :name on :date', ['name' => $report->user->name, 'date' => $report->created_at->translatedFormat('j. F Y, H:i')]) }}
+                                    {{ __('Reported by :name on :date', ['name' => $report->user->name, 'date' => App\Support\Format::date($report->created_at).', '.$report->created_at->format('H:i')]) }}
                                 </p>
                                 @if ($report->description)
                                     <p class="mt-1 whitespace-pre-line text-sm text-ink">„{{ $report->description }}“</p>
                                 @endif
                                 @unless ($report->isOpen())
                                     <p class="mt-2 text-xs text-ink-muted">
-                                        {{ __(':status by :name on :date', ['status' => $report->status->label(), 'name' => $report->resolver?->name ?? '–', 'date' => $report->resolved_at?->translatedFormat('j. F Y')]) }}
+                                        {{ __(':status by :name on :date', ['status' => $report->status->label(), 'name' => $report->resolver?->name ?? '–', 'date' => ($report->resolved_at ? App\Support\Format::date($report->resolved_at) : '–')]) }}
                                     </p>
                                 @endunless
                             </div>

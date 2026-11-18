@@ -3,7 +3,10 @@
     <x-page-header :title="__('Imprint')" :eyebrow="__('Legal')" />
 
     <div class="mx-auto -mt-20 max-w-3xl px-4 sm:px-6 lg:px-8">
-        <x-card class="legal-text">
+        <x-card class="legal-text" lang="de">
+            @unless (app()->getLocale() === 'de')
+                <p class="mb-6 rounded-2xl bg-sand-100 px-4 py-3 text-sm text-ink-muted" lang="en">{{ __('This page is only available in German.') }}</p>
+            @endunless
             <h2>Angaben gemäß § 5 DDG</h2>
             <address>
                 <x-legal-value key="name" label="Name" /><br>

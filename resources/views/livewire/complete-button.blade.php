@@ -2,7 +2,7 @@
     @if ($completedDate)
         <span class="inline-flex items-center gap-2 rounded-full bg-forest-100 px-4 py-2.5 text-sm font-semibold text-forest-800">
             <x-icon name="check-circle" class="size-5" />
-            {{ __('Completed on :date', ['date' => $completedDate->translatedFormat('j. F Y')]) }}
+            {{ __('Completed on :date', ['date' => App\Support\Format::date($completedDate)]) }}
         </span>
         <button type="button" wire:click="toggle" class="text-sm font-medium text-ink-muted hover:text-forest-800 hover:underline">{{ __('Undo') }}</button>
     @else

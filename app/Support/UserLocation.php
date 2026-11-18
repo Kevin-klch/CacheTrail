@@ -59,9 +59,9 @@ final readonly class UserLocation
     {
         return $this->placeName ?? sprintf(
             '%s° %s, %s° %s',
-            number_format(abs($this->latitude), 2, ',', ''),
+            Format::number(abs($this->latitude), 2, grouping: false),
             $this->latitude >= 0 ? 'N' : 'S',
-            number_format(abs($this->longitude), 2, ',', ''),
+            Format::number(abs($this->longitude), 2, grouping: false),
             $this->longitude >= 0 ? 'O' : 'W',
         );
     }

@@ -26,7 +26,7 @@
                     {{ __('by') }} <a href="{{ $trail->user->profileUrl() }}" class="relative z-10 font-medium text-forest-700 hover:underline">{{ $trail->user->name }}</a>
                     <x-role-badge :user="$trail->user" size="icon" />
                     @if ($trail->published_at)
-                        · {{ $trail->published_at->translatedFormat('j. F Y') }}
+                        · {{ App\Support\Format::date($trail->published_at) }}
                     @endif
                 </p>
             </div>
