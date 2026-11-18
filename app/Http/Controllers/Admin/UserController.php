@@ -43,6 +43,10 @@ class UserController extends Controller
         // Admins cannot lock themselves out.
         abort_if($user->is($request->user()), 403, __('You cannot change your own account here.'));
 
+        // The owner role can only be granted or taken away by an owner, and owners cannot be blocked by others.
+        $touchesOwner = $user->isOwner() || ($validated['role'] ?? null) === UserRole::Owner->value;
+        abort_if($touchesOwner && ! $request->user()->isOwner(), 403, __('Only the owner can change owner accounts.'));
+
         if (isset($validated['role'])) {
             $user->forceFill(['role' => $validated['role']])->save();
         }

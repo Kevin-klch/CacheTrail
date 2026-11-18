@@ -34,14 +34,15 @@
                             <td class="py-3 pr-4">{{ $user->trails_count }}</td>
                             <td class="py-3 pr-4">{{ $user->ratings_count }}</td>
                             <td class="py-3 pr-4">
-                                @if ($isSelf)
-                                    {{ __('Admin') }}
+                                @if ($isSelf || ($user->isOwner() && ! auth()->user()->isOwner()))
+                                    <x-role-badge :user="$user" />
                                 @else
                                     <form method="POST" action="{{ route('admin.users.update', $user) }}" class="flex items-center gap-2">
                                         @csrf @method('PATCH')
                                         <label for="role-{{ $user->id }}" class="sr-only">{{ __('Role of :name', ['name' => $user->name]) }}</label>
                                         <select id="role-{{ $user->id }}" name="role" class="rounded-lg border border-sand-300 bg-white px-2 py-1.5 text-sm">
                                             @foreach (App\Enums\UserRole::cases() as $role)
+                                                @continue($role === App\Enums\UserRole::Owner && ! auth()->user()->isOwner())
                                                 <option value="{{ $role->value }}" @selected($user->role === $role)>{{ $role->label() }}</option>
                                             @endforeach
                                         </select>
@@ -50,7 +51,7 @@
                                 @endif
                             </td>
                             <td class="py-3">
-                                @if ($isSelf)
+                                @if ($isSelf || ($user->isOwner() && ! auth()->user()->isOwner()))
                                     <span class="text-ink-muted">{{ __('Active') }}</span>
                                 @else
                                     <form method="POST" action="{{ route('admin.users.update', $user) }}" class="flex items-center gap-3">

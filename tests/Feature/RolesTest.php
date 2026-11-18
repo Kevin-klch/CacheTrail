@@ -47,17 +47,61 @@ class RolesTest extends TestCase
         }
     }
 
-    public function test_admins_can_assign_every_role(): void
+    public function test_admins_can_assign_every_role_except_owner(): void
     {
         $user = User::factory()->create();
+        $admin = User::factory()->admin()->create();
 
         foreach (UserRole::cases() as $role) {
-            $this->actingAs(User::factory()->admin()->create())
-                ->patch(route('admin.users.update', $user), ['role' => $role->value])
-                ->assertSessionHasNoErrors();
+            $response = $this->actingAs($admin)->patch(route('admin.users.update', $user), ['role' => $role->value]);
 
-            $this->assertSame($role, $user->fresh()->role);
+            if ($role === UserRole::Owner) {
+                $response->assertForbidden();
+                $this->assertNotSame(UserRole::Owner, $user->fresh()->role);
+            } else {
+                $this->assertSame($role, $user->fresh()->role);
+            }
         }
+    }
+
+    public function test_owners_and_developers_have_admin_rights(): void
+    {
+        foreach ([User::factory()->owner()->create(), User::factory()->developer()->create()] as $user) {
+            $this->assertTrue($user->isAdmin());
+            $this->actingAs($user)->get(route('admin.users.index'))->assertOk();
+        }
+    }
+
+    public function test_only_owners_can_change_owner_accounts(): void
+    {
+        $owner = User::factory()->owner()->create();
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->patch(route('admin.users.update', $owner), ['role' => 'user'])->assertForbidden();
+        $this->actingAs($admin)->patch(route('admin.users.update', $owner), ['blocked' => '1'])->assertForbidden();
+        $this->assertTrue($owner->fresh()->isOwner());
+        $this->assertFalse($owner->fresh()->isBlocked());
+
+        $this->actingAs($owner)->patch(route('admin.users.update', $admin), ['role' => 'owner']);
+        $this->assertTrue($admin->fresh()->isOwner());
+    }
+
+    public function test_the_first_owner_is_appointed_on_the_command_line(): void
+    {
+        $user = User::factory()->admin()->create(['email' => 'chefin@example.com']);
+
+        $this->artisan('users:make-owner', ['email' => 'chefin@example.com'])->assertSuccessful();
+        $this->artisan('users:make-owner', ['email' => 'unbekannt@example.com'])->assertFailed();
+
+        $this->assertTrue($user->fresh()->isOwner());
+    }
+
+    public function test_the_owner_option_is_only_offered_to_owners(): void
+    {
+        User::factory()->create();
+
+        $this->actingAs(User::factory()->admin()->create())->get(route('admin.users.index'))->assertDontSee('value="owner"', false);
+        $this->actingAs(User::factory()->owner()->create())->get(route('admin.users.index'))->assertSee('value="owner"', false);
     }
 
     public function test_the_role_is_shown_as_a_badge_after_the_name(): void

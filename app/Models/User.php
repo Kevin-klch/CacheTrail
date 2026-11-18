@@ -181,9 +181,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return trim($this->id.'-'.Str::slug($this->name, language: 'de'), '-');
     }
 
+    /**
+     * Owners, developers and admins have full administration rights.
+     */
     public function isAdmin(): bool
     {
-        return $this->role === UserRole::Admin;
+        return $this->role->isAdministrative();
+    }
+
+    public function isOwner(): bool
+    {
+        return $this->role === UserRole::Owner;
     }
 
     /**
