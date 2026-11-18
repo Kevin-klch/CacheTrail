@@ -230,6 +230,15 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return $this->role === UserRole::Owner;
     }
 
+    /**
+     * The shared account testers use on the feedback version. Its email address and password cannot be
+     * changed and it cannot be deleted, so nobody can lock the others out.
+     */
+    public function isFeedbackAccount(): bool
+    {
+        return $this->email === config('cachetrail.feedback.email');
+    }
+
     public function hasSecondaryRole(SecondaryRole $role): bool
     {
         return ($this->secondary_roles ?? collect())->contains($role);

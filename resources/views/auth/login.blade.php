@@ -3,6 +3,19 @@
         <x-alert class="mb-6">{{ session('status') }}</x-alert>
     @endif
 
+    @if (config('cachetrail.feedback.demo_data'))
+    <div class="mb-6 rounded-2xl bg-forest-50 px-4 py-3 text-sm text-forest-900 ring-1 ring-forest-600/15">
+        <p class="font-semibold">{{ __('Want to try CacheTrail?') }}</p>
+        <p class="mt-1">{{ __('Log in with the shared test account:') }}</p>
+        <dl class="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5">
+            <dt class="text-ink-muted">{{ __('Email address') }}</dt>
+            <dd class="font-mono">{{ config('cachetrail.feedback.email') }}</dd>
+            <dt class="text-ink-muted">{{ __('Password') }}</dt>
+            <dd class="font-mono">{{ config('cachetrail.feedback.password') }}</dd>
+        </dl>
+    </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 

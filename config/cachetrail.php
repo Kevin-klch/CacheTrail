@@ -83,6 +83,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Demo Data and Feedback Account
+    |--------------------------------------------------------------------------
+    |
+    | With demo data switched on, the database seeder adds demo routes, a demo
+    | community and a shared account for testers. Its login details are shown
+    | on the login page; email address, password and deletion are locked.
+    |
+    */
+
+    'feedback' => [
+        // Seed demo routes, a demo community and this shared account (development and test servers only).
+        'demo_data' => (bool) env('CACHETRAIL_DEMO_DATA', false),
+
+        'email' => env('CACHETRAIL_FEEDBACK_EMAIL', 'feedback@example.com'),
+        'password' => env('CACHETRAIL_FEEDBACK_PASSWORD', 'cachetrail-testen'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Imprint and Privacy Policy
     |--------------------------------------------------------------------------
     |
@@ -114,7 +133,7 @@ return [
 
         // Slug of the route shown to visitors as an example (home page and /beispielroute).
         // Falls back to the most liked published route.
-        'example' => env('CACHETRAIL_EXAMPLE_TRAIL'),
+        'example' => env('CACHETRAIL_EXAMPLE_TRAIL', 'waldabenteuer-am-niederrhein'),
     ],
 
 ];
