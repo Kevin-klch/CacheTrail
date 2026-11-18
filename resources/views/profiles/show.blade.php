@@ -36,7 +36,7 @@
                 @endif
 
                 {{-- Most recently completed routes --}}
-                <section class="mt-8 border-t border-sand-200 pt-6">
+                <section class="mt-8">
                     <div class="flex flex-wrap items-baseline justify-between gap-2">
                         <h3 class="flex items-center gap-2 text-xl font-bold">
                             <x-icon name="check-circle" class="text-forest-600" />
