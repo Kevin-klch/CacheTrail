@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\SecondaryRole;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -37,6 +38,9 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'role' => ['sometimes', Rule::enum(UserRole::class)],
+            // An empty value is always sent along, so unticking every box removes all secondary roles.
+            'secondary_roles' => ['sometimes', 'array'],
+            'secondary_roles.*' => ['nullable', Rule::enum(SecondaryRole::class)],
             'blocked' => ['sometimes', 'boolean'],
             'name' => ['sometimes', ...User::usernameRules($user)],
         ], attributes: ['name' => __('Geocaching username')]);
@@ -50,6 +54,15 @@ class UserController extends Controller
 
         if (isset($validated['role'])) {
             $user->forceFill(['role' => $validated['role']])->save();
+        }
+
+        if (isset($validated['secondary_roles'])) {
+            $user->forceFill([
+                'secondary_roles' => array_values(array_filter(
+                    SecondaryRole::cases(),
+                    fn (SecondaryRole $role): bool => in_array($role->value, $validated['secondary_roles'], true),
+                )),
+            ])->save();
         }
 
         // Usernames can only be corrected by administrators, e.g. after a rename on Geocaching.com.

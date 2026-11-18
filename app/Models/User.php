@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SecondaryRole;
 use App\Enums\UserRole;
 use App\Rules\UniqueUsername;
 use Database\Factories\UserFactory;
@@ -9,6 +10,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -39,6 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'bio' => null,
         'avatar_path' => null,
         'cover_path' => null,
+        'secondary_roles' => '[]',
     ];
 
     /**
@@ -52,6 +55,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'role' => UserRole::class,
+            'secondary_roles' => AsEnumCollection::of(SecondaryRole::class),
             'blocked_at' => 'datetime',
         ];
     }
@@ -214,6 +218,25 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isOwner(): bool
     {
         return $this->role === UserRole::Owner;
+    }
+
+    public function hasSecondaryRole(SecondaryRole $role): bool
+    {
+        return ($this->secondary_roles ?? collect())->contains($role);
+    }
+
+    /**
+     * Badges after the name: the main role (unless it is a normal user) followed by the secondary roles,
+     * each with label, icon and colour classes.
+     *
+     * @return list<UserRole|SecondaryRole>
+     */
+    public function roleBadges(): array
+    {
+        $secondary = SecondaryRole::cases();
+        $own = array_values(array_filter($secondary, fn (SecondaryRole $role): bool => $this->hasSecondaryRole($role)));
+
+        return $this->role->hasBadge() ? [$this->role, ...$own] : $own;
     }
 
     /**

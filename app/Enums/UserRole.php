@@ -3,21 +3,19 @@
 namespace App\Enums;
 
 /**
- * Roles of CacheTrail accounts.
+ * Main role of an account; every user has exactly one. It decides the rights:
  *
  * - Owner: runs the site; same rights as admins. Only owners can grant or take away the owner role.
- * - Developer: builds the site; same rights as admins.
  * - Admin: everything, including user and role management.
  * - Moderator: handles reports and may delete routes and ratings of others.
- * - Supporter: no extra rights, only the badge (e.g. for people supporting the project).
  * - User: normal account.
+ *
+ * Additional badges such as "Supporter" or "Developer" are secondary roles (see SecondaryRole).
  */
 enum UserRole: string
 {
     case User = 'user';
-    case Supporter = 'supporter';
     case Moderator = 'moderator';
-    case Developer = 'developer';
     case Admin = 'admin';
     case Owner = 'owner';
 
@@ -25,9 +23,7 @@ enum UserRole: string
     {
         return match ($this) {
             self::User => __('User'),
-            self::Supporter => __('Supporter'),
             self::Moderator => __('Moderator'),
-            self::Developer => __('Developer'),
             self::Admin => __('Admin'),
             self::Owner => __('Owner'),
         };
@@ -38,7 +34,7 @@ enum UserRole: string
      */
     public function isAdministrative(): bool
     {
-        return in_array($this, [self::Owner, self::Admin, self::Developer], true);
+        return $this === self::Owner || $this === self::Admin;
     }
 
     public function canModerate(): bool
@@ -61,10 +57,8 @@ enum UserRole: string
     {
         return match ($this) {
             self::Owner => 'bg-forest-950 text-[#f1d98f] ring-1 ring-[#c9971c]',
-            self::Developer => 'bg-[#3d5a80] text-white',
             self::Admin => 'bg-trail-500 text-white',
             self::Moderator => 'bg-forest-700 text-paper',
-            self::Supporter => 'bg-[#c9971c] text-white',
             self::User => 'bg-sand-200 text-ink',
         };
     }
@@ -73,10 +67,8 @@ enum UserRole: string
     {
         return match ($this) {
             self::Owner => 'crown',
-            self::Developer => 'code',
             self::Admin => 'key',
             self::Moderator => 'shield',
-            self::Supporter => 'heart',
             self::User => 'user',
         };
     }

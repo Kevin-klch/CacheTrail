@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\SecondaryRole;
 use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -65,7 +66,7 @@ class UserFactory extends Factory
     public function developer(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => UserRole::Developer,
+            'secondary_roles' => [SecondaryRole::Developer],
         ]);
     }
 
@@ -79,7 +80,7 @@ class UserFactory extends Factory
     public function supporter(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => UserRole::Supporter,
+            'secondary_roles' => [SecondaryRole::Supporter],
         ]);
     }
 }

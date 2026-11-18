@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\SecondaryRole;
 use App\Enums\UserRole;
 use App\Models\Report;
 use App\Models\Trail;
@@ -64,12 +65,49 @@ class RolesTest extends TestCase
         }
     }
 
-    public function test_owners_and_developers_have_admin_rights(): void
+    public function test_owners_have_admin_rights(): void
     {
-        foreach ([User::factory()->owner()->create(), User::factory()->developer()->create()] as $user) {
-            $this->assertTrue($user->isAdmin());
-            $this->actingAs($user)->get(route('admin.users.index'))->assertOk();
-        }
+        $owner = User::factory()->owner()->create();
+
+        $this->assertTrue($owner->isAdmin());
+        $this->actingAs($owner)->get(route('admin.users.index'))->assertOk();
+    }
+
+    public function test_secondary_roles_grant_no_rights(): void
+    {
+        $developer = User::factory()->developer()->create();
+
+        $this->assertFalse($developer->isAdmin());
+        $this->actingAs($developer)->get(route('admin.reports.index'))->assertForbidden();
+    }
+
+    public function test_admins_can_set_any_number_of_secondary_roles(): void
+    {
+        $user = User::factory()->moderator()->create();
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->patch(route('admin.users.update', $user), ['role' => 'moderator', 'secondary_roles' => ['', 'supporter', 'developer']])
+            ->assertSessionHasNoErrors();
+
+        $user->refresh();
+        $this->assertSame(UserRole::Moderator, $user->role);
+        $this->assertTrue($user->hasSecondaryRole(SecondaryRole::Supporter));
+        $this->assertTrue($user->hasSecondaryRole(SecondaryRole::Developer));
+
+        $this->patch(route('admin.users.update', $user), ['role' => 'moderator', 'secondary_roles' => ['']]);
+        $this->assertCount(0, $user->fresh()->secondary_roles);
+
+        $this->patch(route('admin.users.update', $user), ['secondary_roles' => ['owner']])->assertSessionHasErrors('secondary_roles.0');
+    }
+
+    public function test_the_main_role_and_all_secondary_roles_are_shown_after_the_name(): void
+    {
+        $user = User::factory()->moderator()->create(['name' => 'Waldhüterin', 'secondary_roles' => [SecondaryRole::Supporter, SecondaryRole::Developer]]);
+
+        $this->actingAs(User::factory()->create())
+            ->get($user->profileUrl())
+            ->assertSeeInOrder(['Waldhüterin', 'Moderator', 'Developer', 'Supporter']);
     }
 
     public function test_only_owners_can_change_owner_accounts(): void

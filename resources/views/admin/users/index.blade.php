@@ -47,18 +47,37 @@
                             <td class="py-3 pr-4">{{ $user->ratings_count }}</td>
                             <td class="py-3 pr-4">
                                 @if ($isSelf || ($user->isOwner() && ! auth()->user()->isOwner()))
-                                    <x-role-badge :user="$user" />
+                                    <div class="flex flex-wrap gap-1">
+                                        <x-role-badge :user="$user" />
+                                        @if ($user->roleBadges() === [])
+                                            <span class="text-ink-muted">{{ $user->role->label() }}</span>
+                                        @endif
+                                    </div>
                                 @else
-                                    <form method="POST" action="{{ route('admin.users.update', $user) }}" class="flex items-center gap-2">
+                                    <form method="POST" action="{{ route('admin.users.update', $user) }}" class="space-y-2">
                                         @csrf @method('PATCH')
-                                        <label for="role-{{ $user->id }}" class="sr-only">{{ __('Role of :name', ['name' => $user->name]) }}</label>
-                                        <select id="role-{{ $user->id }}" name="role" class="rounded-lg border border-sand-300 bg-white px-2 py-1.5 text-sm">
-                                            @foreach (App\Enums\UserRole::cases() as $role)
-                                                @continue($role === App\Enums\UserRole::Owner && ! auth()->user()->isOwner())
-                                                <option value="{{ $role->value }}" @selected($user->role === $role)>{{ $role->label() }}</option>
+                                        <div class="flex items-center gap-2">
+                                            <label for="role-{{ $user->id }}" class="text-xs text-ink-muted">{{ __('Main role') }}</label>
+                                            <select id="role-{{ $user->id }}" name="role" class="rounded-lg border border-sand-300 bg-white px-2 py-1.5 text-sm">
+                                                @foreach (App\Enums\UserRole::cases() as $role)
+                                                    @continue($role === App\Enums\UserRole::Owner && ! auth()->user()->isOwner())
+                                                    <option value="{{ $role->value }}" @selected($user->role === $role)>{{ $role->label() }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <fieldset class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                            <legend class="sr-only">{{ __('Secondary roles of :name', ['name' => $user->name]) }}</legend>
+                                            <span class="text-xs text-ink-muted" aria-hidden="true">{{ __('Secondary roles') }}</span>
+                                            <input type="hidden" name="secondary_roles[]" value="">
+                                            @foreach (App\Enums\SecondaryRole::cases() as $secondary)
+                                                <label class="inline-flex items-center gap-1.5 text-sm">
+                                                    <input type="checkbox" name="secondary_roles[]" value="{{ $secondary->value }}" @checked($user->hasSecondaryRole($secondary))
+                                                        class="size-4 rounded border-sand-300 accent-forest-700">
+                                                    {{ $secondary->label() }}
+                                                </label>
                                             @endforeach
-                                        </select>
-                                        <button type="submit" class="text-xs font-semibold text-forest-700 hover:underline">{{ __('Save') }}</button>
+                                        </fieldset>
+                                        <button type="submit" class="text-xs font-semibold text-forest-700 hover:underline">{{ __('Save roles') }}</button>
                                     </form>
                                 @endif
                             </td>
