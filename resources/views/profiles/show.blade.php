@@ -34,12 +34,6 @@
                 @else
                     <p class="mt-3 text-ink-muted">{{ __(':name has not written anything about themselves yet.', ['name' => $profile->name]) }}</p>
                 @endif
-                @if (auth()->user()->is($profile))
-                    <a href="{{ route('profile.edit') }}#infobox" class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-forest-700 hover:underline">
-                        <x-icon name="edit" class="size-4" />
-                        {{ __('Edit info box') }}
-                    </a>
-                @endif
 
                 {{-- Most recently completed routes --}}
                 <section class="mt-8 border-t border-sand-200 pt-6">
