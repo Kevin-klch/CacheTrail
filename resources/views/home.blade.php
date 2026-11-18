@@ -88,7 +88,7 @@
                     <x-trail-card :trail="$latestTrails->first()" class="mt-5" />
 
                     @if ($latestTrails->count() > 1)
-                        <ul class="mt-4 divide-y divide-sand-200 rounded-3xl border border-sand-200 bg-white/70">
+                        <ul class="mt-4 divide-y divide-sand-200 overflow-hidden rounded-3xl border border-sand-200 bg-white/70">
                             @foreach ($latestTrails->skip(1) as $trail)
                                 <li>
                                     <a href="{{ route('trails.show', $trail) }}" class="flex items-center gap-4 px-5 py-3 transition hover:bg-white">
