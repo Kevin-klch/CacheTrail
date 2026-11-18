@@ -41,12 +41,16 @@ return [
     |--------------------------------------------------------------------------
     |
     | Used to show the place name of the visitor's shared location
-    | ("Dein Standort: Moers"). Requests are sent by the server only.
+    | ("Dein Standort: Moers") and to find places for the radius search.
+    | Requests are sent by the server only.
     |
     */
 
     'geocoding' => [
         'reverse_url' => env('CACHETRAIL_REVERSE_GEOCODING_URL', 'https://nominatim.openstreetmap.org/reverse'),
+
+        // Used for "routes within X km of a place" in the route directory.
+        'search_url' => env('CACHETRAIL_PLACE_GEOCODING_URL', 'https://nominatim.openstreetmap.org/search'),
     ],
 
     /*

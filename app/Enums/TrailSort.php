@@ -28,7 +28,7 @@ enum TrailSort: string
             self::BestRated => __('Best rated'),
             self::Shortest => __('Shortest'),
             self::Longest => __('Longest'),
-            self::Nearest => __('Nearest to me'),
+            self::Nearest => __('Shortest distance'),
         };
     }
 }

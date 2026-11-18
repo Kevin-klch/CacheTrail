@@ -136,6 +136,71 @@ class TrailDirectoryTest extends TestCase
             ->assertDontSee('Ohne Start');
     }
 
+    public function test_routes_can_be_searched_within_a_radius_of_a_place(): void
+    {
+        Http::fake(['nominatim.openstreetmap.org/search*' => Http::response([
+            ['lat' => '51.0', 'lon' => '7.0', 'name' => 'Moers', 'address' => ['town' => 'Moers']],
+        ])]);
+
+        $this->publishedTrail('Mittel', ['start_latitude' => 51.10, 'start_longitude' => 7.0, 'description' => 'Ohne Ortsnamen']);
+        $this->publishedTrail('Nah', ['start_latitude' => 51.01, 'start_longitude' => 7.0, 'description' => 'Ohne Ortsnamen']);
+        $this->publishedTrail('Fern', ['start_latitude' => 51.50, 'start_longitude' => 7.0, 'description' => 'Ohne Ortsnamen']);
+
+        $this->get(route('trails.index', ['q' => 'Moers', 'radius' => 25]))
+            ->assertOk()
+            ->assertSee('Routen mit Start im Umkreis von 25 km um')
+            ->assertSeeInOrder(['Nah', 'Mittel'])
+            ->assertDontSee('Fern')
+            ->assertSee('ca. 1,1 km entfernt')
+            ->assertSee('Sortiert nach: Kürzeste Entfernung');
+
+        Http::assertSent(fn ($request) => $request['q'] === 'Moers' && $request['format'] === 'jsonv2');
+    }
+
+    public function test_places_are_looked_up_only_once(): void
+    {
+        Http::fake(['nominatim.openstreetmap.org/search*' => Http::response([['lat' => '51.0', 'lon' => '7.0', 'address' => ['town' => 'Moers']]])]);
+
+        $this->get(route('trails.index', ['q' => 'Moers', 'radius' => 10]))->assertOk();
+        $this->get(route('trails.index', ['q' => ' moers ', 'radius' => 10]))->assertOk();
+
+        Http::assertSentCount(1);
+    }
+
+    public function test_an_unknown_place_falls_back_to_the_text_search(): void
+    {
+        Http::fake(['nominatim.openstreetmap.org/search*' => Http::response([])]);
+
+        $this->publishedTrail('Waldrunde', ['start_latitude' => 51.0, 'start_longitude' => 7.0]);
+        $this->publishedTrail('Stadtbummel', ['start_latitude' => 51.0, 'start_longitude' => 7.0]);
+
+        $this->get(route('trails.index', ['q' => 'Waldrunde', 'radius' => 10]))
+            ->assertOk()
+            ->assertSee('Den Ort „Waldrunde“ haben wir nicht gefunden.', false)
+            ->assertSee('Waldrunde')
+            ->assertDontSee('Stadtbummel');
+    }
+
+    public function test_a_failing_geocoding_service_falls_back_to_the_text_search(): void
+    {
+        Http::fake(['nominatim.openstreetmap.org/search*' => Http::response('', 503)]);
+
+        $this->publishedTrail('Waldrunde', []);
+
+        $this->get(route('trails.index', ['q' => 'Waldrunde', 'radius' => 10]))
+            ->assertOk()
+            ->assertSee('Waldrunde');
+    }
+
+    public function test_without_a_radius_the_search_stays_a_text_search(): void
+    {
+        Http::fake();
+
+        $this->get(route('trails.index', ['q' => 'Moers']))->assertOk();
+
+        Http::assertNothingSent();
+    }
+
     public function test_nearest_sort_and_radius_are_ignored_without_a_location(): void
     {
         $this->publishedTrail('Ältere', ['start_latitude' => 51.0, 'start_longitude' => 7.0, 'published_at' => now()->subDay()]);

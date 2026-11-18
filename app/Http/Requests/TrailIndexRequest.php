@@ -82,13 +82,16 @@ class TrailIndexRequest extends FormRequest
     }
 
     /**
-     * "Nearest" needs a location; without one the directory falls back to the newest routes.
+     * "Nearest" needs a reference point; without one the directory falls back to the newest routes.
+     * A radius search around a place is sorted by distance unless another order was chosen.
      */
-    public function sort(): TrailSort
+    public function sort(?UserLocation $referencePoint = null, bool $isPlaceSearch = false): TrailSort
     {
-        $sort = TrailSort::tryFrom((string) $this->validated('sort')) ?? TrailSort::Newest;
+        $referencePoint ??= $this->location();
+        $default = $isPlaceSearch ? TrailSort::Nearest : TrailSort::Newest;
+        $sort = TrailSort::tryFrom((string) $this->validated('sort')) ?? $default;
 
-        return $sort === TrailSort::Nearest && $this->location() === null ? TrailSort::Newest : $sort;
+        return $sort === TrailSort::Nearest && $referencePoint === null ? TrailSort::Newest : $sort;
     }
 
     public function view(): string

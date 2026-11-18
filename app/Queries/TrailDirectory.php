@@ -17,13 +17,15 @@ class TrailDirectory
 
     /**
      * @param  array<string, mixed>  $filters
+     * @param  UserLocation|null  $location  reference point for distances: the searched place or the visitor's location
+     * @param  bool  $searchIsPlace  the search term is the place of a radius search, not a text to look for
      * @return Builder<Trail>
      */
-    public function query(array $filters, TrailSort $sort, ?UserLocation $location): Builder
+    public function query(array $filters, TrailSort $sort, ?UserLocation $location, bool $searchIsPlace = false): Builder
     {
         $query = Trail::query()->published();
 
-        if (isset($filters['q'])) {
+        if (isset($filters['q']) && ! $searchIsPlace) {
             $search = $filters['q'];
             $query->where(fn (Builder $query) => $query
                 ->whereLike('name', "%{$search}%")

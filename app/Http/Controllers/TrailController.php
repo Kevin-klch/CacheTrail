@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateTrailRequest;
 use App\Models\Trail;
 use App\Queries\TrailDirectory;
 use App\Services\Geocaching\MockGeocacheProvider;
+use App\Services\Geocoding\PlaceGeocoder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Gate;
@@ -25,12 +26,19 @@ class TrailController extends Controller
      */
     public const int MAP_LIMIT = 500;
 
-    public function index(TrailIndexRequest $request, TrailDirectory $directory): View
+    public function index(TrailIndexRequest $request, TrailDirectory $directory, PlaceGeocoder $placeGeocoder): View
     {
         $filters = $request->filters();
         $location = $request->location();
         $view = $request->view();
-        $query = $directory->query($filters, $request->sort(), $location);
+
+        // With a radius, the search term is a place: "Moers" + 10 km finds routes starting near Moers.
+        $isPlaceSearch = isset($filters['q'], $filters['radius']);
+        $searchedPlace = $isPlaceSearch ? $placeGeocoder->locate($filters['q']) : null;
+        $referencePoint = $searchedPlace ?? $location;
+        $sort = $request->sort($referencePoint, $searchedPlace !== null);
+
+        $query = $directory->query($filters, $sort, $referencePoint, searchIsPlace: $searchedPlace !== null);
 
         $trails = $view === 'map'
             ? $query->whereNotNull('start_latitude')->limit(self::MAP_LIMIT)->get()
@@ -39,10 +47,13 @@ class TrailController extends Controller
         return view('trails.index', [
             'trails' => $trails,
             'filters' => $filters,
-            'sort' => $request->sort(),
+            'sort' => $sort,
             'view' => $view,
             'location' => $location,
-            'mapMarkers' => $view === 'map' ? $trails->map(fn (Trail $trail): array => $trail->toDirectoryMarker($location))->all() : [],
+            'searchedPlace' => $searchedPlace,
+            'placeNotFound' => $isPlaceSearch && $searchedPlace === null,
+            'referencePoint' => $referencePoint,
+            'mapMarkers' => $view === 'map' ? $trails->map(fn (Trail $trail): array => $trail->toDirectoryMarker($referencePoint))->all() : [],
         ]);
     }
 

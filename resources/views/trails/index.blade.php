@@ -3,7 +3,7 @@
 @use('App\Http\Requests\TrailIndexRequest')
 
 @php
-    $advancedFilters = ['min_hours', 'max_hours', 'min_caches', 'max_caches', 'min_km', 'max_km', 'min_difficulty', 'max_difficulty', 'min_terrain', 'max_terrain', 'radius'];
+    $advancedFilters = ['min_hours', 'max_hours', 'min_caches', 'max_caches', 'min_km', 'max_km', 'min_difficulty', 'max_difficulty', 'min_terrain', 'max_terrain'];
     $hasAdvancedFilters = collect($advancedFilters)->contains(fn ($key) => isset($filters[$key]));
     $viewQuery = $view === 'compact' ? [] : ['view' => $view];
 @endphp
@@ -26,6 +26,19 @@
                     <label for="q" class="sr-only">{{ __('Search') }}</label>
                     <input id="q" name="q" type="search" value="{{ $filters['q'] ?? '' }}" placeholder="{{ __('Place, region or route name') }}"
                         class="min-w-0 flex-1 bg-transparent py-2 text-ink placeholder:text-ink-muted/70 focus:outline-none">
+                    {{-- Radius: with a place in the search field, routes around that place; otherwise around the shared location --}}
+                    <label for="radius" class="sr-only">{{ __('Radius') }}</label>
+                    <select id="radius" name="radius" title="{{ __('Search within a radius of the place you entered') }}"
+                        @class([
+                            'shrink-0 rounded-full border py-2 pl-3 pr-8 text-sm font-semibold focus:border-forest-500 focus:outline-none focus:ring-4 focus:ring-forest-500/15',
+                            'border-forest-600 bg-forest-50 text-forest-800' => isset($filters['radius']),
+                            'border-sand-300 bg-white text-ink-muted' => ! isset($filters['radius']),
+                        ])>
+                        <option value="">{{ __('No radius') }}</option>
+                        @foreach (TrailIndexRequest::RADIUS_OPTIONS_KM as $km)
+                            <option value="{{ $km }}" @selected((int) ($filters['radius'] ?? 0) === $km)>{{ __('+ :count km', ['count' => $km]) }}</option>
+                        @endforeach
+                    </select>
                     @if ($filters !== [])
                         <a href="{{ route('trails.index', $viewQuery) }}" class="hidden shrink-0 rounded-full px-3 py-2 text-sm font-medium text-ink-muted hover:text-forest-800 sm:inline">{{ __('Reset') }}</a>
                     @endif
@@ -103,12 +116,29 @@
                     <select id="sort" name="sort" form="directory-filter" x-on:change="$el.form.requestSubmit()"
                         class="rounded-full border border-sand-300 bg-white py-2 pl-4 pr-9 text-sm font-semibold text-forest-800 focus:border-forest-500 focus:outline-none focus:ring-4 focus:ring-forest-500/15">
                         @foreach (TrailSort::cases() as $option)
-                            @continue($option === TrailSort::Nearest && ! $location)
+                            @continue($option === TrailSort::Nearest && ! $referencePoint)
                             <option value="{{ $option->value }}" @selected($sort === $option)>{{ $option->label() }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
+
+            @if ($searchedPlace)
+                <p class="mt-4 flex items-center gap-2 rounded-2xl bg-forest-50 px-4 py-2.5 text-sm text-forest-900">
+                    <x-icon name="map" class="size-4 shrink-0 text-forest-600" />
+                    <span>{!! __('Routes starting within :radius km of :place', ['radius' => e($filters['radius']), 'place' => '<strong class="font-semibold">'.e($searchedPlace->placeName).'</strong>']) !!}</span>
+                </p>
+            @elseif ($placeNotFound)
+                <p class="mt-4 flex items-center gap-2 rounded-2xl bg-amber-50 px-4 py-2.5 text-sm text-amber-900" role="status">
+                    <x-icon name="alert" class="size-4 shrink-0" />
+                    {{ __('We could not find the place ":place". Showing routes whose name or description matches instead.', ['place' => $filters['q']]) }}
+                </p>
+            @elseif (isset($filters['radius']) && ! $location)
+                <p class="mt-4 flex items-center gap-2 rounded-2xl bg-sand-100 px-4 py-2.5 text-sm text-ink-muted" role="status">
+                    <x-icon name="compass" class="size-4 shrink-0" />
+                    {{ __('Enter a place or use your location to search within a radius.') }}
+                </p>
+            @endif
 
             @error('latitude')
                 <p class="mt-3 text-sm font-medium text-red-700">{{ __('Your location could not be determined.') }}</p>
@@ -122,16 +152,6 @@
                     <x-range-filter :label="__('Length')" name="km" form="directory-filter" :values="$filters" :max="1000" step="0.5" unit="km" />
                     <x-range-filter :label="__('Difficulty')" name="difficulty" form="directory-filter" :values="$filters" :min="1" :max="5" step="0.5" />
                     <x-range-filter :label="__('Terrain')" name="terrain" form="directory-filter" :values="$filters" :min="1" :max="5" step="0.5" />
-
-                    <div>
-                        @if ($location)
-                            <x-select name="radius" form="directory-filter" :label="__('Maximum distance to the start')" :value="$filters['radius'] ?? ''" :placeholder="__('Any distance')"
-                                :options="collect(TrailIndexRequest::RADIUS_OPTIONS_KM)->mapWithKeys(fn ($km) => [$km => __(':count km', ['count' => $km])])->all()" />
-                        @else
-                            <p class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Maximum distance to the start') }}</p>
-                            <p class="rounded-xl border border-dashed border-sand-300 bg-white/60 px-3 py-2 text-sm text-ink-muted">{{ __('Use your location to filter by distance.') }}</p>
-                        @endif
-                    </div>
                 </div>
                 <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
                     <p class="text-xs text-ink-muted">{{ __('Length is measured as the crow flies between the stations.') }}</p>
@@ -175,21 +195,21 @@
                 @endif
             </x-empty-state>
         @elseif ($view === 'map')
-            <x-directory-map :markers="$mapMarkers" :location="$location" class="mt-6 h-[34rem] w-full" />
+            <x-directory-map :markers="$mapMarkers" :location="$referencePoint" :location-label="$searchedPlace?->placeName" class="mt-6 h-[34rem] w-full" />
             @if ($trails->count() >= App\Http\Controllers\TrailController::MAP_LIMIT)
                 <p class="mt-3 text-sm text-ink-muted">{{ __('Only the first :count routes are shown. Narrow down your search to see more.', ['count' => App\Http\Controllers\TrailController::MAP_LIMIT]) }}</p>
             @endif
         @elseif ($view === 'detailed')
             <div class="mx-auto mt-6 max-w-5xl space-y-8">
                 @foreach ($trails as $trail)
-                    <x-trail-card-detailed :trail="$trail" :location="$location" />
+                    <x-trail-card-detailed :trail="$trail" :location="$referencePoint" />
                 @endforeach
             </div>
             <div class="mx-auto mt-10 max-w-5xl">{{ $trails->links() }}</div>
         @else
             <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($trails as $trail)
-                    <x-trail-card :trail="$trail" :location="$location" />
+                    <x-trail-card :trail="$trail" :location="$referencePoint" />
                 @endforeach
             </div>
             <div class="mt-10">{{ $trails->links() }}</div>
