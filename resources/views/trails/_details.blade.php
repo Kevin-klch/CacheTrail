@@ -21,7 +21,12 @@
                 <div class="mt-3 h-1 w-40 rounded-full bg-gradient-to-r from-trail-500 to-transparent"></div>
                 <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
                     <p class="text-ink-muted">
-                        {{ __('Created by') }} <a href="{{ $trail->user->profileUrl() }}" class="font-semibold text-forest-700 hover:underline">{{ $trail->user->name }}</a>
+                        {{ __('Created by') }}
+                        @auth
+                            <a href="{{ $trail->user->profileUrl() }}" class="font-semibold text-forest-700 hover:underline">{{ $trail->user->name }}</a>
+                        @else
+                            <span class="font-semibold text-forest-700">{{ $trail->user->name }}</span>
+                        @endauth
                     </p>
                     @if (! ($isPreview ?? false) && $trail->isPublished())
                         <div class="flex flex-wrap items-center gap-4">
@@ -41,7 +46,7 @@
                 <section class="mt-14">
                     <div class="flex flex-wrap items-baseline justify-between gap-3">
                         <h2 class="text-3xl font-bold">{{ __('Caches on this route') }}</h2>
-                        @if (! ($isPreview ?? false) && auth()->user()->can('update', $trail))
+                        @if (! ($isPreview ?? false) && auth()->user()?->can('update', $trail))
                             <a href="{{ route('trails.caches', $trail) }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-forest-700 hover:underline">
                                 <x-icon name="edit" class="size-4" />
                                 {{ __('Edit caches') }}
@@ -125,7 +130,7 @@
                     </p>
                 </x-card>
 
-                @if (! ($isPreview ?? false) && auth()->user()->can('update', $trail))
+                @if (! ($isPreview ?? false) && auth()->user()?->can('update', $trail))
                     <x-button variant="secondary" :href="route('trails.edit', $trail)" class="w-full">
                         <x-icon name="edit" class="size-4" />
                         {{ __('Edit route') }}

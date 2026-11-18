@@ -126,6 +126,34 @@
                     </x-card>
                 @endforeach
             </div>
+
+            {{-- Example route, so visitors can see a real route before signing up --}}
+            @if ($exampleTrail)
+                <div class="mt-10 overflow-hidden rounded-[2rem] border border-sand-200 bg-white shadow-[0_12px_32px_-16px_rgb(26_50_38/0.25)]">
+                    <div class="grid grid-cols-1 lg:grid-cols-[1.15fr_1fr]">
+                        <x-trail-map :markers="$exampleTrail->mapMarkers()" class="aspect-[4/3] w-full rounded-none! border-0! shadow-none! lg:aspect-auto lg:min-h-[26rem]" />
+                        <div class="flex flex-col p-6 sm:p-8">
+                            <p class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-trail-500">
+                                <x-icon name="map" class="size-4" />
+                                {{ __('Example route') }}
+                            </p>
+                            <h3 class="mt-2 text-3xl font-bold leading-tight">{{ $exampleTrail->name }}</h3>
+                            <p class="mt-1 text-sm text-ink-muted">{{ __('by :name', ['name' => $exampleTrail->user->name]) }}</p>
+                            @if ($excerpt = $exampleTrail->descriptionParagraphs()[0] ?? null)
+                                <p class="mt-4 leading-relaxed text-ink">{{ Str::limit($excerpt, 180) }}</p>
+                            @endif
+                            <x-trail-stats :trail="$exampleTrail" class="mt-6" />
+                            <div class="mt-auto flex flex-wrap items-center gap-x-5 gap-y-3 pt-8">
+                                <x-button :href="route('trails.example')">
+                                    {{ __('View example route') }}
+                                    <x-icon name="arrow-right" class="size-4" />
+                                </x-button>
+                                <span class="text-sm text-ink-muted">{{ __('No account needed') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
 
         {{-- Popular routes --}}

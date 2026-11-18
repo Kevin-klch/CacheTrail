@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trail;
+use App\Queries\ExampleTrail;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -11,7 +12,7 @@ class HomeController extends Controller
 
     public const int POPULAR_TRAILS_COUNT = 3;
 
-    public function __invoke(): View
+    public function __invoke(ExampleTrail $exampleTrail): View
     {
         $withPreview = ['user', 'caches:id,trail_id,position,latitude,longitude'];
 
@@ -23,6 +24,7 @@ class HomeController extends Controller
                 ->orderByDesc('average_rating')
                 ->limit(self::POPULAR_TRAILS_COUNT)
                 ->get(),
+            'exampleTrail' => $exampleTrail->find(),
         ]);
     }
 }

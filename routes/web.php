@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin;
 use App\Http\Controllers\BookmarksController;
+use App\Http\Controllers\ExampleTrailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyTrailsController;
 use App\Http\Controllers\Profile\ProfileController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\UserLocationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
+Route::get('/beispielroute', ExampleTrailController::class)->name('trails.example');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
