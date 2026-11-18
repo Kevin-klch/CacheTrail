@@ -14,7 +14,7 @@ class DatabaseSeederTest extends TestCase
     {
         $this->seed();
 
-        $this->assertDatabaseCount('users', 2);
+        $this->assertDatabaseCount('users', 3);
         $this->assertSame(4, Trail::published()->count());
         $this->assertSame(5, Trail::count());
         $this->assertDatabaseCount('trail_caches', 29);
