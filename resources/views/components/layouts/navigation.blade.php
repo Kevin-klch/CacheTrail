@@ -87,6 +87,10 @@
                                 </a>
                             @endcan
                         </div>
+                        <div class="flex items-center justify-between gap-3 border-t border-sand-200 px-4 py-2.5">
+                            <span class="text-sm text-ink-muted">{{ __('Language') }}</span>
+                            <x-language-switch />
+                        </div>
                         <form method="POST" action="{{ route('logout') }}" class="border-t border-sand-200 p-1.5">
                             @csrf
                             <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-sand-100">
@@ -97,6 +101,7 @@
                     </div>
                 </div>
             @else
+                <x-language-switch tone="dark" />
                 <x-nav-link :href="route('login')" :active="request()->routeIs('login')">{{ __('Log in') }}</x-nav-link>
                 <x-button variant="light" :href="route('register')">{{ __('Sign up') }}</x-button>
             @endauth
@@ -155,6 +160,7 @@
                 <x-nav-link mobile :href="route('login')" :active="request()->routeIs('login')">{{ __('Log in') }}</x-nav-link>
                 <x-button variant="light" :href="route('register')" class="mt-2">{{ __('Sign up') }}</x-button>
             @endauth
+            <x-language-switch tone="dark" class="mt-3 px-4" />
         </div>
     </div>
 </header>

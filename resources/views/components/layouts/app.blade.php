@@ -47,17 +47,6 @@
                 <div class="border-t border-paper/10">
                     <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-xs text-forest-200/80 sm:px-6 lg:px-8">
                         <p>&copy; {{ date('Y') }} {{ config('app.name') }}</p>
-                        <form method="POST" action="{{ route('locale.update') }}" class="flex items-center gap-1" aria-label="{{ __('Language') }}">
-                            @csrf
-                            <x-icon name="globe" class="mr-1 size-4" />
-                            @foreach (config('cachetrail.locales') as $code => $language)
-                                <button type="submit" name="locale" value="{{ $code }}" lang="{{ $code }}" @class([
-                                    'rounded-full px-2.5 py-1 font-semibold transition',
-                                    'bg-paper/15 text-white' => app()->getLocale() === $code,
-                                    'hover:bg-paper/10 hover:text-white' => app()->getLocale() !== $code,
-                                ]) @if (app()->getLocale() === $code) aria-current="true" @endif>{{ $language }}</button>
-                            @endforeach
-                        </form>
                         <nav aria-label="{{ __('Legal') }}" class="flex gap-5">
                             <a href="{{ route('legal.imprint') }}" class="hover:text-white">{{ __('Imprint') }}</a>
                             <a href="{{ route('legal.privacy') }}" class="hover:text-white">{{ __('Privacy policy') }}</a>
