@@ -63,11 +63,12 @@
         <div class="relative grid grid-cols-1 gap-12 pt-20 lg:grid-cols-2 lg:gap-32 lg:pb-8">
             {{-- The trail line leaves the hero and ends at a finish marker, like the last station of a route --}}
             <div class="pointer-events-none absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 flex-col items-center lg:flex" aria-hidden="true">
-                <x-trail-line class="w-full flex-1 text-trail-500/70" />
-                <span class="relative -mt-1 grid size-12 place-items-center rounded-full border-4 border-paper bg-trail-500 text-white shadow-lg shadow-trail-600/30">
-                    <x-icon name="flag" class="size-5" />
-                    <span class="absolute inset-0 -z-10 animate-ping rounded-full bg-trail-500/30 [animation-duration:2.5s] motion-reduce:hidden"></span>
+                <x-trail-line class="w-full flex-1 text-trail-500/80" />
+                <span class="relative -mt-1 grid size-16 shrink-0 place-items-center rounded-full border-4 border-paper bg-trail-500 text-white shadow-xl shadow-trail-600/40 ring-8 ring-trail-500/15">
+                    <x-icon name="flag" class="size-7" />
+                    <span class="absolute -inset-2 -z-10 animate-ping rounded-full bg-trail-500/40 [animation-duration:2s] motion-reduce:hidden"></span>
                 </span>
+                <span class="mt-3 rounded-full bg-trail-500 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white shadow-md">{{ __('Finish') }}</span>
             </div>
             <div class="lg:pt-10">
                 <h2 class="text-4xl font-bold">{{ __('Geocaching made easy') }}</h2>
