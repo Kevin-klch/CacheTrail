@@ -2,9 +2,10 @@
 
 {{-- Badges after a name: the main role (admin, moderator, owner; normal users get none) followed by the
      secondary roles (supporter, developer).
-     - "icon": only a small coloured symbol with tooltip, for compact places like route cards and ratings
+     - "icon": only the supporter heart as a small symbol with tooltip, for compact places like route cards
+       and ratings (other roles do not matter there)
      - "sm" / "lg": labelled pill, e.g. in the admin list and the profile header --}}
-@foreach ($user->roleBadges() as $role)
+@foreach ($size === 'icon' ? array_filter($user->roleBadges(), fn ($role) => $role === App\Enums\SecondaryRole::Supporter) : $user->roleBadges() as $role)
     @if ($size === 'icon')
         <span {{ $attributes->class(['relative z-10 inline-flex align-[-0.15em]', $role->iconClasses()]) }} title="{{ $role->label() }}">
             <x-icon :name="$role->icon()" class="size-4" />

@@ -161,8 +161,22 @@ class RolesTest extends TestCase
         $viewer = User::factory()->create();
 
         $this->actingAs($viewer)->get($moderator->profileUrl())->assertSeeInOrder(['Waldhüterin', 'Moderator']);
-        $this->actingAs($viewer)->get(route('trails.show', $trail))->assertSeeInOrder(['Waldhüterin', 'Moderator']);
-        $this->actingAs($viewer)->get(route('trails.index'))->assertSeeInOrder(['Waldhüterin', 'Moderator']);
+        $this->actingAs($viewer)->get(route('trails.show', $trail))->assertDontSee('(Moderator)');
+        $this->actingAs($viewer)->get(route('trails.index'))->assertDontSee('(Moderator)');
+    }
+
+    public function test_route_cards_and_details_only_mark_supporters(): void
+    {
+        $supporter = User::factory()->admin()->supporter()->create(['name' => 'Spenderin']);
+        $trail = Trail::factory()->published()->for($supporter)->create();
+
+        $this->actingAs(User::factory()->create());
+
+        foreach ([route('trails.index'), route('trails.show', $trail)] as $page) {
+            $this->get($page)
+                ->assertSeeInOrder(['Spenderin', '(Supporter)'])
+                ->assertDontSee('(Admin)');
+        }
     }
 
     public function test_normal_users_get_no_badge(): void
