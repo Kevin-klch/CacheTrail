@@ -61,7 +61,14 @@
     {{-- Intro and latest routes, connected by the trail line --}}
     <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="relative grid grid-cols-1 gap-12 pt-20 lg:grid-cols-2 lg:gap-32 lg:pb-8">
-            <x-trail-line class="absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 text-trail-500/70 lg:block" />
+            {{-- The trail line leaves the hero and ends at a finish marker, like the last station of a route --}}
+            <div class="pointer-events-none absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 flex-col items-center lg:flex" aria-hidden="true">
+                <x-trail-line class="w-full flex-1 text-trail-500/70" />
+                <span class="relative -mt-1 grid size-12 place-items-center rounded-full border-4 border-paper bg-trail-500 text-white shadow-lg shadow-trail-600/30">
+                    <x-icon name="flag" class="size-5" />
+                    <span class="absolute inset-0 -z-10 animate-ping rounded-full bg-trail-500/30 [animation-duration:2.5s] motion-reduce:hidden"></span>
+                </span>
+            </div>
             <div class="lg:pt-10">
                 <h2 class="text-4xl font-bold">{{ __('Geocaching made easy') }}</h2>
                 <div class="mt-5 space-y-4 text-lg leading-relaxed text-ink-muted">
