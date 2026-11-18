@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -29,11 +31,18 @@ return new class extends Migration
             }
         }
 
+        // MySQL and MariaDB compare case-insensitively with the default collation and know no index on lower().
+        if (in_array(DB::getDriverName(), ['mysql', 'mariadb'], true)) {
+            Schema::table('users', fn (Blueprint $table) => $table->unique('name', 'users_name_lower_unique'));
+
+            return;
+        }
+
         DB::statement('create unique index users_name_lower_unique on users (lower(name))');
     }
 
     public function down(): void
     {
-        DB::statement('drop index users_name_lower_unique');
+        Schema::table('users', fn (Blueprint $table) => $table->dropUnique('users_name_lower_unique'));
     }
 };
