@@ -24,8 +24,10 @@
                         {{ __('Created by') }}
                         @auth
                             <a href="{{ $trail->user->profileUrl() }}" class="font-semibold text-forest-700 hover:underline">{{ $trail->user->name }}</a>
+                            <x-role-badge :user="$trail->user" />
                         @else
                             <span class="font-semibold text-forest-700">{{ $trail->user->name }}</span>
+                            <x-role-badge :user="$trail->user" />
                         @endauth
                     </p>
                     @if (! ($isPreview ?? false) && $trail->isPublished())

@@ -40,7 +40,7 @@ class TrailPolicy
 
     public function delete(User $user, Trail $trail): bool
     {
-        return $this->canManage($user, $trail);
+        return $this->canManage($user, $trail) || $user->canModerate();
     }
 
     /**

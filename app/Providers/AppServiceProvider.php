@@ -52,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Gate::define('admin', fn (User $user): bool => $user->isAdmin());
+        Gate::define('moderate', fn (User $user): bool => $user->canModerate());
 
         Gate::define('premium', fn (User $user): bool => $user->isAdmin()
             || $this->app->make(PremiumAccessChecker::class)->hasPremiumAccess($user));

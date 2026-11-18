@@ -185,4 +185,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->role === UserRole::Admin;
     }
+
+    /**
+     * Administrators and moderators handle reports and may remove content of others.
+     */
+    public function canModerate(): bool
+    {
+        return $this->role->canModerate();
+    }
 }

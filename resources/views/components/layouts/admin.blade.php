@@ -9,7 +9,7 @@
 
             <nav class="mt-6 flex flex-wrap gap-2 text-sm" aria-label="{{ __('Administration') }}">
                 @php $openReports = App\Models\Report::open()->count(); @endphp
-                @foreach (['admin.reports.index' => [__('Reports'), 'flag', $openReports], 'admin.users.index' => [__('Users'), 'user', null]] as $routeName => [$label, $icon, $badge])
+                @foreach (array_filter(['admin.reports.index' => [__('Reports'), 'flag', $openReports], 'admin.users.index' => Gate::allows('admin') ? [__('Users'), 'user', null] : null]) as $routeName => [$label, $icon, $badge])
                     <a href="{{ route($routeName) }}" @class([
                         'inline-flex items-center gap-2 rounded-full px-4 py-2 font-medium transition',
                         'bg-paper text-forest-900' => request()->routeIs($routeName),

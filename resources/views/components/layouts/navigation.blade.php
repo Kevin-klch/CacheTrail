@@ -1,6 +1,6 @@
 @php
     $hasPremiumAccess = auth()->check() && Gate::allows('premium');
-    $openReports = Gate::allows('admin') ? App\Models\Report::open()->count() : 0;
+    $openReports = Gate::allows('moderate') ? App\Models\Report::open()->count() : 0;
 
     $items = auth()->check() ? [
         ['route' => 'trails.index', 'label' => __('Discover routes'), 'icon' => 'compass'],
@@ -77,10 +77,10 @@
                                 <x-icon name="sliders" class="size-4 text-forest-700" />
                                 {{ __('Account settings') }}
                             </a>
-                            @can('admin')
+                            @can('moderate')
                                 <a href="{{ route('admin.reports.index') }}" @class(['flex items-center gap-3 rounded-xl px-3 py-2 text-sm hover:bg-sand-100', 'bg-sand-100 font-semibold' => request()->routeIs('admin.*')])>
                                     <x-icon name="flag" class="size-4 text-forest-700" />
-                                    {{ __('Admin') }}
+                                    {{ Gate::allows('admin') ? __('Admin') : __('Moderation') }}
                                     @if ($openReports > 0)
                                         <span class="ml-auto rounded-full bg-trail-500 px-1.5 py-0.5 text-xs font-semibold text-white">{{ $openReports }}</span>
                                     @endif
@@ -134,9 +134,9 @@
 
         <div class="mt-4 flex flex-col gap-1 border-t border-paper/10 pt-4">
             @auth
-                @can('admin')
+                @can('moderate')
                     <x-nav-link mobile :href="route('admin.reports.index')" :active="request()->routeIs('admin.*')" icon="flag">
-                        {{ __('Admin') }}
+                        {{ Gate::allows('admin') ? __('Admin') : __('Moderation') }}
                         @if ($openReports > 0)
                             <span class="ml-1 rounded-full bg-trail-500 px-1.5 py-0.5 text-xs text-white">{{ $openReports }}</span>
                         @endif

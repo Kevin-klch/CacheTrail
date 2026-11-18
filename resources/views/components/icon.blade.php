@@ -98,6 +98,12 @@
         @case('chevron-down')
             <path d="m6 9 6 6 6-6" />
             @break
+        @case('key')
+            <circle cx="8" cy="15" r="4" /><path d="m10.8 12.2 8.2-8.2m-3 3 2.5 2.5M14 9l2 2" />
+            @break
+        @case('shield')
+            <path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6Z" /><path d="m9 12 2 2 4-4" />
+            @break
         @case('award')
             <circle cx="12" cy="9" r="6" /><path d="m8.5 13.9-1.5 8.1 5-3 5 3-1.5-8.1" />
             @break

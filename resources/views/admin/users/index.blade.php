@@ -42,7 +42,7 @@
                                         <label for="role-{{ $user->id }}" class="sr-only">{{ __('Role of :name', ['name' => $user->name]) }}</label>
                                         <select id="role-{{ $user->id }}" name="role" class="rounded-lg border border-sand-300 bg-white px-2 py-1.5 text-sm">
                                             @foreach (App\Enums\UserRole::cases() as $role)
-                                                <option value="{{ $role->value }}" @selected($user->role === $role)>{{ $role === App\Enums\UserRole::Admin ? __('Admin') : __('User') }}</option>
+                                                <option value="{{ $role->value }}" @selected($user->role === $role)>{{ $role->label() }}</option>
                                             @endforeach
                                         </select>
                                         <button type="submit" class="text-xs font-semibold text-forest-700 hover:underline">{{ __('Save') }}</button>

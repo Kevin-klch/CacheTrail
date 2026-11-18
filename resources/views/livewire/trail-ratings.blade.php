@@ -71,6 +71,7 @@
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
                             <a href="{{ $item->user->profileUrl() }}" class="font-semibold text-forest-800 hover:underline">{{ $item->user->name }}</a>
+                            <x-role-badge :user="$item->user" />
                             <x-stars :value="$item->rating" />
                             <span class="text-xs text-ink-muted">{{ $item->created_at->translatedFormat('j. F Y') }}</span>
                         </div>

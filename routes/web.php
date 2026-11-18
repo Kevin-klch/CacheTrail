@@ -23,12 +23,16 @@ Route::middleware('auth')->group(function () {
     Route::put('/profil/bilder', [ProfileController::class, 'updateImages'])->name('profile.images.update');
 });
 
-Route::middleware(['auth', 'verified', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
+// Moderation (admins and moderators) and user management (admins only).
+Route::middleware(['auth', 'verified', 'can:moderate'])->prefix('admin')->name('admin.')->group(function () {
     Route::redirect('/', '/admin/meldungen')->name('index');
     Route::get('/meldungen', [Admin\ReportController::class, 'index'])->name('reports.index');
     Route::patch('/meldungen/{report}', [Admin\ReportController::class, 'update'])->name('reports.update');
-    Route::get('/nutzer', [Admin\UserController::class, 'index'])->name('users.index');
-    Route::patch('/nutzer/{user}', [Admin\UserController::class, 'update'])->name('users.update');
+
+    Route::middleware('can:admin')->group(function () {
+        Route::get('/nutzer', [Admin\UserController::class, 'index'])->name('users.index');
+        Route::patch('/nutzer/{user}', [Admin\UserController::class, 'update'])->name('users.update');
+    });
 });
 
 Route::middleware(['auth', 'verified', 'premium'])->group(function () {

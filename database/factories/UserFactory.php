@@ -54,4 +54,18 @@ class UserFactory extends Factory
             'role' => UserRole::Admin,
         ]);
     }
+
+    public function moderator(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::Moderator,
+        ]);
+    }
+
+    public function supporter(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::Supporter,
+        ]);
+    }
 }

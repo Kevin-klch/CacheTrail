@@ -27,7 +27,7 @@ class TrailRatingPolicy
 
     public function delete(User $user, TrailRating $rating): bool
     {
-        return $rating->user_id === $user->id || $user->isAdmin();
+        return $rating->user_id === $user->id || $user->canModerate();
     }
 
     /**
