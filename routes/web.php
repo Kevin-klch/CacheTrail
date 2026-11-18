@@ -52,5 +52,5 @@ Route::middleware(['auth', 'verified', 'premium'])->group(function () {
     Route::get('/meine-routen', MyTrailsController::class)->name('trails.mine');
     Route::get('/merkliste', BookmarksController::class)->name('bookmarks.index');
     Route::redirect('/favoriten', '/merkliste', 301);
-    Route::get('/nutzer/{user}', PublicProfileController::class)->where('user', '[0-9]+(-[a-z0-9-]*)?')->name('profiles.show');
+    Route::get('/nutzer/{user}', PublicProfileController::class)->where('user', '[^/]+')->name('profiles.show');
 });

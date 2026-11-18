@@ -17,7 +17,7 @@
                     {{ $profile->name }}
                     <x-role-badge :user="$profile" size="lg" />
                 </h1>
-                @if ($account)
+                @if ($account && mb_strtolower($account->username) !== mb_strtolower($profile->name))
                     <p class="mt-2 inline-flex items-center gap-1.5 text-forest-100/90">
                         <x-icon name="compass" class="size-4" />
                         {{ __('On Geocaching.com: :name', ['name' => $account->username]) }}

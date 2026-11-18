@@ -29,6 +29,18 @@
                                     <span class="ml-1 text-xs text-ink-muted">({{ __('you') }})</span>
                                 @endif
                                 <span class="block text-xs text-ink-muted">{{ __('Member since :date', ['date' => $user->created_at->translatedFormat('j. F Y')]) }}</span>
+                                @unless ($isSelf || ($user->isOwner() && ! auth()->user()->isOwner()))
+                                    <details class="mt-1 text-xs">
+                                        <summary class="cursor-pointer font-semibold text-forest-700">{{ __('Change username') }}</summary>
+                                        <form method="POST" action="{{ route('admin.users.update', $user) }}" class="mt-2 flex items-center gap-2">
+                                            @csrf @method('PATCH')
+                                            <label for="name-{{ $user->id }}" class="sr-only">{{ __('New username of :name', ['name' => $user->name]) }}</label>
+                                            <input id="name-{{ $user->id }}" name="name" value="{{ $user->name }}" maxlength="{{ App\Models\User::USERNAME_MAX_LENGTH }}" required
+                                                class="w-40 rounded-lg border border-sand-300 bg-white px-2 py-1 text-sm">
+                                            <button type="submit" class="font-semibold text-forest-700 hover:underline">{{ __('Save') }}</button>
+                                        </form>
+                                    </details>
+                                @endunless
                             </td>
                             <td class="py-3 pr-4 text-ink-muted">{{ $user->email }}</td>
                             <td class="py-3 pr-4">{{ $user->trails_count }}</td>

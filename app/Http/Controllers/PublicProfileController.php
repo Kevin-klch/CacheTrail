@@ -22,12 +22,16 @@ class PublicProfileController extends Controller
 
     public function __invoke(string $user): View|RedirectResponse
     {
-        $profile = User::with('geocachingAccount')->findOrFail((int) $user);
+        $profile = User::findByName($user) ?? $this->fromOldAddress($user);
 
-        // Old or shortened addresses lead to the current one, e.g. after a name change.
-        if ($user !== $profile->profileSlug()) {
+        abort_if($profile === null, 404);
+
+        // Other spellings (e.g. /nutzer/testcacher) lead to the address with the name as written.
+        if ($user !== $profile->name) {
             return redirect()->to($profile->profileUrl(), 301);
         }
+
+        $profile->load('geocachingAccount');
 
         $trails = $profile->trails()
             ->published()
@@ -56,6 +60,14 @@ class PublicProfileController extends Controller
                 ->limit(self::RECENT_COMPLETIONS)
                 ->get(),
         ]);
+    }
+
+    /**
+     * Profile addresses used to be "/nutzer/42-erika-muster"; such links still lead to the right profile.
+     */
+    private function fromOldAddress(string $user): ?User
+    {
+        return preg_match('/^(\d+)(-[a-z0-9-]*)?$/', $user, $matches) === 1 ? User::find((int) $matches[1]) : null;
     }
 
     /**

@@ -2,7 +2,8 @@
     <form method="POST" action="{{ route('register') }}" class="space-y-5">
         @csrf
 
-        <x-input name="name" :label="__('Name')" autocomplete="name" required autofocus />
+        <x-input name="name" :label="__('Geocaching username')" autocomplete="username" required autofocus maxlength="{{ App\Models\User::USERNAME_MAX_LENGTH }}"
+            :hint="__('Exactly as on Geocaching.com. It is your name on CacheTrail and cannot be changed later.')" />
         <x-input name="email" type="email" :label="__('Email address')" autocomplete="email" required />
         <x-input name="password" type="password" :label="__('Password')" autocomplete="new-password" :hint="__('At least 8 characters.')" required />
         <x-input name="password_confirmation" type="password" :label="__('Confirm password')" autocomplete="new-password" required />

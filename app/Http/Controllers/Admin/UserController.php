@@ -38,7 +38,8 @@ class UserController extends Controller
         $validated = $request->validate([
             'role' => ['sometimes', Rule::enum(UserRole::class)],
             'blocked' => ['sometimes', 'boolean'],
-        ]);
+            'name' => ['sometimes', ...User::usernameRules($user)],
+        ], attributes: ['name' => __('Geocaching username')]);
 
         // Admins cannot lock themselves out.
         abort_if($user->is($request->user()), 403, __('You cannot change your own account here.'));
@@ -49,6 +50,11 @@ class UserController extends Controller
 
         if (isset($validated['role'])) {
             $user->forceFill(['role' => $validated['role']])->save();
+        }
+
+        // Usernames can only be corrected by administrators, e.g. after a rename on Geocaching.com.
+        if (isset($validated['name'])) {
+            $user->forceFill(['name' => trim($validated['name'])])->save();
         }
 
         if (isset($validated['blocked'])) {

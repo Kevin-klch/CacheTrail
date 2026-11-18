@@ -22,8 +22,11 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
+        $input['name'] = trim((string) ($input['name'] ?? ''));
+
+        // The name is the user's geocaching username; it identifies the public profile and cannot be changed later.
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => User::usernameRules(),
             'email' => [
                 'required',
                 'string',
@@ -32,7 +35,7 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
-        ])->validate();
+        ], attributes: ['name' => __('Geocaching username')])->validate();
 
         return User::create([
             'name' => $input['name'],

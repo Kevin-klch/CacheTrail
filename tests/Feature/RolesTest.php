@@ -86,6 +86,18 @@ class RolesTest extends TestCase
         $this->assertTrue($admin->fresh()->isOwner());
     }
 
+    public function test_admins_can_correct_usernames(): void
+    {
+        $user = User::factory()->create(['name' => 'AlterName']);
+        User::factory()->create(['name' => 'Vergeben']);
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->patch(route('admin.users.update', $user), ['name' => 'vergeben'])->assertSessionHasErrors('name');
+        $this->actingAs($admin)->patch(route('admin.users.update', $user), ['name' => 'NeuerName'])->assertSessionHasNoErrors();
+
+        $this->assertSame('NeuerName', $user->fresh()->name);
+    }
+
     public function test_the_first_owner_is_appointed_on_the_command_line(): void
     {
         $user = User::factory()->admin()->create(['email' => 'chefin@example.com']);

@@ -28,9 +28,9 @@ class ProfileTest extends TestCase
             ->assertSee($user->email);
     }
 
-    public function test_profile_information_can_be_updated(): void
+    public function test_the_username_cannot_be_changed_in_the_profile(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['name' => 'TestCacher']);
 
         $this->actingAs($user)
             ->put(route('user-profile-information.update'), [
@@ -41,8 +41,9 @@ class ProfileTest extends TestCase
 
         $user->refresh();
 
-        $this->assertSame('Neuer Name', $user->name);
+        $this->assertSame('TestCacher', $user->name);
         $this->assertTrue($user->hasVerifiedEmail());
+        $this->get(route('profile.edit'))->assertSee('Dein Benutzername kann nicht geändert werden.');
     }
 
     public function test_changing_the_email_address_requires_verification_again(): void

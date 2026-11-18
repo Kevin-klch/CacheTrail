@@ -30,6 +30,9 @@
         @if (session('status'))
             <x-alert class="mb-6">{{ session('status') }}</x-alert>
         @endif
+        @if ($errors->any())
+            <div class="mb-6 rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-800" role="alert">{{ $errors->first() }}</div>
+        @endif
 
         {{ $slot }}
     </div>

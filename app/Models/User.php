@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UserRole;
+use App\Rules\UniqueUsername;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
@@ -23,6 +23,10 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    public const int USERNAME_MIN_LENGTH = 2;
+
+    public const int USERNAME_MAX_LENGTH = 50;
 
     /**
      * The model's default values for attributes.
@@ -168,17 +172,35 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Public profile address, e.g. /nutzer/42-erika-muster. The number identifies the user,
-     * the name part only makes the address readable (names are not unique).
+     * Public profile address, e.g. /nutzer/TestCacher. The name is the geocaching username and unique.
      */
     public function profileUrl(): string
     {
-        return route('profiles.show', ['user' => $this->profileSlug()]);
+        return route('profiles.show', ['user' => $this->name]);
     }
 
-    public function profileSlug(): string
+    /**
+     * Finds a user by username, regardless of upper and lower case.
+     */
+    public static function findByName(string $name): ?self
     {
-        return trim($this->id.'-'.Str::slug($this->name, language: 'de'), '-');
+        return static::query()->whereRaw('lower(name) = ?', [mb_strtolower(trim($name))])->first();
+    }
+
+    /**
+     * Validation rules for the username: the user's name on Geocaching.com.
+     *
+     * @return array<int, mixed>
+     */
+    public static function usernameRules(?self $ignore = null): array
+    {
+        return [
+            'required',
+            'string',
+            'min:'.self::USERNAME_MIN_LENGTH,
+            'max:'.self::USERNAME_MAX_LENGTH,
+            new UniqueUsername($ignore),
+        ];
     }
 
     /**

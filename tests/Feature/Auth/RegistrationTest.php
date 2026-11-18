@@ -39,6 +39,39 @@ class RegistrationTest extends TestCase
         Notification::assertSentTo($user, VerifyEmail::class);
     }
 
+    public function test_usernames_are_unique_regardless_of_case(): void
+    {
+        User::factory()->create(['name' => 'TestCacher']);
+
+        $this->post(route('register.store'), [
+            'name' => ' testcacher ',
+            'email' => 'zweiter@example.com',
+            'password' => 'sicheres-passwort',
+            'password_confirmation' => 'sicheres-passwort',
+        ])->assertSessionHasErrors(['name' => 'Dieser Benutzername ist schon vergeben.']);
+
+        $this->assertGuest();
+    }
+
+    public function test_usernames_may_not_contain_characters_that_break_the_profile_address(): void
+    {
+        foreach (['Wald/Fuchs', '?frage', 'a', ' '] as $name) {
+            $this->post(route('register.store'), [
+                'name' => $name,
+                'email' => 'fuchs@example.com',
+                'password' => 'sicheres-passwort',
+                'password_confirmation' => 'sicheres-passwort',
+            ])->assertSessionHasErrors('name');
+        }
+
+        $this->post(route('register.store'), [
+            'name' => "Wald-Fuchs_2 O'Neil",
+            'email' => 'fuchs@example.com',
+            'password' => 'sicheres-passwort',
+            'password_confirmation' => 'sicheres-passwort',
+        ])->assertSessionHasNoErrors();
+    }
+
     public function test_registration_cannot_assign_the_admin_role(): void
     {
         $this->post(route('register.store'), [
@@ -63,7 +96,7 @@ class RegistrationTest extends TestCase
             ])
             ->assertRedirect(route('register'))
             ->assertSessionHasErrors([
-                'name' => 'Name ist ein Pflichtfeld.',
+                'name' => 'Geocaching-Benutzername ist ein Pflichtfeld.',
                 'email' => 'E-Mail-Adresse muss eine gültige E-Mail-Adresse sein.',
             ]);
 

@@ -72,17 +72,19 @@ class CommunityDirectoryTest extends TestCase
             ->assertDontSee('Erikas Entwurf')
             ->assertDontSee('erika@example.com');
 
-        $this->assertStringEndsWith('/nutzer/'.$author->id.'-erika-muster', $author->profileUrl());
+        $this->assertStringEndsWith('/nutzer/Erika%20Muster', $author->profileUrl());
     }
 
-    public function test_outdated_profile_addresses_redirect_to_the_current_one(): void
+    public function test_other_spellings_and_old_addresses_redirect_to_the_profile(): void
     {
-        $author = User::factory()->create(['name' => 'Neuer Name']);
+        $author = User::factory()->create(['name' => 'TestCacher']);
 
-        $this->actingAs(User::factory()->create())
-            ->get('/nutzer/'.$author->id.'-alter-name')
-            ->assertRedirect($author->profileUrl());
+        $this->actingAs(User::factory()->create());
 
+        $this->get('/nutzer/TestCacher')->assertOk();
+        $this->get('/nutzer/testcacher')->assertRedirect($author->profileUrl());
+        $this->get('/nutzer/'.$author->id.'-alter-name')->assertRedirect($author->profileUrl());
+        $this->get('/nutzer/Unbekannt')->assertNotFound();
         $this->get('/nutzer/999999')->assertNotFound();
     }
 

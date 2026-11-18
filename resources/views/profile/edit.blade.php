@@ -30,7 +30,14 @@
                 @csrf
                 @method('PUT')
 
-                <x-input name="name" :label="__('Name')" :value="$user->name" bag="updateProfileInformation" autocomplete="name" required />
+                <div>
+                    <p class="mb-1.5 block text-sm font-medium text-forest-900">{{ __('Geocaching username') }}</p>
+                    <p class="flex items-center gap-2 rounded-xl border border-sand-200 bg-sand-100/60 px-4 py-2.5 font-semibold text-forest-900">
+                        <x-icon name="lock" class="size-4 text-ink-muted" />
+                        {{ $user->name }}
+                    </p>
+                    <p class="mt-1.5 text-sm text-ink-muted">{{ __('Your username cannot be changed. As soon as you connect your Geocaching.com account, it is taken over from there automatically.') }}</p>
+                </div>
                 <x-input name="email" type="email" :label="__('Email address')" :value="$user->email" bag="updateProfileInformation" autocomplete="email" :hint="__('If you change your email address, you will need to confirm it again.')" required />
 
                 <x-button>{{ __('Save') }}</x-button>
