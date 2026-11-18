@@ -62,7 +62,7 @@
     <section class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="relative grid grid-cols-1 gap-12 pt-20 lg:grid-cols-2 lg:gap-32 lg:pb-8">
             {{-- The trail line leaves the hero and ends at a finish marker, like the last station of a route --}}
-            <div class="pointer-events-none absolute left-1/2 top-0 hidden h-full w-24 -translate-x-1/2 flex-col items-center lg:flex" aria-hidden="true">
+            <div class="pointer-events-none absolute left-1/2 top-0 hidden h-[calc(100%+4rem)] w-24 -translate-x-1/2 flex-col items-center lg:flex" aria-hidden="true">
                 <x-trail-line class="w-full flex-1 text-trail-500/80" />
                 <span class="relative -mt-1 grid size-16 shrink-0 place-items-center rounded-full border-4 border-paper bg-trail-500 text-white shadow-xl shadow-trail-600/40 ring-8 ring-trail-500/15">
                     <x-icon name="flag" class="size-7" />
