@@ -55,6 +55,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Imprint and Privacy Policy
+    |--------------------------------------------------------------------------
+    |
+    | Details of the operator shown in the imprint and privacy policy. They
+    | are set in the .env file, so no personal data ends up in the code.
+    | Missing values are highlighted on the pages outside production.
+    |
+    */
+
+    'legal' => [
+        'name' => env('CACHETRAIL_LEGAL_NAME'),
+        'street' => env('CACHETRAIL_LEGAL_STREET'),
+        'city' => env('CACHETRAIL_LEGAL_CITY'),
+        'email' => env('CACHETRAIL_LEGAL_EMAIL'),
+        'phone' => env('CACHETRAIL_LEGAL_PHONE'),
+        'hosting' => env('CACHETRAIL_LEGAL_HOSTING'),
+        'mail_provider' => env('CACHETRAIL_LEGAL_MAIL_PROVIDER'),
+        'privacy_updated_at' => '2026-11-18',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Routes
     |--------------------------------------------------------------------------
     */

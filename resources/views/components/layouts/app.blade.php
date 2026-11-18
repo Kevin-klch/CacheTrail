@@ -45,9 +45,13 @@
                     </p>
                 </div>
                 <div class="border-t border-paper/10">
-                    <p class="mx-auto max-w-7xl px-4 py-5 text-xs text-forest-200/80 sm:px-6 lg:px-8">
-                        &copy; {{ date('Y') }} {{ config('app.name') }}
-                    </p>
+                    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-xs text-forest-200/80 sm:px-6 lg:px-8">
+                        <p>&copy; {{ date('Y') }} {{ config('app.name') }}</p>
+                        <nav aria-label="{{ __('Legal') }}" class="flex gap-5">
+                            <a href="{{ route('legal.imprint') }}" class="hover:text-white">{{ __('Imprint') }}</a>
+                            <a href="{{ route('legal.privacy') }}" class="hover:text-white">{{ __('Privacy policy') }}</a>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </footer>

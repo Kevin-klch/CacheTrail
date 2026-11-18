@@ -49,6 +49,15 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    protected static function booted(): void
+    {
+        // Delete the routes one by one instead of relying on the database cascade, so their
+        // uploaded images are removed from storage as well.
+        static::deleting(function (User $user): void {
+            $user->trails()->each(fn (Trail $trail) => $trail->delete());
+        });
+    }
+
     public function isBlocked(): bool
     {
         return $this->blocked_at !== null;

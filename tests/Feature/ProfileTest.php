@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Trail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -98,6 +100,20 @@ class ProfileTest extends TestCase
 
         $this->assertGuest();
         $this->assertModelMissing($user);
+    }
+
+    public function test_deleting_an_account_removes_its_routes_and_their_images(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+        $trail = Trail::factory()->for($user)->create();
+        $trail->forceFill(['image_path' => 'trails/eigenes-bild.jpg'])->save();
+        Storage::disk('public')->put('trails/eigenes-bild.jpg', 'bild');
+
+        $this->actingAs($user)->delete(route('profile.destroy'), ['password' => 'password']);
+
+        $this->assertModelMissing($trail);
+        Storage::disk('public')->assertMissing('trails/eigenes-bild.jpg');
     }
 
     public function test_account_is_not_deleted_with_a_wrong_password(): void

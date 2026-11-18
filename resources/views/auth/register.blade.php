@@ -7,6 +7,10 @@
         <x-input name="password" type="password" :label="__('Password')" autocomplete="new-password" :hint="__('At least 8 characters.')" required />
         <x-input name="password_confirmation" type="password" :label="__('Confirm password')" autocomplete="new-password" required />
 
+        <p class="text-sm text-ink-muted">
+            {!! __('By signing up you confirm that you have read our :privacy.', ['privacy' => '<a href="'.e(route('legal.privacy')).'" target="_blank" class="font-semibold text-forest-700 underline underline-offset-4">'.e(__('privacy policy')).'</a>']) !!}
+        </p>
+
         <x-button class="w-full">{{ __('Sign up') }}</x-button>
     </form>
 

@@ -54,6 +54,35 @@
     }
 }
 
+/* Long legal texts (imprint, privacy policy) */
+@layer components {
+    .legal-text {
+        @apply max-w-none leading-relaxed text-ink;
+    }
+
+    .legal-text h2 {
+        @apply mt-10 mb-3 text-2xl font-bold first:mt-0;
+    }
+
+    .legal-text h3 {
+        @apply mt-6 mb-2 text-lg font-bold;
+    }
+
+    .legal-text p,
+    .legal-text ul,
+    .legal-text address {
+        @apply mb-4 not-italic;
+    }
+
+    .legal-text ul {
+        @apply list-disc space-y-1 pl-5;
+    }
+
+    .legal-text a {
+        @apply font-medium text-forest-700 underline underline-offset-4 hover:text-forest-900;
+    }
+}
+
 /* Leaflet route map: numbered station markers and popups */
 @layer components {
     .ct-marker {
