@@ -9,11 +9,11 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database with local development accounts.
-     * Both accounts use the password "password".
+     * All accounts use the password "password".
      */
     public function run(): void
     {
-        User::factory()->create([
+        User::factory()->supporter()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
@@ -21,6 +21,11 @@ class DatabaseSeeder extends Seeder
         User::factory()->admin()->create([
             'name' => 'Admin',
             'email' => 'admin@example.com',
+        ]);
+
+        User::factory()->moderator()->create([
+            'name' => 'Moderator',
+            'email' => 'moderator@example.com',
         ]);
 
         $this->call([TrailSeeder::class, CommunitySeeder::class]);
