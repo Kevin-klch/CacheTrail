@@ -300,7 +300,6 @@
     "No caches yet": "Noch keine Caches",
     "No cover image yet": "Noch kein Titelbild",
     "No matching routes": "Keine passenden Routen",
-    "No more puzzling together single caches on a crowded map. On CacheTrail, geocachers share complete routes, each in the order they recommend.": "Schluss mit dem mühsamen Zusammensuchen einzelner Caches auf einer unübersichtlichen Karte. Auf CacheTrail teilen Geocacher komplette Routen, jeweils in der Reihenfolge, die sie empfehlen.",
     "No popular routes yet": "Noch keine beliebten Routen",
     "No radius": "Kein Umkreis",
     "No ratings yet": "Noch keine Bewertungen",
@@ -316,7 +315,6 @@
     "On Geocaching.com: :name": "Auf Geocaching.com: :name",
     "On the way": "Unterwegs",
     "One of the first :count members": "Eines der ersten :count Mitglieder",
-    "Only have an hour and want a nice walk with your kids? Filter by distance, duration, difficulty and means of transport and only see the routes that really fit.": "Du hast nur eine Stunde Zeit und möchtest mit deinen Kindern einen schönen Spaziergang machen? Filtere nach Strecke, Dauer, Schwierigkeit und Fortbewegungsmittel und sieh nur die Routen, die wirklich passen.",
     "Only the first :count routes are shown. Narrow down your search to see more.": "Es werden nur die ersten :count Routen angezeigt. Grenze deine Suche ein, um weitere zu sehen.",
     "Only the owner can change owner accounts.": "Nur der Owner kann Owner-Konten ändern.",
     "Open": "Offen",
@@ -611,5 +609,14 @@
     "Too many accounts have been created from your connection. Please try again later.": "Über deine Verbindung wurden zu viele Konten angelegt. Bitte versuch es später noch einmal.",
     "You have changed your email address several times. Please try again later.": "Du hast deine E-Mail-Adresse mehrmals geändert. Bitte versuch es später noch einmal.",
     "You have sent a lot of reports in a short time. Please try again later.": "Du hast in kurzer Zeit viele Meldungen geschickt. Bitte versuch es später noch einmal.",
-    "Marked for the shared feedback account": "Für das gemeinsame Feedback-Konto vorgemerkt"
+    "Marked for the shared feedback account": "Für das gemeinsame Feedback-Konto vorgemerkt",
+    "No more puzzling together single caches on a crowded map. On CacheTrail, geocachers share complete routes: hand-picked caches in the order they recommend, from the parking spot to the last logbook.": "Schluss mit dem mühsamen Zusammensuchen einzelner Caches auf einer unübersichtlichen Karte. Auf CacheTrail teilen Geocacher komplette Routen: ausgewählte Caches in der Reihenfolge, die sie empfehlen, vom Parkplatz bis zum letzten Logbuch.",
+    "Routes instead of single points": "Routen statt einzelner Punkte",
+    "Every route shows its caches as stations on the map, with distance, duration and the recommended order. You simply follow it from start to finish.": "Jede Route zeigt ihre Caches als Stationen auf der Karte, mit Strecke, Dauer und empfohlener Reihenfolge. Du folgst ihr einfach vom Start bis ins Ziel.",
+    "Filters that fit your day": "Filter, die zu deinem Tag passen",
+    "Only have an hour and want a nice walk with your kids? Filter by distance, duration, difficulty, terrain and means of transport and only see the routes that really fit.": "Du hast nur eine Stunde Zeit und möchtest mit deinen Kindern einen schönen Spaziergang machen? Filtere nach Strecke, Dauer, Schwierigkeit, Gelände und Fortbewegungsmittel und sieh nur die Routen, die wirklich passen.",
+    "Know the important things beforehand": "Alles Wichtige vorher wissen",
+    "Round trip or one way, suitable for kids, strollers, dogs or at night, plus a parking spot to start from: before you leave, you know whether a route suits you.": "Rundweg oder einfache Strecke, geeignet für Kinder, Kinderwagen, Hunde oder nachts, dazu ein Parkplatz zum Starten: Schon vor dem Losgehen weißt du, ob eine Route zu dir passt.",
+    "Tips from the community": "Tipps aus der Community",
+    "Ratings and comments from other geocachers show which routes are worth it. Save favourites for later and collect badges for every route you complete.": "Bewertungen und Kommentare anderer Geocacher zeigen, welche Routen sich lohnen. Merk dir Favoriten für später und sammle Abzeichen für jede absolvierte Route."
 }

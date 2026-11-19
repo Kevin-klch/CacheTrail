@@ -64,10 +64,32 @@
             </div>
             <div class="lg:pt-10">
                 <h2 class="text-4xl font-bold">{{ __('Geocaching made easy') }}</h2>
-                <div class="mt-5 space-y-4 text-lg leading-relaxed text-ink-muted">
-                    <p>{{ __('No more puzzling together single caches on a crowded map. On CacheTrail, geocachers share complete routes, each in the order they recommend.') }}</p>
-                    <p>{{ __('Only have an hour and want a nice walk with your kids? Filter by distance, duration, difficulty and means of transport and only see the routes that really fit.') }}</p>
-                </div>
+                <p class="mt-5 text-lg leading-relaxed text-ink-muted">
+                    {{ __('No more puzzling together single caches on a crowded map. On CacheTrail, geocachers share complete routes: hand-picked caches in the order they recommend, from the parking spot to the last logbook.') }}
+                </p>
+
+                @php
+                    $highlights = [
+                        ['icon' => 'route', 'title' => __('Routes instead of single points'), 'text' => __('Every route shows its caches as stations on the map, with distance, duration and the recommended order. You simply follow it from start to finish.')],
+                        ['icon' => 'sliders', 'title' => __('Filters that fit your day'), 'text' => __('Only have an hour and want a nice walk with your kids? Filter by distance, duration, difficulty, terrain and means of transport and only see the routes that really fit.')],
+                        ['icon' => 'kids', 'title' => __('Know the important things beforehand'), 'text' => __('Round trip or one way, suitable for kids, strollers, dogs or at night, plus a parking spot to start from: before you leave, you know whether a route suits you.')],
+                        ['icon' => 'star', 'title' => __('Tips from the community'), 'text' => __('Ratings and comments from other geocachers show which routes are worth it. Save favourites for later and collect badges for every route you complete.')],
+                    ];
+                @endphp
+
+                <ul class="mt-8 space-y-5">
+                    @foreach ($highlights as $highlight)
+                        <li class="flex gap-4">
+                            <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-forest-700/10 text-forest-700">
+                                <x-icon :name="$highlight['icon']" class="size-5" />
+                            </span>
+                            <div>
+                                <h3 class="font-heading text-lg font-bold text-forest-900">{{ $highlight['title'] }}</h3>
+                                <p class="mt-0.5 leading-relaxed text-ink-muted">{{ $highlight['text'] }}</p>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
                 <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
                     <a href="{{ route('about') }}" class="inline-flex items-center gap-1.5 text-forest-700 hover:underline">
                         {{ __('Why CacheTrail exists') }}
