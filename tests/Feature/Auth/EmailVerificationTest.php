@@ -4,8 +4,10 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
 
@@ -19,6 +21,34 @@ class EmailVerificationTest extends TestCase
             ->get(route('verification.notice'))
             ->assertOk()
             ->assertSee('Bestätige deine E-Mail-Adresse');
+    }
+
+    public function test_without_email_verification_new_accounts_can_start_right_away(): void
+    {
+        config(['cachetrail.email_verification' => false]);
+        Notification::fake();
+
+        $this->post(route('register.store'), [
+            'name' => 'Spontan',
+            'email' => 'spontan@example.com',
+            'password' => 'sicheres-passwort',
+            'password_confirmation' => 'sicheres-passwort',
+        ]);
+
+        Notification::assertNothingSent();
+        $this->get(route('trails.create'))->assertOk();
+    }
+
+    public function test_without_email_verification_a_changed_address_needs_no_confirmation(): void
+    {
+        config(['cachetrail.email_verification' => false]);
+        Notification::fake();
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->put(route('user-profile-information.update'), ['email' => 'neu@example.com']);
+
+        $this->assertSame('neu@example.com', $user->fresh()->email);
+        Notification::assertNotSentTo($user, VerifyEmail::class);
     }
 
     public function test_email_can_be_verified(): void

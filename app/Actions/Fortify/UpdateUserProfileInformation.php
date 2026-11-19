@@ -40,7 +40,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             ],
         ])->validateWithBag('updateProfileInformation');
 
-        if ($input['email'] !== $user->email && $user instanceof MustVerifyEmail) {
+        if ($input['email'] !== $user->email && $user instanceof MustVerifyEmail && config('cachetrail.email_verification')) {
             // Each change sends a confirmation email to the new address, so changes are limited.
             if (RateLimiter::tooManyAttempts('email-change:'.$user->id, self::EMAIL_CHANGES_PER_HOUR)) {
                 throw ValidationException::withMessages(['email' => __('You have changed your email address several times. Please try again later.')])

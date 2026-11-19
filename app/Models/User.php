@@ -231,6 +231,14 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     }
 
     /**
+     * Without email verification (no mail server yet) every account counts as confirmed.
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        return ! config('cachetrail.email_verification') || parent::hasVerifiedEmail();
+    }
+
+    /**
      * The shared account testers use on the feedback version. Its email address and password cannot be
      * changed and it cannot be deleted, so nobody can lock the others out.
      */

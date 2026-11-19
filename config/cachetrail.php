@@ -17,6 +17,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Email verification
+    |--------------------------------------------------------------------------
+    |
+    | Whether new and changed email addresses must be confirmed by a link sent
+    | by email. Switched off, every account counts as confirmed and no
+    | confirmation emails are sent, e.g. while no mail server is set up.
+    |
+    */
+
+    'email_verification' => env('CACHETRAIL_EMAIL_VERIFICATION', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Languages
     |--------------------------------------------------------------------------
     |
