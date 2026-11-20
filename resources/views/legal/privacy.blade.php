@@ -51,6 +51,11 @@
                 Deine E-Mail-Adresse bestätigst du über einen Link, den wir dir schicken. Die Daten brauchen wir, um dir das Konto
                 bereitzustellen (Art. 6 Abs. 1 lit. b DSGVO). Deine E-Mail-Adresse wird anderen Nutzerinnen und Nutzern nie angezeigt.
             </p>
+            <p>
+                Bei jeder Anmeldung speichern wir Zeitpunkt, IP-Adresse und Browserkennung. So können wir Missbrauch deines Kontos
+                erkennen und sehen, ob das gemeinsame Test-Konto genutzt wird (berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO).
+                Nur Administratoren sehen diese Angaben; nach {{ App\Models\LoginRecord::KEEP_DAYS }} Tagen löschen wir sie automatisch.
+            </p>
 
             <h2>6. Was andere von dir sehen</h2>
             <p>
@@ -123,7 +128,7 @@
             <p>
                 Deine Kontodaten speichern wir, solange dein Konto besteht. Du kannst es in den Kontoeinstellungen jederzeit selbst löschen.
                 Dabei löschen wir dein Profil, deine Routen mit Bildern, Bewertungen, Merkliste, „Gefällt mir“, absolvierte Routen und Meldungen.
-                Sitzungsdaten werden nach Ablauf der Sitzung gelöscht, Server-Logdateien nach den Fristen des Hosters.
+                Sitzungsdaten werden nach Ablauf der Sitzung gelöscht, Anmeldungen nach {{ App\Models\LoginRecord::KEEP_DAYS }} Tagen, Server-Logdateien nach den Fristen des Hosters.
             </p>
 
             <h2>15. Deine Rechte</h2>

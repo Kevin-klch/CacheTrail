@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified', 'can:moderate'])->prefix('admin')->name('
     Route::middleware('can:admin')->group(function () {
         Route::get('/nutzer', [Admin\UserController::class, 'index'])->name('users.index');
         Route::patch('/nutzer/{user}', [Admin\UserController::class, 'update'])->name('users.update');
+        Route::get('/anmeldungen', [Admin\LoginController::class, 'index'])->name('logins.index');
     });
 });
 

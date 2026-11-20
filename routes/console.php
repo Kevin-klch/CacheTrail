@@ -10,3 +10,6 @@ Artisan::command('inspire', function () {
 
 // Membership badges depend only on time passing, so all users are checked once a day.
 Schedule::command('badges:award')->dailyAt('03:00');
+
+// Deletes old login records (see LoginRecord::prunable()).
+Schedule::command('model:prune')->dailyAt('03:15');

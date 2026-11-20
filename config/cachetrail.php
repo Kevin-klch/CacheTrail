@@ -135,7 +135,7 @@ return [
         'phone' => env('CACHETRAIL_LEGAL_PHONE'),
         'hosting' => env('CACHETRAIL_LEGAL_HOSTING'),
         'mail_provider' => env('CACHETRAIL_LEGAL_MAIL_PROVIDER'),
-        'privacy_updated_at' => '2026-11-18',
+        'privacy_updated_at' => '2026-11-20',
     ],
 
     /*

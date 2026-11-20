@@ -20,7 +20,7 @@ class LegalPagesTest extends TestCase
             ->assertOk()
             ->assertSee('Karten von OpenStreetMap')
             ->assertSee('Ortssuche mit Nominatim')
-            ->assertSee('Stand: 18. November 2026');
+            ->assertSee('Stand: 20. November 2026');
     }
 
     public function test_the_operator_details_come_from_the_configuration(): void

@@ -619,5 +619,17 @@
     "Know the important things beforehand": "Alles Wichtige vorher wissen",
     "Round trip or one way, suitable for kids, strollers, dogs or at night, plus a parking spot to start from: before you leave, you know whether a route suits you.": "Rundweg oder einfache Strecke, geeignet für Kinder, Kinderwagen, Hunde oder nachts, dazu ein Parkplatz zum Starten: Schon vor dem Losgehen weißt du, ob eine Route zu dir passt.",
     "Tips from the community": "Tipps aus der Community",
-    "Ratings and comments from other geocachers show which routes are worth it. Save favourites for later and collect badges for every route you complete.": "Bewertungen und Kommentare anderer Geocacher zeigen, welche Routen sich lohnen. Merk dir Favoriten für später und sammle Abzeichen für jede absolvierte Route."
+    "Ratings and comments from other geocachers show which routes are worth it. Save favourites for later and collect badges for every route you complete.": "Bewertungen und Kommentare anderer Geocacher zeigen, welche Routen sich lohnen. Merk dir Favoriten für später und sammle Abzeichen für jede absolvierte Route.",
+    "Logins": "Anmeldungen",
+    "All accounts": "Alle Konten",
+    "Feedback account": "Feedback-Konto",
+    "Today: :count logins": "Heute: :count Anmeldungen",
+    ":count of them with the feedback account": "davon :count mit dem Feedback-Konto",
+    "No logins": "Keine Anmeldungen",
+    "Nobody has logged in during the last :days days.": "In den letzten :days Tagen hat sich niemand angemeldet.",
+    "Time": "Zeitpunkt",
+    "Device": "Gerät",
+    "IP address": "IP-Adresse",
+    "Unknown device": "Unbekanntes Gerät",
+    "Logins are deleted automatically after :days days.": "Anmeldungen werden nach :days Tagen automatisch gelöscht."
 }
