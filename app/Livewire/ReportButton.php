@@ -53,7 +53,7 @@ class ReportButton extends Component
             'description' => ['nullable', 'string', 'max:1000'],
         ], attributes: ['reason' => __('Reason'), 'description' => __('Description')]);
 
-        $key = 'reports:'.auth()->id();
+        $key = 'reports:'.auth()->user()->rateLimitKey();
 
         if (RateLimiter::tooManyAttempts($key, self::REPORTS_PER_HOUR)) {
             throw ValidationException::withMessages(['reason' => __('You have sent a lot of reports in a short time. Please try again later.')]);

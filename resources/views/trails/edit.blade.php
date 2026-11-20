@@ -24,11 +24,16 @@
 
                 @include('trails._form')
 
-                <div class="mt-6 max-w-sm">
-                    <x-select name="visibility" :label="__('Visibility')" :value="$trail->visibility->value"
-                        :options="collect(App\Enums\TrailVisibility::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()])->all()" />
-                    <p class="mt-1.5 text-sm text-ink-muted">{{ __('Drafts and hidden routes are only visible to you.') }}</p>
-                </div>
+                @can('publish', $trail)
+                    <div class="mt-6 max-w-sm">
+                        <x-select name="visibility" :label="__('Visibility')" :value="$trail->visibility->value"
+                            :options="collect(App\Enums\TrailVisibility::cases())->mapWithKeys(fn ($case) => [$case->value => $case->label()])->all()" />
+                        <p class="mt-1.5 text-sm text-ink-muted">{{ __('Drafts and hidden routes are only visible to you.') }}</p>
+                    </div>
+                @else
+                    <input type="hidden" name="visibility" value="{{ App\Enums\TrailVisibility::Hidden->value }}">
+                    <p class="mt-6 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">{{ __('The moderation team has hidden this route. Only they can make it visible again.') }}</p>
+                @endcan
 
                 <div class="mt-8 flex flex-col-reverse gap-3 border-t border-sand-200 pt-6 sm:flex-row sm:justify-end">
                     <x-button variant="secondary" :href="route('trails.show', $trail)">{{ __('Cancel') }}</x-button>

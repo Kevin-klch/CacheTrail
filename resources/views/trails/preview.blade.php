@@ -16,6 +16,9 @@
             @if ($trail->isPublished())
                 <p class="text-sm text-ink-muted">{{ __('This route is already published.') }}</p>
                 <x-button :href="route('trails.show', $trail)">{{ __('Done') }}</x-button>
+            @elsecannot('publish', $trail)
+                <p class="text-sm text-amber-900">{{ __('The moderation team has hidden this route. Only they can make it visible again.') }}</p>
+                <x-button :href="route('trails.show', $trail)">{{ __('Done') }}</x-button>
             @else
                 <p class="text-sm text-ink-muted">{{ __('After publishing, all premium users can find your route.') }}</p>
                 <div class="flex flex-col-reverse gap-3 sm:flex-row">

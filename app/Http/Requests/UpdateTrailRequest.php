@@ -40,6 +40,13 @@ class UpdateTrailRequest extends StoreTrailRequest
                 /** @var Trail $trail */
                 $trail = $this->route('trail');
 
+                if ($this->input('visibility') !== TrailVisibility::Hidden->value
+                    && $this->user()->cannot('publish', $trail)) {
+                    $validator->errors()->add('visibility', __('The moderation team has hidden this route. Only they can make it visible again.'));
+
+                    return;
+                }
+
                 if ($this->input('visibility') === TrailVisibility::Published->value
                     && ! $trail->isPublished()
                     && ! $trail->hasEnoughCachesToPublish()) {

@@ -194,6 +194,54 @@ class TrailManagementTest extends TestCase
         );
     }
 
+    public function test_a_route_hidden_by_the_moderation_team_stays_hidden_for_its_creator(): void
+    {
+        $trail = Trail::factory()->withCaches(2)->published()->create();
+        $trail->hideByModeration();
+        $trail->save();
+
+        $this->actingAs($trail->user)
+            ->get(route('trails.edit', $trail))
+            ->assertSee('Das Moderationsteam hat diese Route ausgeblendet.');
+        $this->get(route('trails.preview', $trail))->assertDontSee(route('trails.publish', $trail));
+
+        $this->put(route('trails.update', $trail), $this->validData(['visibility' => TrailVisibility::Published->value]))
+            ->assertSessionHasErrors('visibility');
+        $this->post(route('trails.publish', $trail))->assertForbidden();
+
+        $this->put(route('trails.update', $trail), $this->validData(['name' => 'Neuer Name', 'visibility' => TrailVisibility::Hidden->value]))
+            ->assertSessionHasNoErrors();
+
+        $trail->refresh();
+        $this->assertSame('Neuer Name', $trail->name);
+        $this->assertTrue($trail->isHiddenByModeration());
+    }
+
+    public function test_administrators_can_show_a_hidden_route_again(): void
+    {
+        $trail = Trail::factory()->withCaches(2)->published()->create();
+        $trail->hideByModeration();
+        $trail->save();
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->post(route('trails.publish', $trail))
+            ->assertRedirect(route('trails.show', $trail));
+
+        $this->assertFalse($trail->fresh()->isHiddenByModeration());
+        $this->assertSame(TrailVisibility::Published, $trail->fresh()->visibility);
+    }
+
+    public function test_creators_can_still_show_routes_they_hid_themselves(): void
+    {
+        $trail = Trail::factory()->withCaches(2)->hidden()->create();
+
+        $this->actingAs($trail->user)
+            ->post(route('trails.publish', $trail))
+            ->assertRedirect(route('trails.show', $trail));
+
+        $this->assertSame(TrailVisibility::Published, $trail->fresh()->visibility);
+    }
+
     public function test_the_owner_can_update_a_trail(): void
     {
         $trail = Trail::factory()->withCaches(2)->create(['name' => 'Alter Name']);

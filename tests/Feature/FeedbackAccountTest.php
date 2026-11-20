@@ -4,10 +4,12 @@ namespace Tests\Feature;
 
 use App\Livewire\BookmarkButton;
 use App\Livewire\LikeButton;
+use App\Livewire\ReportButton;
 use App\Models\Report;
 use App\Models\Trail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -132,6 +134,24 @@ class FeedbackAccountTest extends TestCase
 
         $this->assertFalse($trail->isLikedBy($account));
         $this->assertFalse($trail->isBookmarkedBy($account));
+    }
+
+    public function test_testers_on_the_shared_account_each_have_their_own_report_limit(): void
+    {
+        $account = $this->feedbackAccount();
+        $trail = Trail::factory()->published()->create();
+
+        foreach (range(1, ReportButton::REPORTS_PER_HOUR) as $attempt) {
+            RateLimiter::hit('reports:'.$account->id, 3600);
+        }
+
+        Livewire::actingAs($account)->test(ReportButton::class, ['reportable' => $trail])
+            ->set('reason', 'spam')
+            ->call('submit')
+            ->assertHasNoErrors();
+
+        $this->assertSame('127.0.0.1', $account->rateLimitKey());
+        $this->assertSame((string) $trail->user->id, $trail->user->rateLimitKey());
     }
 
     public function test_the_routes_marked_for_the_shared_account_are_shown(): void

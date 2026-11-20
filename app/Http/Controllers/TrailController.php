@@ -117,7 +117,7 @@ class TrailController extends Controller
 
     public function publish(Trail $trail, BadgeAwarder $badges): RedirectResponse
     {
-        Gate::authorize('update', $trail);
+        Gate::authorize('publish', $trail);
 
         if (! $trail->hasEnoughCachesToPublish()) {
             return redirect()->route('trails.caches', $trail)->withErrors([

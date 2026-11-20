@@ -38,6 +38,15 @@ class TrailPolicy
         return $this->canManage($user, $trail);
     }
 
+    /**
+     * Making a route visible again; a route hidden by the moderation team stays hidden for its creator.
+     */
+    public function publish(User $user, Trail $trail): bool
+    {
+        return $this->canManage($user, $trail)
+            && (! $trail->isHiddenByModeration() || $user->canModerate());
+    }
+
     public function delete(User $user, Trail $trail): bool
     {
         return $this->canManage($user, $trail) || $user->canModerate();

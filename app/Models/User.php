@@ -248,6 +248,15 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return config('cachetrail.feedback.demo_data') && $this->email === config('cachetrail.feedback.email');
     }
 
+    /**
+     * Who a per-person rate limit counts for: testers sharing the feedback account are told apart by
+     * their connection, so one of them cannot use up the allowance of all others.
+     */
+    public function rateLimitKey(): string
+    {
+        return $this->isFeedbackAccount() ? (string) request()->ip() : (string) $this->id;
+    }
+
     public function hasSecondaryRole(SecondaryRole $role): bool
     {
         return ($this->secondary_roles ?? collect())->contains($role);

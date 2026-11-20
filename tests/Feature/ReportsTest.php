@@ -110,6 +110,7 @@ class ReportsTest extends TestCase
             ->assertRedirect();
 
         $this->assertSame(TrailVisibility::Hidden, $trail->fresh()->visibility);
+        $this->assertTrue($trail->fresh()->isHiddenByModeration());
         $this->assertSame(ReportStatus::Resolved, $first->fresh()->status);
         $this->assertSame(ReportStatus::Resolved, $second->fresh()->status);
         $this->assertTrue($first->fresh()->resolver->is($admin));

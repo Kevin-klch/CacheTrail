@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\ReportStatus;
-use App\Enums\TrailVisibility;
 use App\Http\Controllers\Controller;
 use App\Models\Report;
 use App\Models\Trail;
@@ -69,7 +68,7 @@ class ReportController extends Controller
     {
         abort_unless($trail instanceof Trail, 422);
 
-        $trail->changeVisibility(TrailVisibility::Hidden);
+        $trail->hideByModeration();
         $trail->save();
     }
 

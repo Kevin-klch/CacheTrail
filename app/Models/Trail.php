@@ -69,6 +69,7 @@ class Trail extends Model
             'parking_longitude' => 'float',
             'visibility' => TrailVisibility::class,
             'published_at' => 'datetime',
+            'hidden_by_moderation_at' => 'datetime',
             'cache_count' => 'integer',
             'average_difficulty' => 'float',
             'average_terrain' => 'float',
@@ -304,9 +305,27 @@ class Trail extends Model
     {
         $this->visibility = $visibility;
 
+        if ($visibility !== TrailVisibility::Hidden) {
+            $this->hidden_by_moderation_at = null;
+        }
+
         if ($visibility === TrailVisibility::Published && $this->published_at === null) {
             $this->published_at = now();
         }
+    }
+
+    /**
+     * Hides the route after a report; only the moderation team can show it again.
+     */
+    public function hideByModeration(): void
+    {
+        $this->changeVisibility(TrailVisibility::Hidden);
+        $this->hidden_by_moderation_at = now();
+    }
+
+    public function isHiddenByModeration(): bool
+    {
+        return $this->visibility === TrailVisibility::Hidden && $this->hidden_by_moderation_at !== null;
     }
 
     /**

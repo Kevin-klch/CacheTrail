@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 
@@ -47,6 +48,12 @@ class AppServiceProvider extends ServiceProvider
         // and access to attributes that were not loaded.
         Model::shouldBeStrict(! $this->app->isProduction());
 
+        // Links in emails (e.g. password reset) always point to the real address, whatever host a request named.
+        if ($this->app->isProduction()) {
+            URL::forceRootUrl(config('app.url'));
+            URL::forceScheme('https');
+        }
+
         // Short, stable names for polymorphic relations (e.g. reported items) instead of class names.
         Relation::enforceMorphMap([
             'trail' => Trail::class,
@@ -55,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         // Creating and changing routes and pictures stores files; a script must not be able to fill the disk.
-        RateLimiter::for('uploads', fn (Request $request): Limit => Limit::perHour(60)->by($request->user()?->id ?: $request->ip()));
+        RateLimiter::for('uploads', fn (Request $request): Limit => Limit::perHour(60)->by($request->user()?->rateLimitKey() ?? $request->ip()));
 
         // Setting the location may ask Nominatim for the place name.
         RateLimiter::for('location', fn (Request $request): Limit => Limit::perMinute(10)->by($request->user()?->id ?: $request->ip()));
